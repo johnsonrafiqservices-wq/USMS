@@ -1,0 +1,28 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-12">
+        <label class="form-label">Book <span class="text-danger">*</span></label>
+        <select name="book" class="form-select" required>
+            <option value="">— Select Available Book —</option>
+            {% for b in books %}
+            <option value="{{ b.pk }}">{{ b.title }} — {{ b.author }} ({{ b.available_copies }} available)</option>
+            {% endfor %}
+        </select>
+        {% if not books %}
+        <div class="form-text text-warning"><i class="bi bi-exclamation-triangle me-1"></i>No books with available copies.</div>
+        {% endif %}
+    </div>
+    <div class="col-12">
+        <label class="form-label">Borrower <span class="text-danger">*</span></label>
+        <select name="borrower" class="form-select" required>
+            <option value="">— Select Borrower —</option>
+            {% for u in users %}
+            <option value="{{ u.pk }}">{{ u.get_full_name|default:u.username }} ({{ u.get_role_display }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Due Date <span class="text-danger">*</span></label>
+        <input type="date" name="due_date" class="form-control" required>
+    </div>
+</div>

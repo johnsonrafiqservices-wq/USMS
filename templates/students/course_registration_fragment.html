@@ -1,0 +1,32 @@
+{% csrf_token %}
+<div class="mb-3">
+    <label class="form-label">Student</label>
+    <div class="p-2 bg-light rounded">
+        <strong>{{ student.student_id }}</strong> — {{ student.user.get_full_name }}
+    </div>
+</div>
+<div class="mb-3">
+    <label class="form-label">Semester <span class="text-danger">*</span></label>
+    <select name="semester" class="form-select" required>
+        <option value="">— Select Semester —</option>
+        {% for s in semesters %}
+        <option value="{{ s.pk }}" {% if semester.id == s.pk %}selected{% endif %}>{{ s.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="mb-3">
+    <label class="form-label">Available Courses</label>
+    <div class="list-group">
+        {% for course in available_courses %}
+        <label class="list-group-item">
+            <input class="form-check-input me-2" type="checkbox" name="courses" value="{{ course.id }}" {% if course.id in enrolled_ids %}checked{% endif %}>
+            <div>
+                <strong>{{ course.code }}</strong> — {{ course.title }}
+                <div class="small text-muted">{{ course.credit_units }} credits</div>
+            </div>
+        </label>
+        {% empty %}
+        <div class="list-group-item text-muted">No courses available for your programme.</div>
+        {% endfor %}
+    </div>
+</div>

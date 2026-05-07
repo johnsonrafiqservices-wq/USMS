@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My Books{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-journal-bookmark"></i> My Borrowed Books</h1>
+</div>
+
+{% if fines %}
+<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>You have {{ fines.count }} pending fine(s).</div>
+{% endif %}
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Book</th><th>Borrowed</th><th>Due Date</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for b in borrowings %}
+                <tr>
+                    <td>{{ b.book.title }}</td>
+                    <td>{{ b.borrow_date|date:"M d, Y" }}</td>
+                    <td>{{ b.due_date|date:"M d, Y" }}</td>
+                    <td><span class="badge bg-{% if b.status == 'returned' %}success{% elif b.is_overdue %}danger{% else %}info{% endif %} badge-role">{% if b.is_overdue %}Overdue{% else %}{{ b.get_status_display }}{% endif %}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center text-muted py-4">No borrowed books.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

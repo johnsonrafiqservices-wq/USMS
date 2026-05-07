@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Maintenance{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-building"></i> Maintenance Requests</h1>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Room</th><th>Issue</th><th>Priority</th><th>Status</th><th>Reported By</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.room }}</td>
+                    <td>{{ req.issue }}</td>
+                    <td><span class="badge bg-{% if req.priority == 'urgent' %}danger{% elif req.priority == 'high' %}warning{% else %}info{% endif %} badge-role">{{ req.get_priority_display }}</span></td>
+                    <td><span class="badge bg-{% if req.status == 'completed' %}success{% elif req.status == 'in_progress' %}primary{% else %}secondary{% endif %} badge-role">{{ req.get_status_display }}</span></td>
+                    <td>{{ req.reported_by.get_full_name }}</td>
+                    <td>{{ req.created_at|date:"M d" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No maintenance requests.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - University Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-card {
+        box-shadow: none;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+    }
+    .login-card .card-body { padding: 2rem; }
+    .login-card .card-title { font-size: 1.2rem; font-weight: 600; }
+    .login-card .form-label { font-size: 0.75rem; font-weight: 500; margin-bottom: 0.35rem; }
+    .login-card .form-control { font-size: 0.8rem; padding: 0.5rem 0.75rem; }
+    .login-card .input-group-text { font-size: 0.8rem; background-color: #f8f9fa; border: 1px solid rgba(0,0,0,0.15); }
+    .login-card .btn-lg { font-size: 0.85rem; padding: 0.6rem 1.3rem; }
+    .login-hero h1 { font-size: 1.8rem; font-weight: 600; }
+    .login-hero .lead { font-size: 0.95rem; }
+    .login-hero .feature-item { font-size: 0.85rem; }
+    .sideblock {
+        background: linear-gradient(160deg, #0a2647 0%, #144272 40%, #1e3a5f 80%, #2a5280 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+    .sideblock::before {
+        content: ''; position: absolute; width: 350px; height: 350px;
+        background: rgba(255,255,255,0.04); border-radius: 50%;
+        top: -80px; left: -80px;
+    }
+    .sideblock::after {
+        content: ''; position: absolute; width: 250px; height: 250px;
+        background: rgba(255,255,255,0.04); border-radius: 50%;
+        bottom: -60px; right: -60px;
+    }
+    .circle-decorator { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.05); }
+    .circle-decorator.c1 { width: 180px; height: 180px; top: 15%; right: -40px; }
+    .circle-decorator.c2 { width: 120px; height: 120px; bottom: 25%; left: -30px; }
+    .circle-decorator.c3 { width: 80px; height: 80px; top: 60%; right: 15%; }
+    .logo-circle {
+        width: 100px; height: 100px; background: #fff; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 1.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        position: relative; z-index: 1;
+    }
+    .logo-circle i { font-size: 2.5rem; color: #1e3a5f; }
+    .sideblock .login-hero { position: relative; z-index: 2; }
+</style>
+{% endblock %}
+
+{% block login_content %}
+<div class="row min-vh-100 align-items-center">
+    <div class="col-md-6 d-none d-md-flex sideblock align-items-center justify-content-center">
+        <div class="circle-decorator c1"></div>
+        <div class="circle-decorator c2"></div>
+        <div class="circle-decorator c3"></div>
+        <div class="d-flex flex-column align-items-center text-white text-center p-5 login-hero">
+            <div class="logo-circle">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <h6 class="text-white-50" style="letter-spacing:1px;">University Management System</h6>
+            <p class="text-white-50 mb-2" style="font-size:0.85rem;">Nice to see you again</p>
+            <h1 class="fw-bold mb-3" style="font-size:2.5rem;">WELCOME<br>BACK</h1>
+            <p class="text-white-50" style="max-width:320px;font-size:0.85rem;line-height:1.6;">
+                Your trusted partner in academic excellence. Providing comprehensive
+                university management with dedication to every student and staff.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card login-card">
+                        <div class="card-body">
+                            <h2 class="card-title mb-1">Login Account</h2>
+                            <p class="text-muted mb-4" style="font-size:0.8rem;">Sign in to access your dashboard, manage academics, and continue providing excellent service.</p>
+
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+
+                            <form method="post" action="{% url 'accounts:login' %}">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <label for="username" class="form-label">Username</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input type="text" class="form-control" id="username" name="username" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                        <input type="password" class="form-control" id="password" name="password" required>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i> SIGN IN
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <p class="text-center text-muted mt-3" style="font-size:0.75rem;">&copy; University Management System &middot; Passionate about education</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

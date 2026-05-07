@@ -1,0 +1,31 @@
+{% csrf_token %}
+{% if student %}
+<div class="alert alert-info py-2 mb-3">
+    <strong>{{ student.student_id }}</strong> — {{ student.programme.name|default:"No programme assigned" }}
+    &nbsp;|&nbsp; {{ student.current_year.name|default:"—" }}, {{ student.current_semester_number.name|default:"—" }}
+</div>
+{% endif %}
+{% if courses %}
+<div class="row g-2">
+    {% for course in courses %}
+    <div class="col-md-6">
+        <div class="form-check p-0">
+            <label class="form-check-label d-flex align-items-start gap-2 border rounded p-2 cursor-pointer" style="cursor:pointer;">
+                <input class="form-check-input mt-1 flex-shrink-0" type="checkbox" name="courses" value="{{ course.pk }}">
+                <div>
+                    <div class="fw-bold" style="font-size:.8rem;">{{ course.code }}</div>
+                    <div style="font-size:.75rem;color:#555;">{{ course.title }}</div>
+                    <div style="font-size:.7rem;color:#888;">{{ course.credit_units }} credit unit{{ course.credit_units|pluralize }}</div>
+                </div>
+            </label>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-4">
+    <i class="bi bi-book text-muted" style="font-size:2rem;"></i>
+    <p class="text-muted mt-2">No courses available for registration.<br>
+    All courses may already be enrolled or no programme is assigned.</p>
+</div>
+{% endif %}

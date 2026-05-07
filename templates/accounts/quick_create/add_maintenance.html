@@ -1,0 +1,28 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-sm-8">
+        <label class="form-label">Room <span class="text-danger">*</span></label>
+        <select name="room" class="form-select" required>
+            <option value="">— Select Room —</option>
+            {% for r in rooms %}
+            <option value="{{ r.pk }}">{{ r.hostel.name }} › Room {{ r.room_number }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <label class="form-label">Priority <span class="text-danger">*</span></label>
+        <select name="priority" class="form-select" required>
+            {% for val, lbl in priorities %}
+            <option value="{{ val }}" {% if val == 'medium' %}selected{% endif %}>{{ lbl }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Issue Title <span class="text-danger">*</span></label>
+        <input type="text" name="title" class="form-control" placeholder="e.g. Broken window, Leaking tap…" required>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3" placeholder="Describe the maintenance issue in detail…"></textarea>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Generate Invoices{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-file-earmark-text"></i> Generate Automatic Invoices</h1>
+        <p class="text-muted mb-0">Generate invoices for students based on their assigned fee structures</p>
+    </div>
+    <a href="{% url 'finance:invoice_list' %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Back to Invoices
+    </a>
+</div>
+
+<div class="card" style="max-width: 700px;">
+    <div class="card-body">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            This will generate invoices for all active students based on their assigned fee structures, considering the fee frequency and the student's current semester/year.
+        </div>
+
+        <form method="post" id="generateForm">
+            {% csrf_token %}
+            <div id="formErrors"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+                <select name="session" class="form-select" required>
+                    <option value="">Select Session</option>
+                    {% for s in sessions %}
+                    <option value="{{ s.pk }}" {% if s.is_current %}selected{% endif %}>{{ s.name }}{% if s.is_current %} (Current){% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Semester (Optional)</label>
+                <select name="semester" class="form-select">
+                    <option value="">All Semesters</option>
+                    {% for s in semesters %}
+                    <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Leave blank to generate for all semesters in the session</small>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary" id="generateBtn">
+                    <i class="bi bi-lightning me-1"></i>Generate Invoices
+                </button>
+                <a href="{% url 'finance:invoice_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="resultModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h5 class="mb-0" id="resultTitle">Result</h5>
+            <button type="button" class="btn-close" onclick="closeResultModal()"></button>
+        </div>
+        <div class="modal-body" id="resultBody"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="closeResultModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<style>
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); display: none;
+    justify-content: center; align-items: center; z-index: 9999;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-content {
+    background: #fff; border-radius: 12px; max-width: 600px; width: 95%;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-header { padding: 20px 24px; border-bottom: 1px solid #e9ecef; }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid #e9ecef; display: flex; gap: 8px; justify-content: flex-end; }
+</style>
+
+<script>
+document.getElementById('generateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+
+    const formData = new FormData(this);
+    fetch('{% url "finance:generate_invoices" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Generate Invoices';
+        
+        const modal = document.getElementById('resultModal');
+        const title = document.getElementById('resultTitle');
+        const body = document.getElementById('resultBody');
+        
+        if (data.success) {
+            title.textContent = 'Success';
+            body.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle me-2"></i>${data.message}
+                </div>
+                <p>Generated <strong>${data.invoices_created}</strong> invoices</p>
+                <p>Total Amount: <strong>UGX ${data.total_amount.toLocaleString()}</strong></p>
+            `;
+        } else {
+            title.textContent = 'Error';
+            body.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>${data.message}
+                </div>
+            `;
+        }
+        modal.classList.add('show');
+    })
+    .catch(error => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-lightning me-1"></i>Generate Invoices';
+        alert('Error generating invoices: ' + error);
+    });
+});
+
+function closeResultModal() {
+    document.getElementById('resultModal').classList.remove('show');
+    if (document.getElementById('resultTitle').textContent === 'Success') {
+        window.location.href = '{% url "finance:invoice_list" %}';
+    }
+}
+
+document.getElementById('resultModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeResultModal();
+    }
+});
+</script>
+{% endblock %}

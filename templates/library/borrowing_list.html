@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Borrowings{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-journal-bookmark"></i> Borrowing Records</h1>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Book</th><th>Borrower</th><th>Borrowed</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+                {% for b in borrowings %}
+                <tr>
+                    <td>{{ b.book.title|truncatechars:40 }}</td>
+                    <td>{{ b.borrower.get_full_name }}</td>
+                    <td>{{ b.borrow_date|date:"M d" }}</td>
+                    <td>{{ b.due_date|date:"M d" }}</td>
+                    <td><span class="badge bg-{% if b.status == 'returned' %}success{% elif b.status == 'overdue' %}danger{% else %}info{% endif %} badge-role">{{ b.get_status_display }}</span></td>
+                    <td>
+                        {% if b.status == 'borrowed' %}
+                        <a href="{% url 'library:return_book' b.pk %}" class="btn btn-sm btn-outline-success">Return</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No borrowing records.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

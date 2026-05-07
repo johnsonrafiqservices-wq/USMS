@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Programmes{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-journal-bookmark me-2"></i>Academic Programmes</h1>
+        <p class="text-muted mb-0">Manage academic programmes and their associated courses</p>
+    </div>
+    {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+    <div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-plus-circle me-1"></i>Add New
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'academics:programme_create' %}">
+                    <i class="bi bi-journal-bookmark me-2"></i>Add Programme
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:course_create' %}">
+                    <i class="bi bi-book me-2"></i>Add Course
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:department_create' %}">
+                    <i class="bi bi-building me-2"></i>Add Department
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:faculty_create' %}">
+                    <i class="bi bi-university me-2"></i>Add Faculty
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:session_create' %}">
+                    <i class="bi bi-calendar me-2"></i>Add Academic Session
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:study_level_create' %}">
+                    <i class="bi bi-layers me-2"></i>Add Study Level
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'academics:intake_create' %}">
+                    <i class="bi bi-people me-2"></i>Add Intake
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'academics:add_existing_course_to_programme' %}">
+                    <i class="bi bi-link-45deg me-2"></i>Add Existing Course to Programme
+                </a></li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Programme Code</th>
+                        <th>Programme Name</th>
+                        <th>Department</th>
+                        <th>Faculty</th>
+                        <th>Level</th>
+                        <th>Duration</th>
+                        <th>Courses</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for programme in programmes %}
+                    <tr>
+                        <td><span class="badge bg-primary">{{ programme.code }}</span></td>
+                        <td>
+                            <a href="{% url 'academics:programme_detail' programme.pk %}" class="text-decoration-none">
+                                {{ programme.name }}
+                            </a>
+                        </td>
+                        <td>{{ programme.department.name }}</td>
+                        <td>{{ programme.department.faculty.name }}</td>
+                        <td><span class="badge bg-info">{{ programme.level.name }}</span></td>
+                        <td>{{ programme.duration_years }} years</td>
+                        <td>
+                            <span class="badge bg-success">{{ programme.courses.count }}</span>
+                            <!-- {% if programme.courses.all %}
+                                <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-url="{% url 'academics:programme_courses' programme.pk %}">
+                                    <i class="bi bi-list"></i> Manage
+                                </button>
+                            {% endif %} -->
+                        </td>
+                        <td>
+                            <span class="badge {% if programme.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                {{ programme.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                            <a href="{% url 'academics:programme_edit' programme.pk %}" class="btn btn-sm btn-outline-warning me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'academics:programme_delete' programme.pk %}" class="btn btn-sm btn-outline-danger me-1">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-journal-bookmark"></i> Manage Courses
+                            </a>
+                            {% else %}
+                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-journal-bookmark"></i> Manage Courses
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4">
+                            <i class="bi bi-journal-bookmark" style="font-size: 2.5rem;"></i>
+                            <p class="mt-2">No programmes found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const manageButtons = document.querySelectorAll('[data-url]');
+    manageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = this.dataset.url;
+        });
+    });
+});
+</script>
+{% endblock %}

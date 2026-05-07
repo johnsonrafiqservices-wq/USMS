@@ -1,0 +1,731 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h1 class="page-title"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+        <p>Welcome back, <strong>{{ user.get_full_name|default:user.username }}</strong>
+            <span class="badge bg-primary ms-1">{{ user.get_role_display }}</span>
+        </p>
+    </div>
+    <small class="text-muted mt-1">{{ user.last_login|date:"D, d M Y H:i" }}</small>
+</div>
+
+<!-- ═══════════════════════════════════════════════ ADMIN DASHBOARD -->
+{% if dashboard_type == 'admin' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Active Students</div>
+            <div class="stat-value">{{ total_students }}</div>
+            <i class="bi bi-mortarboard stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Staff</div>
+            <div class="stat-value">{{ total_staff }}</div>
+            <i class="bi bi-person-badge stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Courses</div>
+            <div class="stat-value">{{ total_courses }}</div>
+            <i class="bi bi-book stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Departments</div>
+            <div class="stat-value">{{ total_departments }}</div>
+            <i class="bi bi-building stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Pending Admissions</div>
+            <div class="stat-value text-warning">{{ pending_admissions }}</div>
+            <i class="bi bi-person-plus stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Revenue (UGX)</div>
+            <div class="stat-value" style="font-size:1.1rem;">{{ total_revenue|floatformat:0 }}</div>
+            <i class="bi bi-cash-stack stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'accounts:register_user' %}" class="btn btn-outline-primary"><i class="bi bi-person-plus me-1"></i> Create User</a>
+                    <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary"><i class="bi bi-mortarboard me-1"></i> Manage Students</a>
+                    <a href="{% url 'students:admission_list' %}" class="btn btn-outline-primary"><i class="bi bi-clipboard-check me-1"></i> Admissions</a>
+                    <a href="{% url 'academics:course_create' %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> New Course</a>
+                    <a href="{% url 'finance:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-cash me-1"></i> Finance Dashboard</a>
+                    <a href="{% url 'reports:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-graph-up me-1"></i> Reports</a>
+                    <a href="{% url 'communications:announcements' %}" class="btn btn-outline-primary"><i class="bi bi-megaphone me-1"></i> Announcements</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people"></i> Recent Students</span>
+                <a href="{% url 'students:student_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Name</th><th>ID</th><th>Programme</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for s in recent_students %}
+                    <tr>
+                        <td><a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a></td>
+                        <td><small>{{ s.student_id }}</small></td>
+                        <td><small>{{ s.programme.code|default:"—" }}</small></td>
+                        <td><span class="badge {% if s.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">{{ s.get_status_display }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-3">No students yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-info-circle"></i> System Status</div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0 small">
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Faculties</span><strong>{{ total_faculties }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Pending Invoices</span>
+                        <span class="badge bg-warning">{{ pending_invoices }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Current Session</span>
+                        <span>{{ current_session.name|default:"None" }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between py-2">
+                        <span class="text-muted">Admin Status</span>
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header"><i class="bi bi-grid"></i> All Modules</div>
+            <div class="card-body p-2">
+                <div class="row g-1 text-center">
+                    <div class="col-6"><a href="{% url 'staff:staff_list' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-person-badge"></i><br><small>Staff</small></a></div>
+                    <div class="col-6"><a href="{% url 'library:catalog' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-journal-bookmark"></i><br><small>Library</small></a></div>
+                    <div class="col-6"><a href="{% url 'hostel:dashboard' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-building"></i><br><small>Hostel</small></a></div>
+                    <div class="col-6"><a href="{% url 'academics:session_list' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-calendar3"></i><br><small>Sessions</small></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ REGISTRAR DASHBOARD -->
+{% elif dashboard_type == 'registrar' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Active Students</div>
+            <div class="stat-value">{{ total_students }}</div>
+            <i class="bi bi-mortarboard stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Pending Admissions</div>
+            <div class="stat-value text-warning">{{ pending_admissions }}</div>
+            <i class="bi bi-person-plus stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Applications</div>
+            <div class="stat-value">{{ total_applications }}</div>
+            <i class="bi bi-file-text stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Programmes</div>
+            <div class="stat-value">{{ total_programmes }}</div>
+            <i class="bi bi-bookmark stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'students:admission_list' %}" class="btn btn-outline-primary"><i class="bi bi-clipboard-check me-1"></i> Review Admissions</a>
+                    <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary"><i class="bi bi-mortarboard me-1"></i> All Students</a>
+                    <a href="{% url 'academics:session_list' %}" class="btn btn-outline-primary"><i class="bi bi-calendar3 me-1"></i> Academic Sessions</a>
+                    <a href="{% url 'academics:department_list' %}" class="btn btn-outline-primary"><i class="bi bi-building me-1"></i> Departments</a>
+                    <a href="{% url 'reports:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-graph-up me-1"></i> Reports</a>
+                </div>
+            </div>
+        </div>
+        {% if current_session %}
+        <div class="card mt-2">
+            <div class="card-header"><i class="bi bi-calendar-check"></i> Current Session</div>
+            <div class="card-body text-center">
+                <div class="fw-bold text-primary">{{ current_session.name }}</div>
+                <span class="badge bg-success mt-1">Active</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-5">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-plus"></i> Recent Applications</span>
+                <a href="{% url 'students:admission_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Applicant</th><th>Programme</th><th>Status</th><th>Date</th></tr></thead>
+                    <tbody>
+                    {% for app in recent_applications %}
+                    <tr>
+                        <td>{{ app.first_name }} {{ app.last_name }}</td>
+                        <td><small>{{ app.programme_applied|default:"—" }}</small></td>
+                        <td>
+                            <span class="badge {% if app.status == 'accepted' %}bg-success{% elif app.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ app.get_status_display }}
+                            </span>
+                        </td>
+                        <td><small>{{ app.created_at|date:"d M" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-3">No applications</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-mortarboard"></i> New Students</span>
+                <a href="{% url 'students:student_list' %}" class="btn btn-sm btn-outline-primary">All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Name</th><th>Programme</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for s in new_students %}
+                    <tr>
+                        <td><a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a></td>
+                        <td><small>{{ s.programme.code|default:"—" }}</small></td>
+                        <td><span class="badge {% if s.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">{{ s.get_status_display }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center text-muted py-3">No students</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ LECTURER DASHBOARD -->
+{% elif dashboard_type == 'lecturer' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">My Courses</div>
+            <div class="stat-value">{{ course_count|default:"0" }}</div>
+            <i class="bi bi-book stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">My Students</div>
+            <div class="stat-value">{{ total_students|default:"0" }}</div>
+            <i class="bi bi-people stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Department</div>
+            <div class="stat-value" style="font-size:0.85rem;">{{ staff.department.name|default:"—" }}</div>
+            <i class="bi bi-building stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Attendance Records</div>
+            <div class="stat-value">{{ pending_attendance|default:"0" }}</div>
+            <i class="bi bi-clipboard stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'staff:my_courses' %}" class="btn btn-outline-primary"><i class="bi bi-book me-1"></i> My Courses</a>
+                    <a href="{% url 'academics:grade_management' %}" class="btn btn-outline-primary"><i class="bi bi-card-checklist me-1"></i> Enter Grades</a>
+                    <a href="{% url 'academics:attendance_list' %}" class="btn btn-outline-primary"><i class="bi bi-clipboard-check me-1"></i> Take Attendance</a>
+                    <a href="{% url 'communications:announcements' %}" class="btn btn-outline-primary"><i class="bi bi-megaphone me-1"></i> Announcements</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-book"></i> Allocated Courses</span>
+                <a href="{% url 'staff:my_courses' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Course Code</th><th>Course Title</th><th>Semester</th><th>Action</th></tr></thead>
+                    <tbody>
+                    {% for alloc in allocations %}
+                    <tr>
+                        <td><strong>{{ alloc.course.code }}</strong></td>
+                        <td>{{ alloc.course.title }}</td>
+                        <td>{{ alloc.semester|default:"—" }}</td>
+                        <td>
+                            <a href="{% url 'academics:enter_results' alloc.pk %}" class="btn btn-outline-primary btn-sm">Grades</a>
+                            <a href="{% url 'academics:take_attendance' alloc.pk %}" class="btn btn-outline-secondary btn-sm">Attend</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-4">No courses allocated yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STUDENT DASHBOARD -->
+{% elif dashboard_type == 'student' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Student ID</div>
+            <div class="stat-value" style="font-size:1.1rem;">{{ student.student_id|default:"N/A" }}</div>
+            <i class="bi bi-person-badge stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Enrolled Courses</div>
+            <div class="stat-value">{{ enrollment_count|default:"0" }}</div>
+            <i class="bi bi-book stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">CGPA</div>
+            <div class="stat-value">{{ cgpa|default:"0.00" }}</div>
+            <i class="bi bi-trophy stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Outstanding Balance</div>
+            <div class="stat-value {% if total_owed > 0 %}text-danger{% else %}text-success{% endif %}" style="font-size:1rem;">UGX {{ total_owed|floatformat:0 }}</div>
+            <i class="bi bi-cash stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-person-circle"></i> My Profile</div>
+            <div class="card-body text-center">
+                <div class="avatar-sm bg-primary text-white mx-auto mb-2" style="width:50px;height:50px;font-size:1.3rem;">
+                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                </div>
+                <div class="fw-bold">{{ user.get_full_name }}</div>
+                <small class="text-muted">{{ student.programme|default:"No Programme" }}</small><br>
+                <small class="text-muted">{{ student.current_year|default:"—" }} · {{ student.current_semester_number|default:"—" }}</small>
+                <div class="mt-2">
+                    <span class="badge {% if student.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">{{ student.get_status_display }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'students:course_registration' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-plus-circle me-1"></i> Register Courses</a>
+                    <a href="{% url 'students:my_results' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-trophy me-1"></i> My Results</a>
+                    <a href="{% url 'finance:my_fees' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash me-1"></i> My Fees</a>
+                    <a href="{% url 'academics:my_timetable' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-week me-1"></i> Timetable</a>
+                    <a href="{% url 'library:my_books' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-journal-bookmark me-1"></i> Library</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-book"></i> Current Courses</span>
+                <a href="{% url 'students:my_courses' %}" class="btn btn-sm btn-outline-primary">All Courses</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Code</th><th>Course</th><th>Semester</th></tr></thead>
+                    <tbody>
+                    {% for enr in enrollments %}
+                    <tr>
+                        <td><strong>{{ enr.course.code }}</strong></td>
+                        <td>{{ enr.course.title }}</td>
+                        <td><small>{{ enr.semester|default:"—" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center text-muted py-4">
+                        No courses enrolled. <a href="{% url 'students:course_registration' %}">Register now</a>
+                    </td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-trophy"></i> Recent Results</span>
+                <a href="{% url 'students:my_results' %}" class="btn btn-sm btn-outline-primary">All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Course</th><th>Score</th><th>Grade</th></tr></thead>
+                    <tbody>
+                    {% for r in recent_results %}
+                    <tr>
+                        <td><small>{{ r.course_allocation.course.code }}</small></td>
+                        <td>{{ r.total_score|default:"—" }}</td>
+                        <td><span class="badge bg-{% if r.grade == 'A' %}success{% elif r.grade == 'B' %}primary{% elif r.grade == 'C' %}info{% elif r.grade == 'F' %}danger{% else %}secondary{% endif %}">{{ r.grade|default:"—" }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center text-muted py-4">No results published yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ FINANCE DASHBOARD -->
+{% elif dashboard_type == 'finance' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Revenue (UGX)</div>
+            <div class="stat-value" style="font-size:1.1rem;">{{ total_revenue|floatformat:0 }}</div>
+            <i class="bi bi-cash-stack stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Pending Invoices</div>
+            <div class="stat-value text-warning">{{ pending_invoices }}</div>
+            <i class="bi bi-receipt stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Overdue Invoices</div>
+            <div class="stat-value text-danger">{{ overdue_invoices }}</div>
+            <i class="bi bi-exclamation-circle stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Outstanding</div>
+            <div class="stat-value text-danger" style="font-size:1rem;">{{ total_outstanding|floatformat:0 }}</div>
+            <i class="bi bi-wallet stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'finance:create_invoice' %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> Create Invoice</a>
+                    <a href="{% url 'finance:invoice_list' %}" class="btn btn-outline-primary"><i class="bi bi-receipt me-1"></i> All Invoices</a>
+                    <a href="{% url 'finance:payment_list' %}" class="btn btn-outline-primary"><i class="bi bi-credit-card me-1"></i> All Payments</a>
+                    <a href="{% url 'finance:fee_structure' %}" class="btn btn-outline-primary"><i class="bi bi-list-check me-1"></i> Fee Structures</a>
+                    <a href="{% url 'finance:scholarship_list' %}" class="btn btn-outline-primary"><i class="bi bi-award me-1"></i> Scholarships</a>
+                    <a href="{% url 'reports:financial' %}" class="btn btn-outline-primary"><i class="bi bi-graph-up me-1"></i> Financial Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-credit-card"></i> Recent Payments</span>
+                <a href="{% url 'finance:payment_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Student</th><th>Amount (UGX)</th><th>Method</th><th>Date</th><th>Receipt</th></tr></thead>
+                    <tbody>
+                    {% for p in recent_payments %}
+                    <tr>
+                        <td>{{ p.student.user.get_full_name }}</td>
+                        <td>{{ p.amount|floatformat:0 }}</td>
+                        <td><span class="badge bg-info">{{ p.get_payment_method_display }}</span></td>
+                        <td><small>{{ p.payment_date|date:"d M Y" }}</small></td>
+                        <td><small>{{ p.receipt_number }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-4">No payments yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ LIBRARIAN DASHBOARD -->
+{% elif dashboard_type == 'librarian' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Books</div>
+            <div class="stat-value">{{ total_books }}</div>
+            <i class="bi bi-journal-bookmark stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Available</div>
+            <div class="stat-value text-success">{{ available_books }}</div>
+            <i class="bi bi-check-circle stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Active Borrowings</div>
+            <div class="stat-value text-primary">{{ active_borrowings }}</div>
+            <i class="bi bi-arrow-left-right stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Overdue / Fines</div>
+            <div class="stat-value text-danger">{{ overdue_borrowings }}</div>
+            <i class="bi bi-exclamation-triangle stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'library:issue_book' %}" class="btn btn-outline-primary"><i class="bi bi-box-arrow-right me-1"></i> Issue Book</a>
+                    <a href="{% url 'library:catalog' %}" class="btn btn-outline-primary"><i class="bi bi-journal-bookmark me-1"></i> Book Catalog</a>
+                    <a href="{% url 'library:borrowing_list' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-left-right me-1"></i> All Borrowings</a>
+                    <a href="{% url 'library:fine_list' %}" class="btn btn-outline-primary"><i class="bi bi-exclamation-triangle me-1"></i> Manage Fines</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header"><i class="bi bi-cash"></i> Pending Fines</div>
+            <div class="card-body text-center">
+                <div class="stat-value text-danger" style="font-size:1.4rem;">UGX {{ pending_fines|floatformat:0 }}</div>
+                <a href="{% url 'library:fine_list' %}" class="btn btn-sm btn-outline-danger mt-2">Manage Fines</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-arrow-left-right"></i> Active Borrowings</span>
+                <a href="{% url 'library:borrowing_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Book</th><th>Borrower</th><th>Borrowed</th><th>Due Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for b in recent_borrowings %}
+                    <tr>
+                        <td>{{ b.book.title|truncatechars:30 }}</td>
+                        <td>{{ b.borrower.get_full_name }}</td>
+                        <td><small>{{ b.borrow_date|date:"d M Y" }}</small></td>
+                        <td><small>{{ b.due_date|date:"d M Y" }}</small></td>
+                        <td>
+                            <span class="badge {% if b.is_overdue %}bg-danger{% else %}bg-success{% endif %}">
+                                {% if b.is_overdue %}Overdue{% else %}Active{% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-4">No active borrowings</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ HOSTEL MANAGER DASHBOARD -->
+{% elif dashboard_type == 'hostel_manager' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Hostels</div>
+            <div class="stat-value">{{ total_hostels }}</div>
+            <i class="bi bi-building stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Total Rooms</div>
+            <div class="stat-value">{{ total_rooms }}</div>
+            <i class="bi bi-house-door stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Occupied</div>
+            <div class="stat-value text-primary">{{ occupied_rooms }}</div>
+            <i class="bi bi-person-check stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Available</div>
+            <div class="stat-value text-success">{{ available_rooms }}</div>
+            <i class="bi bi-door-open stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Pending Maintenance</div>
+            <div class="stat-value text-warning">{{ pending_maintenance }}</div>
+            <i class="bi bi-tools stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="stat-card">
+            <div class="stat-label">Occupancy Rate</div>
+            <div class="stat-value" style="font-size:1.1rem;">
+                {% if total_rooms %}{{ occupied_rooms|floatformat:0 }}/{{ total_rooms }}{% else %}0%{% endif %}
+            </div>
+            <i class="bi bi-bar-chart stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'hostel:allocate_room' %}" class="btn btn-outline-primary"><i class="bi bi-person-plus me-1"></i> Allocate Room</a>
+                    <a href="{% url 'hostel:room_list' %}" class="btn btn-outline-primary"><i class="bi bi-house-door me-1"></i> Room List</a>
+                    <a href="{% url 'hostel:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-person-check me-1"></i> All Allocations</a>
+                    <a href="{% url 'hostel:maintenance_list' %}" class="btn btn-outline-primary"><i class="bi bi-tools me-1"></i> Maintenance</a>
+                    <a href="{% url 'communications:announcements' %}" class="btn btn-outline-primary"><i class="bi bi-megaphone me-1"></i> Announcements</a>
+                </div>
+            </div>
+        </div>
+        {% if hostels %}
+        <div class="card mt-2">
+            <div class="card-header"><i class="bi bi-building"></i> Hostel Overview</div>
+            <div class="card-body p-0">
+                {% for h in hostels %}
+                <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                    <div>
+                        <div class="fw-medium small">{{ h.name }}</div>
+                        <small class="text-muted">{{ h.get_hostel_type_display }}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="small text-primary">{{ h.occupancy_rate }}%</div>
+                        <small class="text-muted">{{ h.occupied_beds }}/{{ h.total_capacity }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-check"></i> Recent Room Allocations</span>
+                <a href="{% url 'hostel:dashboard' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Student</th><th>Room</th><th>Hostel</th><th>Session</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for alloc in recent_allocations %}
+                    <tr>
+                        <td>{{ alloc.student.user.get_full_name }}</td>
+                        <td>{{ alloc.room.room_number }}</td>
+                        <td>{{ alloc.room.hostel.name }}</td>
+                        <td><small>{{ alloc.session.name|default:"—" }}</small></td>
+                        <td><small>{{ alloc.allocation_date|date:"d M Y" }}</small></td>
+                        <td><span class="badge {% if alloc.is_active %}bg-success{% else %}bg-secondary{% endif %}">{% if alloc.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted py-4">No allocations yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ DEFAULT / SETUP -->
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="bi bi-mortarboard-fill" style="font-size: 5rem; color: var(--primary-color);"></i>
+        <h2 class="mt-4">University Management System</h2>
+        <p class="text-muted">Your dashboard is being configured. Contact your administrator if this persists.</p>
+        <div class="mt-4">
+            <a href="{% url 'accounts:profile' %}" class="btn btn-primary me-2">
+                <i class="bi bi-person"></i> View Profile
+            </a>
+            <a href="/admin/" class="btn btn-outline-secondary" target="_blank">
+                <i class="bi bi-gear"></i> Admin Panel
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Fines{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-journal-bookmark"></i> Library Fines</h1>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>User</th><th>Book</th><th>Amount</th><th>Reason</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for fine in fines %}
+                <tr>
+                    <td>{{ fine.user.get_full_name }}</td>
+                    <td>{{ fine.borrowing.book.title|truncatechars:30 }}</td>
+                    <td class="fw-bold">{{ fine.amount|floatformat:2 }}</td>
+                    <td>{{ fine.reason }}</td>
+                    <td><span class="badge bg-{% if fine.status == 'paid' %}success{% else %}warning{% endif %} badge-role">{{ fine.get_status_display }}</span></td>
+                    <td>{{ fine.created_at|date:"M d" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No fines.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-book"></i> Course Catalog</h1>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form class="d-flex gap-2" method="get">
+        <select name="department" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Departments</option>
+            {% for dept in departments %}
+            <option value="{{ dept.id }}">{{ dept.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="level" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Levels</option>
+            <option value="100">100</option><option value="200">200</option>
+            <option value="300">300</option><option value="400">400</option><option value="500">500</option>
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+    </form>
+    {% if user.is_admin or user.is_registrar %}
+    <button type="button" class="btn btn-primary btn-sm" id="openAddCourseBtn">
+        <i class="bi bi-plus-circle me-1"></i> Add Course
+    </button>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>Code</th><th>Title</th><th>Department</th><th>Credits</th><th>Level</th><th>Type</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr data-course-id="{{ course.pk }}" data-course-code="{{ course.code }}" data-course-title="{{ course.title }}" data-course-credits="{{ course.credit_units }}" data-course-level="{{ course.level }}" data-course-type="{{ course.course_type }}" data-course-description="{{ course.description|escape }}" data-course-max-students="{{ course.max_students }}" data-course-department="{{ course.department.pk }}" data-course-active="{{ course.is_active|yesno:'true,false' }}">
+                    <td class="fw-medium">{{ course.code }}</td>
+                    <td>{{ course.title }}</td>
+                    <td><small>{{ course.department.name }}</small></td>
+                    <td>{{ course.credit_units }}</td>
+                    <td>{{ course.level }}</td>
+                    <td><span class="badge bg-secondary badge-role">{{ course.get_course_type_display }}</span></td>
+                    <td>
+                        <a href="{% url 'academics:course_detail' course.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i></a>
+                        <button class="btn btn-sm btn-outline-warning edit-course-btn" data-course-id="{{ course.pk }}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No courses found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Course Modal -->
+{% if user.is_admin or user.is_registrar %}
+<div id="addCourseModal" class="course-modal-overlay" style="display:none;">
+    <div class="course-modal-content">
+        <div class="course-modal-header">
+            <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Create New Course</h5>
+            <button type="button" class="btn-close btn-close-white" id="closeModalBtn"></button>
+        </div>
+        <div class="course-modal-body">
+            <form id="addCourseForm" method="post" action="{% url 'academics:course_create' %}">
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <!-- Programme Selection Section (First) -->
+                    <div class="col-12">
+                        <div class="border rounded p-3" style="background:#f8f9fa;">
+                            <h6 class="fw-bold mb-3 text-sm"><i class="bi bi-building me-2"></i>Programme Selection</h6>
+                            
+                            <!-- Faculty Dropdown -->
+                            <div class="mb-3">
+                                <label class="form-label text-xs fw-semibold mb-1">Faculty</label>
+                                <select class="form-select form-select-sm" id="facultySelect">
+                                    <option value="">-- Select Faculty --</option>
+                                    {% for faculty in faculties %}
+                                    <option value="{{ faculty.pk }}" data-departments="{% for dept in faculty.departments.all %}{{ dept.pk }}:{% endfor %}">{{ faculty.name }} ({{ faculty.code }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Programmes (filtered by faculty) -->
+                            <div class="mb-3" id="programmesSection" style="display:none;">
+                                <label class="form-label text-xs fw-semibold mb-1">Programmes</label>
+                                <div id="programmesList">
+                                    {% for programme in course_form.programmes.field.queryset %}
+                                    <div class="programme-item mb-2" data-faculty="{{ programme.department.faculty.pk }}" data-programme-id="{{ programme.pk }}">
+                                        <div class="form-check">
+                                            <input type="checkbox" 
+                                                   class="form-check-input programme-checkbox" 
+                                                   name="programmes" 
+                                                   value="{{ programme.pk }}"
+                                                   id="prog_{{ programme.pk }}"
+                                                   data-programme-id="{{ programme.pk }}">
+                                            <label class="form-check-label text-sm" for="prog_{{ programme.pk }}">
+                                                {{ programme.name }} <small class="text-muted">({{ programme.code }})</small>
+                                            </label>
+                                        </div>
+                                        <!-- Year & Semester (revealed when programme is checked) -->
+                                        <div class="programme-year-semester ms-4 mt-2" id="ys_{{ programme.pk }}" style="display:none;">
+                                            <div class="row g-2">
+                                                <div class="col-sm-4">
+                                                    <label class="form-label text-xs mb-1">Year of Study</label>
+                                                    <select class="form-select form-select-sm" name="programme_year_{{ programme.pk }}">
+                                                        <option value="">-- Year --</option>
+                                                        {% for year in study_years %}
+                                                        <option value="{{ year.pk }}">{{ year.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="form-label text-xs mb-1">Semester</label>
+                                                    <select class="form-select form-select-sm" name="programme_semester_{{ programme.pk }}">
+                                                        <option value="">-- Semester --</option>
+                                                        {% for sem in study_semesters %}
+                                                        <option value="{{ sem.pk }}">{{ sem.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class="form-label text-xs mb-1">Course Type</label>
+                                                    <select class="form-select form-select-sm" name="programme_course_type_{{ programme.pk }}">
+                                                        <option value="">-- Type --</option>
+                                                        <option value="core">Core</option>
+                                                        <option value="elective">Elective</option>
+                                                        <option value="general">General Education</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <div class="col-12">
+                                        <p class="text-muted mb-0">No programmes available.</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Details Section -->
+                    <div class="col-12"><hr class="my-1"><h6 class="fw-bold mb-3 text-sm"><i class="bi bi-journal-text me-2"></i>Course Details</h6></div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label text-xs fw-semibold mb-1">Course Code</label>
+                        {{ course_form.code }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-xs fw-semibold mb-1">Course Title</label>
+                        {{ course_form.title }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-xs fw-semibold mb-1">Credit Units</label>
+                        {{ course_form.credit_units }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-xs fw-semibold mb-1">Max Students</label>
+                        {{ course_form.max_students }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-xs fw-semibold mb-1">Description</label>
+                        {{ course_form.description }}
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            {{ course_form.is_active }}
+                            <label class="form-check-label text-sm" for="{{ course_form.is_active.id_for_label }}">Active</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="course-modal-footer">
+            <button type="button" class="btn btn-outline-secondary" id="cancelModalBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="submitCourseBtn">
+                <i class="bi bi-plus-circle me-1"></i>Create Course
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.course-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); display: none;
+    justify-content: center; align-items: flex-start; z-index: 9999;
+    padding-top: 40px; overflow-y: auto;
+}
+.course-modal-overlay.show { display: flex !important; }
+.course-modal-content {
+    background: #fff; border-radius: 12px; max-width: 800px; width: 95%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 40px;
+}
+.course-modal-header { 
+    padding: 16px 24px; border-bottom: 1px solid #e9ecef; 
+    background: #1e3a5f; color: #fff; border-radius: 12px 12px 0 0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.course-modal-body { padding: 24px; }
+.course-modal-footer { 
+    padding: 16px 24px; border-top: 1px solid #e9ecef; 
+    display: flex; gap: 8px; justify-content: flex-end; 
+}
+.course-modal-body .form-control {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+}
+.course-modal-body .form-select {
+    padding: 0.25rem 2.25rem 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+}
+.course-modal-body textarea.form-control {
+    min-height: 60px;
+}
+.course-modal-body .form-check-input {
+    padding: 0.125rem;
+}
+</style>
+
+<script>
+(function() {
+    const modal = document.getElementById('addCourseModal');
+    const openBtn = document.getElementById('openAddCourseBtn');
+    const closeBtn = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('cancelModalBtn');
+    const submitBtn = document.getElementById('submitCourseBtn');
+    const form = document.getElementById('addCourseForm');
+    const facultySelect = document.getElementById('facultySelect');
+    const programmesSection = document.getElementById('programmesSection');
+    
+    function openModal() {
+        if (modal) modal.classList.add('show');
+    }
+    
+    function closeModal() {
+        if (modal) modal.classList.remove('show');
+    }
+    
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    
+    if (modal) modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
+    
+    // Faculty filter for programmes
+    if (facultySelect) {
+        facultySelect.addEventListener('change', function() {
+            const selectedFaculty = this.value;
+            const programmeItems = document.querySelectorAll('.programme-item');
+            let visibleCount = 0;
+            
+            programmeItems.forEach(function(item) {
+                if (!selectedFaculty || item.dataset.faculty === selectedFaculty) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                    const checkbox = item.querySelector('.programme-checkbox');
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        // Hide year/semester for unchecked hidden programmes
+                        const ysDiv = document.getElementById('ys_' + checkbox.dataset.programmeId);
+                        if (ysDiv) ysDiv.style.display = 'none';
+                    }
+                }
+            });
+            
+            if (programmesSection) {
+                programmesSection.style.display = selectedFaculty ? '' : 'none';
+            }
+        });
+    }
+    
+    // Show/hide year & semester when programme checkbox changes
+    document.querySelectorAll('.programme-checkbox').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            const progId = this.dataset.programmeId;
+            const ysDiv = document.getElementById('ys_' + progId);
+            if (ysDiv) {
+                ysDiv.style.display = this.checked ? '' : 'none';
+                // Clear selections when hiding
+                if (!this.checked) {
+                    const selects = ysDiv.querySelectorAll('select');
+                    selects.forEach(function(sel) { sel.selectedIndex = 0; });
+                }
+            }
+        });
+    });
+    
+    // Edit course functionality
+    document.querySelectorAll('.edit-course-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const courseId = this.dataset.courseId;
+            const courseRow = document.querySelector(`tr[data-course-id="${courseId}"]`);
+            
+            // Populate form with course data
+            document.querySelector('#addCourseForm input[name="code"]').value = courseRow.dataset.courseCode;
+            document.querySelector('#addCourseForm input[name="title"]').value = courseRow.dataset.courseTitle;
+            document.querySelector('#addCourseForm input[name="credit_units"]').value = courseRow.dataset.courseCredits;
+            document.querySelector('#addCourseForm input[name="max_students"]').value = courseRow.dataset.courseMaxStudents;
+            document.querySelector('#addCourseForm textarea[name="description"]').value = courseRow.dataset.courseDescription;
+            document.querySelector('#addCourseForm select[name="department"]').value = courseRow.dataset.courseDepartment;
+            document.querySelector('#addCourseForm input[name="is_active"]').checked = courseRow.dataset.courseActive === 'true';
+            
+            // Update modal title and button
+            document.querySelector('.course-modal-header h5').innerHTML = '<i class="bi bi-pencil me-2"></i>Edit Course';
+            document.querySelector('#submitCourseBtn').innerHTML = '<i class="bi bi-save me-1"></i>Update Course';
+            
+            // Change form action to edit
+            document.getElementById('addCourseForm').action = `/academics/courses/${courseId}/edit/`;
+            
+            // Open modal
+            openModal();
+        });
+    });
+    
+    // Reset form when opening for new course
+    document.getElementById('openAddCourseBtn').addEventListener('click', function() {
+        document.getElementById('addCourseForm').reset();
+        document.querySelector('.course-modal-header h5').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Create New Course';
+        document.querySelector('#submitCourseBtn').innerHTML = '<i class="bi bi-plus-circle me-1"></i>Create Course';
+        document.getElementById('addCourseForm').action = '{% url "academics:course_create" %}';
+    });
+    
+    // Reset form when closing modal
+    function resetModalForm() {
+        document.getElementById('addCourseForm').reset();
+        document.querySelector('.course-modal-header h5').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Create New Course';
+        document.querySelector('#submitCourseBtn').innerHTML = '<i class="bi bi-plus-circle me-1"></i>Create Course';
+        document.getElementById('addCourseForm').action = '{% url "academics:course_create" %}';
+    }
+    
+    // Update close handlers to reset form
+    document.getElementById('closeModalBtn').addEventListener('click', resetModalForm);
+    document.getElementById('cancelModalBtn').addEventListener('click', resetModalForm);
+    
+    // Submit form
+    if (submitBtn && form) {
+        submitBtn.addEventListener('click', function() {
+            const btn = submitBtn;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + (btn.innerHTML.includes('Create') ? 'Creating...' : 'Updating...');
+            
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    let errorMsg = 'Error ' + (form.action.includes('edit') ? 'updating' : 'creating') + ' course:\n';
+                    try {
+                        const errors = JSON.parse(data.errors);
+                        for (const field in errors) {
+                            errorMsg += `${field}: ${errors[field].join(', ')}\n`;
+                        }
+                    } catch {
+                        errorMsg += data.errors || 'Unknown error';
+                    }
+                    alert(errorMsg);
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                alert('Error ' + (form.action.includes('edit') ? 'updating' : 'creating') + ' course. Please try again.');
+            });
+        });
+    }
+})();
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,75 @@
+<form method="post" id="feeForm">
+    {% csrf_token %}
+    <div id="formErrors"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Fee Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control" value="{{ fee.name|default:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fee Type <span class="text-danger">*</span></label>
+        <select name="fee_type" class="form-select" required>
+            <option value="">Select Type</option>
+            {% for val, label in fee_types %}
+            <option value="{{ val }}" {% if fee.fee_type == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Frequency <span class="text-danger">*</span></label>
+        <select name="frequency" class="form-select" required>
+            <option value="per_semester" {% if fee.frequency|default:'per_semester' == 'per_semester' %}selected{% endif %}>Per Semester</option>
+            <option value="per_year" {% if fee.frequency == 'per_year' %}selected{% endif %}>Per Year</option>
+            <option value="once" {% if fee.frequency == 'once' %}selected{% endif %}>Once</option>
+            <option value="graduation" {% if fee.frequency == 'graduation' %}selected{% endif %}>Graduation</option>
+            <option value="monthly" {% if fee.frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Programme</label>
+        <select name="programme" class="form-select">
+            <option value="">All Programmes</option>
+            {% for p in programmes %}
+            <option value="{{ p.pk }}" {% if fee.programme_id == p.pk %}selected{% endif %}>{{ p.name }}</option>
+            {% endfor %}
+        </select>
+        <small class="text-muted">Leave blank to apply to all programmes</small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Year Level</label>
+        <input type="number" name="level" class="form-control" value="{{ fee.level|default:'' }}" min="1" max="6">
+        <small class="text-muted">Leave blank to apply to all years</small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+        <select name="session" class="form-select" required>
+            <option value="">Select Session</option>
+            {% for s in sessions %}
+            <option value="{{ s.pk }}" {% if fee.session_id == s.pk %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
+        <input type="number" name="amount" class="form-control" value="{{ fee.amount|default:'' }}" step="0.01" min="0" required>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-check">
+            <input type="checkbox" name="is_mandatory" class="form-check-input" id="isMandatory" {% if fee.is_mandatory|default:True %}checked{% endif %}>
+            <label class="form-check-label" for="isMandatory">Mandatory Fee</label>
+        </div>
+        <small class="text-muted">If checked, this fee is mandatory for students</small>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3">{{ fee.description|default:'' }}</textarea>
+    </div>
+</form>

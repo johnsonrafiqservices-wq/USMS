@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Rooms{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-building"></i> Room Management</h1>
+    </div>
+    <button onclick="loadModalForm('/hostel/allocate/', '<i class=&quot;bi bi-building me-2&quot;></i>Allocate Room', 'Allocate')" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-circle me-1"></i>Allocate Room
+    </button>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Hostel</th><th>Room</th><th>Type</th><th>Floor</th><th>Capacity</th><th>Occupied</th><th>Price</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ room.hostel.name }}</td>
+                    <td class="fw-medium">{{ room.room_number }}</td>
+                    <td>{{ room.get_room_type_display }}</td>
+                    <td>{{ room.floor }}</td>
+                    <td>{{ room.capacity }}</td>
+                    <td>{{ room.current_occupancy }}</td>
+                    <td>{{ room.price_per_semester|floatformat:0 }}</td>
+                    <td>{% if room.is_full %}<span class="badge bg-danger badge-role">Full</span>{% elif room.is_available %}<span class="badge bg-success badge-role">Available</span>{% else %}<span class="badge bg-secondary badge-role">Unavailable</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

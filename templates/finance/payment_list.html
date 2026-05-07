@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Payment Records{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-credit-card"></i> Payment Records</h1>
+        <p class="text-muted mb-0">All recorded fee payments</p>
+    </div>
+    <div class="card px-4 py-2 text-center">
+        <div style="font-size:.72rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Total Collected</div>
+        <div class="fw-bold text-success" style="font-size:1.2rem;">{{ total_collected|floatformat:0 }} UGX</div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label mb-1" style="font-size:.8rem;">Search</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Receipt #, student name, reference…">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label mb-1" style="font-size:.8rem;">Method</label>
+                <select name="method" class="form-select form-select-sm">
+                    <option value="">All Methods</option>
+                    {% for val, label in methods %}
+                    <option value="{{ val }}" {% if method_filter == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label mb-1" style="font-size:.8rem;">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    {% for val, label in statuses %}
+                    <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button type="submit" class="btn btn-primary btn-sm flex-grow-1">Filter</button>
+                <a href="{% url 'finance:payment_list' %}" class="btn btn-outline-secondary btn-sm">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Receipt #</th>
+                    <th>Student</th>
+                    <th>Invoice</th>
+                    <th class="text-end">Amount (UGX)</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Processed By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td><code class="fw-bold">{{ p.receipt_number }}</code></td>
+                    <td>
+                        <div class="fw-medium">{{ p.student.user.get_full_name }}</div>
+                        <small class="text-muted">{{ p.student.student_id }}</small>
+                    </td>
+                    <td>
+                        <a href="{% url 'finance:invoice_detail' p.invoice.pk %}" class="text-decoration-none" style="font-size:.82rem;">
+                            {{ p.invoice.invoice_number }}
+                        </a>
+                    </td>
+                    <td class="text-end fw-bold text-success">{{ p.amount|floatformat:0 }}</td>
+                    <td><span class="badge bg-light text-dark border">{{ p.get_payment_method_display }}</span></td>
+                    <td style="font-size:.82rem;">{{ p.reference_number|default:"—" }}</td>
+                    <td style="font-size:.82rem;">{{ p.payment_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="badge {% if p.status == 'completed' %}bg-success{% elif p.status == 'refunded' %}bg-warning text-dark{% elif p.status == 'failed' %}bg-danger{% else %}bg-secondary{% endif %} badge-role">
+                            {{ p.get_status_display }}
+                        </span>
+                    </td>
+                    <td style="font-size:.82rem;">{{ p.processed_by.get_full_name|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center text-muted py-5">
+                        <i class="bi bi-credit-card" style="font-size:2rem;"></i>
+                        <p class="mt-2 mb-0">No payments found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

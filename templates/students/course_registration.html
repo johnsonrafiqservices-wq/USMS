@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Course Registration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-mortarboard"></i> Course Registration - {{ semester }}</h1>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <span>Available Courses</span>
+        <span class="text-muted">{{ student.programme }}</span>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                            <th>Type</th>
+                            <th>Level</th>
+                            <th>Retake</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in available_courses %}
+                        <tr {% if course.id in failed_course_ids %}class="table-warning"{% endif %}>
+                            <td>
+                                <input type="checkbox" name="courses" value="{{ course.id }}" class="course-checkbox"
+                                    data-course-id="{{ course.id }}"
+                                    {% if course.id in enrolled_ids %}checked disabled{% endif %}>
+                            </td>
+                            <td class="fw-medium">{{ course.code }}</td>
+                            <td>{{ course.title }}</td>
+                            <td>{{ course.credit_units }}</td>
+                            <td><span class="badge bg-secondary badge-role">{{ course.get_course_type_display }}</span></td>
+                            <td>{{ course.level }}</td>
+                            <td>
+                                {% if course.id in failed_course_ids %}
+                                <div class="form-check">
+                                    <input type="checkbox" name="retakes" value="{{ course.id }}" 
+                                           class="form-check-input retake-checkbox" id="retake_{{ course.id }}"
+                                           data-course-id="{{ course.id }}">
+                                    <label class="form-check-label" for="retake_{{ course.id }}">
+                                        <small class="text-danger">Retake</small>
+                                    </label>
+                                </div>
+                                {% else %}
+                                <small class="text-muted">—</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" class="text-center text-muted">No courses available for registration.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if failed_course_ids %}
+            <div class="alert alert-warning mb-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Highlighted courses</strong> are previously failed courses. Check the <strong>Retake</strong> box to register them as retakes.
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-1"></i> Register Selected Courses
+            </button>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('select-all')?.addEventListener('change', function() {
+    document.querySelectorAll('input[name="courses"]:not(:disabled)').forEach(cb => cb.checked = this.checked);
+});
+
+// When a course checkbox is unchecked, also uncheck its retake checkbox
+document.querySelectorAll('.course-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+        const courseId = this.dataset.courseId;
+        const retakeCb = document.querySelector('.retake-checkbox[data-course-id="' + courseId + '"]');
+        if (retakeCb && !this.checked) {
+            retakeCb.checked = false;
+        }
+    });
+});
+
+// When a retake checkbox is checked, also check the course checkbox
+document.querySelectorAll('.retake-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+        const courseId = this.dataset.courseId;
+        const courseCb = document.querySelector('.course-checkbox[data-course-id="' + courseId + '"]');
+        if (this.checked && courseCb && !courseCb.disabled) {
+            courseCb.checked = true;
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

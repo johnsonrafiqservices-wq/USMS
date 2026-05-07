@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Invoice {{ invoice.invoice_number }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  @media print { .no-print { display:none !important; } }
+  .inv-hdr { background:#1e3a5f; color:#fff; border-radius:8px 8px 0 0; padding:22px 28px; }
+  .inv-body { padding:24px 28px; }
+  .inv-lbl { font-size:.72rem; text-transform:uppercase; letter-spacing:.5px; color:#888; }
+  .inv-val { font-size:.93rem; font-weight:500; color:#222; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center no-print">
+    <div>
+        <h1 class="page-title"><i class="bi bi-receipt"></i> Invoice Details</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0 small">
+            <li class="breadcrumb-item"><a href="{% url 'finance:dashboard' %}">Finance</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'finance:invoice_list' %}">Invoices</a></li>
+            <li class="breadcrumb-item active">{{ invoice.invoice_number }}</li>
+        </ol></nav>
+    </div>
+    <div class="d-flex gap-2 no-print">
+        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-printer me-1"></i>Print
+        </button>
+        {% if invoice.status != 'paid' and invoice.status != 'cancelled' %}
+        <a href="{% url 'finance:record_payment' invoice.pk %}" class="btn btn-success btn-sm">
+            <i class="bi bi-cash me-1"></i>Record Payment
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card overflow-hidden">
+            <div class="inv-hdr">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="mb-0 fw-bold">INVOICE</h5>
+                        <div style="font-size:.85rem;opacity:.8;">{{ invoice.invoice_number }}</div>
+                    </div>
+                    <span class="badge fs-6
+                        {% if invoice.status == 'paid' %}bg-success
+                        {% elif invoice.status == 'overdue' %}bg-danger
+                        {% elif invoice.status == 'partial' %}bg-info
+                        {% else %}bg-warning text-dark{% endif %}">
+                        {{ invoice.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            <div class="inv-body">
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <div class="inv-lbl">Billed To</div>
+                        <div class="inv-val fw-bold">{{ invoice.student.user.get_full_name }}</div>
+                        <div style="font-size:.83rem;color:#666;">{{ invoice.student.student_id }}</div>
+                        <div style="font-size:.83rem;color:#666;">{{ invoice.student.user.email }}</div>
+                        <div style="font-size:.83rem;color:#666;">{{ invoice.student.programme }}</div>
+                    </div>
+                    <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                        <div class="mb-2">
+                            <div class="inv-lbl">Issued</div>
+                            <div class="inv-val">{{ invoice.issued_date|date:"M d, Y" }}</div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="inv-lbl">Due Date</div>
+                            <div class="inv-val {% if invoice.status == 'overdue' %}text-danger fw-bold{% endif %}">
+                                {{ invoice.due_date|date:"M d, Y"|default:"—" }}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="inv-lbl">Session</div>
+                            <div class="inv-val">{{ invoice.session.name }}{% if invoice.semester %} — {{ invoice.semester }}{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-sm mb-3">
+                    <thead class="table-light">
+                        <tr><th>Description</th><th class="text-end">Amount (UGX)</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.description }}</td>
+                            <td class="text-end">{{ item.amount|floatformat:0 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-muted text-center">No line items.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr><td class="text-end fw-bold">Total</td><td class="text-end fw-bold">{{ invoice.total_amount|floatformat:0 }}</td></tr>
+                        <tr><td class="text-end text-success">Amount Paid</td><td class="text-end text-success fw-bold">{{ invoice.amount_paid|floatformat:0 }}</td></tr>
+                        <tr style="background:#fff5f5;">
+                            <td class="text-end fw-bold text-danger">Balance Due</td>
+                            <td class="text-end fw-bold text-danger" style="font-size:1.1rem;">{{ invoice.balance|floatformat:0 }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                {% if invoice.notes %}
+                <div class="p-3 bg-light rounded" style="font-size:.85rem;">
+                    <strong>Notes:</strong> {{ invoice.notes }}
+                </div>
+                {% endif %}
+
+                <div class="mt-3 text-muted" style="font-size:.75rem;">
+                    Issued by: {{ invoice.created_by.get_full_name|default:"System" }} &bull;
+                    Created: {{ invoice.created_at|date:"M d, Y H:i" }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header fw-bold" style="font-size:.8rem;letter-spacing:.5px;text-transform:uppercase;">
+                <i class="bi bi-clock-history me-1"></i>Payment History
+            </div>
+            <div class="card-body p-3">
+                {% for p in payments %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                        <code style="font-size:.78rem;">{{ p.receipt_number }}</code><br>
+                        <small class="text-muted">{{ p.payment_date|date:"M d, Y H:i" }}</small><br>
+                        <span class="badge bg-light text-dark border" style="font-size:.72rem;">{{ p.get_payment_method_display }}</span>
+                        {% if p.reference_number %}
+                        <small class="text-muted ms-1">Ref: {{ p.reference_number }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="text-end">
+                        <div class="text-success fw-bold">{{ p.amount|floatformat:0 }}</div>
+                        <small class="text-muted">UGX</small>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-muted text-center py-3">
+                    <i class="bi bi-inbox" style="font-size:1.5rem;"></i>
+                    <p class="mb-0 mt-1" style="font-size:.85rem;">No payments yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if invoice.status != 'paid' and invoice.status != 'cancelled' %}
+        <a href="{% url 'finance:record_payment' invoice.pk %}" class="btn btn-success w-100 no-print">
+            <i class="bi bi-cash me-1"></i>Record Payment
+        </a>
+        {% else %}
+        <div class="card p-3 text-center {% if invoice.status == 'paid' %}border-success{% endif %}">
+            {% if invoice.status == 'paid' %}
+            <i class="bi bi-check-circle-fill text-success" style="font-size:2rem;"></i>
+            <div class="fw-bold text-success mt-1">Fully Paid</div>
+            {% else %}
+            <span class="badge bg-secondary">{{ invoice.get_status_display }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

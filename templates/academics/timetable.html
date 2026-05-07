@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Timetable{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-book"></i> My Timetable</h1>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>Day</th><th>Time</th><th>Course</th><th>Room</th><th>Building</th></tr>
+            </thead>
+            <tbody>
+                {% for slot in timetable %}
+                <tr>
+                    <td class="fw-medium">{{ slot.get_day_display }}</td>
+                    <td>{{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}</td>
+                    <td>{{ slot.course_allocation.course.code }} - {{ slot.course_allocation.course.title }}</td>
+                    <td>{{ slot.room }}</td>
+                    <td>{{ slot.building|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No timetable entries found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,998 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ programme.name }} - Programme Details{% endblock %}
+
+{% block content %}
+<!-- Programme Header Section -->
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex align-items-center">
+                <!-- Programme Avatar -->
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-4" style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+                    {{ programme.code|slice:":2"|upper }}
+                </div>
+                
+                <div>
+                    <h2 class="mb-1 fw-bold">{{ programme.name }}</h2>
+                    <div class="text-muted mb-2">
+                        <i class="bi bi-building me-1"></i>{{ programme.department.name }} 
+                        <span class="mx-2">|</span>
+                        <i class="bi bi-clock me-1"></i>{{ programme.duration_years }} Years
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-success">{% if programme.is_active %}Active{% else %}Inactive{% endif %}</span>
+                        <span class="badge bg-info">{{ programme.level.name }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-end">
+                <span class="badge bg-dark mb-2 d-block">PROGRAMME</span>
+                <div class="btn-group btn-group-sm">
+                    {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                    <a href="{% url 'academics:programme_edit' programme.pk %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-primary">
+                        <i class="bi bi-journal-bookmark me-1"></i>Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Navigation -->
+<ul class="nav nav-tabs border-0 mb-4" id="programmeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+            <i class="bi bi-grid me-2"></i>Overview
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab">
+            <i class="bi bi-people me-2"></i>Students
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses" type="button" role="tab">
+            <i class="bi bi-book me-2"></i>Courses
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="enrollments-tab" data-bs-toggle="tab" data-bs-target="#enrollments" type="button" role="tab">
+            <i class="bi bi-person-plus me-2"></i>Enrollments
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab">
+            <i class="bi bi-graph-up me-2"></i>Results
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab">
+            <i class="bi bi-file-earmark me-2"></i>Documents
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="programmeTabsContent">
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        <div class="row">
+            <!-- Left Column - Programme Details -->
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-4 pb-2 border-bottom">Programme Information</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Programme Code</small>
+                                <span class="fw-semibold">{{ programme.code }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Duration</small>
+                                <span class="fw-semibold">{{ programme.duration_years }} Years</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Department</small>
+                                <span class="fw-semibold">{{ programme.department.name }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Faculty</small>
+                                <span class="fw-semibold">{{ programme.department.faculty.name }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Level</small>
+                                <span class="fw-semibold">{{ programme.level.name }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Status</small>
+                                <span class="badge {% if programme.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ programme.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-4 pb-2 border-bottom">Contact Information</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">
+                                    <i class="bi bi-building me-1"></i>Department Email
+                                </small>
+                                <span class="fw-semibold">{{ programme.department.email|default:"—" }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">
+                                    <i class="bi bi-telephone me-1"></i>Department Phone
+                                </small>
+                                <span class="fw-semibold">{{ programme.department.phone|default:"—" }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">
+                                    <i class="bi bi-geo-alt me-1"></i>Address
+                                </small>
+                                <span class="fw-semibold">{{ programme.department.address|default:"—" }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">
+                                    <i class="bi bi-calendar me-1"></i>Created
+                                </small>
+                                <span class="fw-semibold">{{ programme.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Quick Stats -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-4 pb-2 border-bottom">Quick Stats</h6>
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="bg-light rounded p-3">
+                                    <div class="fw-bold fs-4 text-primary">{{ total_students }}</div>
+                                    <small class="text-muted text-uppercase">Students</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="bg-light rounded p-3">
+                                    <div class="fw-bold fs-4 text-success">{{ active_students }}</div>
+                                    <small class="text-muted text-uppercase">Active</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="bg-light rounded p-3">
+                                    <div class="fw-bold fs-4 text-info">{{ programme.courses.count }}</div>
+                                    <small class="text-muted text-uppercase">Courses</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="bg-light rounded p-3">
+                                    <div class="fw-bold fs-4 text-warning">{{ students_by_year|length }}</div>
+                                    <small class="text-muted text-uppercase">Years</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Programme Status Card -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-4 pb-2 border-bottom">Programme Status</h6>
+                        <div class="alert {% if programme.is_active %}alert-success{% else %}alert-secondary{% endif %}">
+                            <div class="d-flex align-items-center">
+                                <i class="bi {% if programme.is_active %}bi-check-circle-fill{% else %}bi-pause-circle-fill{% endif %} fs-4 me-2"></i>
+                                <div>
+                                    <strong>{% if programme.is_active %}Programme Active{% else %}Programme Inactive{% endif %}</strong>
+                                    <div class="small">
+                                        {% if programme.is_active %}
+                                            Currently accepting new students
+                                        {% else %}
+                                            Not currently accepting students
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Tab -->
+    <div class="tab-pane fade" id="students" role="tabpanel">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                <h6 class="mb-0 text-uppercase">
+                    <i class="bi bi-people me-2"></i>Students
+                </h6>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary" id="studentCount">{{ current_year_students|length }}</span>
+                    {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                        <i class="bi bi-person-plus me-1"></i>Add Student
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Compact Filter Bar -->
+                <div class="d-flex flex-wrap gap-2 mb-3 p-2 bg-light rounded align-items-end">
+                    <div class="flex-grow-1" style="min-width: 180px;">
+                        <input type="text" class="form-control form-control-sm" id="studentSearch" placeholder="🔍 Search name or ID...">
+                    </div>
+                    <div style="min-width: 100px;">
+                        <select class="form-select form-select-sm" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div style="min-width: 110px;">
+                        <select class="form-select form-select-sm" id="yearFilter">
+                            <option value="">All Years</option>
+                            {% for year in programme_years %}
+                            <option value="{{ year.name }}">{{ year.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="min-width: 120px;">
+                        <select class="form-select form-select-sm" id="semesterFilter">
+                            <option value="">All Semesters</option>
+                            {% for sem in study_semesters %}
+                            <option value="{{ sem.name }}">{{ sem.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="min-width: 120px;">
+                        <select class="form-select form-select-sm" id="intakeFilter">
+                            <option value="">All Intakes</option>
+                            {% for intake in intakes %}
+                            <option value="{{ intake.name }}">{{ intake.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" id="resetFilters" title="Reset filters">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+                
+                {% if current_year_students %}
+                <div class="table-responsive">
+                    <table class="table table-hover border-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Intake</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            {% for student in current_year_students %}
+                            <tr class="student-row" 
+                                data-status="{% if student.is_active %}active{% else %}inactive{% endif %}"
+                                data-year="{{ student.current_year.name|default:'' }}"
+                                data-semester="{{ student.current_semester_number.name|default:'' }}"
+                                data-intake="{{ student.intake.name|default:'' }}"
+                                data-name="{{ student.user.get_full_name|lower }}"
+                                data-id="{{ student.student_id|lower }}">
+                                <td><span class="badge bg-light text-dark border">{{ student.student_id }}</span></td>
+                                <td>
+                                    <a href="/students/{{ student.pk }}/" class="text-decoration-none fw-semibold">
+                                        {{ student.user.get_full_name }}
+                                    </a>
+                                </td>
+                                <td>{{ student.user.email }}</td>
+                                <td>{{ student.intake.name|default:"—" }}</td>
+                                <td>
+                                    <span class="badge {% if student.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                        {% if student.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/students/{{ student.pk }}/" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5" id="noStudentsMessage">
+                    <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
+                    <p class="mt-3 text-muted">No students found matching the selected filters</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Students by Year -->
+        <!-- {% if students_by_year %}
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 text-uppercase"><i class="bi bi-calendar3 me-2"></i>Students by Study Year</h6>
+            </div>
+            <div class="card-body">
+                {% for year, students in students_by_year.items %}
+                <div class="mb-4">
+                    <h6 class="text-primary mb-3">{{ year }} <span class="badge bg-secondary ms-2">{{ students|length }}</span></h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover border-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Intake</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td><span class="badge bg-light text-dark border">{{ student.student_id }}</span></td>
+                                    <td>
+                                        <a href="/students/{{ student.pk }}/" class="text-decoration-none fw-semibold">
+                                            {{ student.user.get_full_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ student.intake.name|default:"—" }}</td>
+                                    <td>
+                                        <span class="badge {% if student.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {% if student.is_active %}Active{% else %}Inactive{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="/students/{{ student.pk }}/" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} -->
+    </div>
+
+    <!-- Courses Tab -->
+    <div class="tab-pane fade" id="courses" role="tabpanel">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                <h6 class="mb-0 text-uppercase">
+                    <i class="bi bi-book me-2"></i>Programme Courses
+                </h6>
+                <span class="badge bg-primary" id="courseCount">{{ programme.courses.count }}</span>
+            </div>
+            <div class="card-body">
+                <!-- Compact Course Filters -->
+                <div class="d-flex flex-wrap gap-2 mb-3 p-2 bg-light rounded align-items-end">
+                    <div class="flex-grow-1" style="min-width: 200px;">
+                        <input type="text" class="form-control form-control-sm" id="courseSearch" placeholder="🔍 Search courses...">
+                    </div>
+                    <div style="min-width: 110px;">
+                        <select class="form-select form-select-sm" id="courseTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="core">Core</option>
+                            <option value="elective">Elective</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    <div style="min-width: 110px;">
+                        <select class="form-select form-select-sm" id="courseLevelFilter">
+                            <option value="">All Levels</option>
+                            <option value="Year 1">Year 1</option>
+                            <option value="Year 2">Year 2</option>
+                            <option value="Year 3">Year 3</option>
+                            <option value="Year 4">Year 4</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" id="resetCourseFilters" title="Reset filters">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+                
+                {% if programme.courses.all %}
+                <div class="table-responsive">
+                    <table class="table table-hover border-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Title</th>
+                                <th>Credits</th>
+                                <th>Type</th>
+                                <th>Level</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            {% for course in programme.courses.all %}
+                            <tr class="course-row"
+                                data-code="{{ course.code|lower }}"
+                                data-title="{{ course.title|lower }}"
+                                data-type="{{ course.course_type }}"
+                                data-level="{{ course.level }}">
+                                <td><span class="badge bg-light text-dark border">{{ course.code }}</span></td>
+                                <td class="fw-semibold">{{ course.title }}</td>
+                                <td class="text-center">{{ course.credit_units }}</td>
+                                <td><span class="badge bg-info">{{ course.get_course_type_display }}</span></td>
+                                <td>{{ course.level }}</td>
+                                <td>{{ course.department.name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5" id="noCoursesMessage">
+                    <i class="bi bi-book text-muted" style="font-size: 4rem;"></i>
+                    <p class="mt-3 text-muted">No courses found matching the selected filters.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- JavaScript for Filters -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Student Filters
+            const studentSearch = document.getElementById('studentSearch');
+            const statusFilter = document.getElementById('statusFilter');
+            const yearFilter = document.getElementById('yearFilter');
+            const semesterFilter = document.getElementById('semesterFilter');
+            const intakeFilter = document.getElementById('intakeFilter');
+            const resetFilters = document.getElementById('resetFilters');
+            const studentRows = document.querySelectorAll('.student-row');
+            const studentCount = document.getElementById('studentCount');
+            
+            function filterStudents() {
+                const searchTerm = studentSearch.value.toLowerCase();
+                const status = statusFilter.value;
+                const year = yearFilter.value;
+                const semester = semesterFilter.value;
+                const intake = intakeFilter.value;
+                
+                let visibleCount = 0;
+                
+                studentRows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowYear = row.getAttribute('data-year');
+                    const rowSemester = row.getAttribute('data-semester');
+                    const rowIntake = row.getAttribute('data-intake');
+                    const rowName = row.getAttribute('data-name');
+                    const rowId = row.getAttribute('data-id');
+                    
+                    const matchesSearch = !searchTerm || rowName.includes(searchTerm) || rowId.includes(searchTerm);
+                    const matchesStatus = !status || rowStatus === status;
+                    const matchesYear = !year || rowYear === year;
+                    const matchesSemester = !semester || rowSemester === semester;
+                    const matchesIntake = !intake || rowIntake === intake;
+                    
+                    if (matchesSearch && matchesStatus && matchesYear && matchesSemester && matchesIntake) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                studentCount.textContent = visibleCount;
+            }
+            
+            if (studentSearch) studentSearch.addEventListener('input', filterStudents);
+            if (statusFilter) statusFilter.addEventListener('change', filterStudents);
+            if (yearFilter) yearFilter.addEventListener('change', filterStudents);
+            if (semesterFilter) semesterFilter.addEventListener('change', filterStudents);
+            if (intakeFilter) intakeFilter.addEventListener('change', filterStudents);
+            
+            if (resetFilters) {
+                resetFilters.addEventListener('click', function() {
+                    studentSearch.value = '';
+                    statusFilter.value = '';
+                    yearFilter.value = '';
+                    semesterFilter.value = '';
+                    intakeFilter.value = '';
+                    filterStudents();
+                });
+            }
+            
+            // Course Filters
+            const courseSearch = document.getElementById('courseSearch');
+            const courseTypeFilter = document.getElementById('courseTypeFilter');
+            const courseLevelFilter = document.getElementById('courseLevelFilter');
+            const resetCourseFilters = document.getElementById('resetCourseFilters');
+            const courseRows = document.querySelectorAll('.course-row');
+            const courseCount = document.getElementById('courseCount');
+            
+            function filterCourses() {
+                const searchTerm = courseSearch.value.toLowerCase();
+                const type = courseTypeFilter.value;
+                const level = courseLevelFilter.value;
+                
+                let visibleCount = 0;
+                
+                courseRows.forEach(row => {
+                    const rowCode = row.getAttribute('data-code');
+                    const rowTitle = row.getAttribute('data-title');
+                    const rowType = row.getAttribute('data-type');
+                    const rowLevel = row.getAttribute('data-level');
+                    
+                    const matchesSearch = !searchTerm || rowCode.includes(searchTerm) || rowTitle.includes(searchTerm);
+                    const matchesType = !type || rowType === type;
+                    const matchesLevel = !level || rowLevel === level;
+                    
+                    if (matchesSearch && matchesType && matchesLevel) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                courseCount.textContent = visibleCount;
+            }
+            
+            if (courseSearch) courseSearch.addEventListener('input', filterCourses);
+            if (courseTypeFilter) courseTypeFilter.addEventListener('change', filterCourses);
+            if (courseLevelFilter) courseLevelFilter.addEventListener('change', filterCourses);
+            
+            if (resetCourseFilters) {
+                resetCourseFilters.addEventListener('click', function() {
+                    courseSearch.value = '';
+                    courseTypeFilter.value = '';
+                    courseLevelFilter.value = '';
+                    filterCourses();
+                });
+            }
+        });
+        </script>
+    </div>
+
+    <!-- Enrollments Tab -->
+    <div class="tab-pane fade" id="enrollments" role="tabpanel">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 text-uppercase"><i class="bi bi-person-plus me-2"></i>Student Enrollments</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="bi bi-person-plus text-muted" style="font-size: 4rem;"></i>
+                    <p class="mt-3 text-muted">Enrollment management coming soon</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Tab -->
+    <div class="tab-pane fade" id="results" role="tabpanel">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 text-uppercase"><i class="bi bi-graph-up me-2"></i>Academic Results</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="bi bi-graph-up text-muted" style="font-size: 4rem;"></i>
+                    <p class="mt-3 text-muted">Results and analytics coming soon</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents Tab -->
+    <div class="tab-pane fade" id="documents" role="tabpanel">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h6 class="mb-0 text-uppercase"><i class="bi bi-file-earmark me-2"></i>Documents</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center py-5">
+                    <i class="bi bi-file-earmark text-muted" style="font-size: 4rem;"></i>
+                    <p class="mt-3 text-muted">Document management coming soon</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStudentModalLabel">
+                    <i class="bi bi-person-plus me-2 text-success"></i>Add New Student
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addStudentForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="programme" value="{{ programme.id }}">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">First Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="first_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Last Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="last_name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control form-control-sm" name="email" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Phone</label>
+                            <input type="tel" class="form-control form-control-sm" name="phone">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Student ID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" name="student_id" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Status</label>
+                            <select class="form-select form-select-sm" name="status">
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="admitted">Admitted</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Study Year</label>
+                            <select class="form-select form-select-sm" name="current_year">
+                                <option value="">-- Select Year --</option>
+                                {% for year in programme_years %}
+                                <option value="{{ year.id }}">{{ year.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small">Semester</label>
+                            <select class="form-select form-select-sm" name="current_semester">
+                                <option value="">-- Select Semester --</option>
+                                {% for sem in study_semesters %}
+                                <option value="{{ sem.id }}">{{ sem.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small">Intake</label>
+                        <select class="form-select form-select-sm" name="intake">
+                            <option value="">-- Select Intake --</option>
+                            {% for intake in intakes %}
+                            <option value="{{ intake.id }}">{{ intake.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="alert alert-info py-2 small mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Initial password will be set to the Student ID
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success btn-sm" id="saveStudentBtn">
+                    <i class="bi bi-person-plus me-1"></i>Create Student
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Floating Action Button (FAB) - Context Aware -->
+<div class="fab-container" style="position: fixed; bottom: 30px; right: 30px; z-index: 1000;">
+    <!-- Menu Items - Hidden by default -->
+    <div class="fab-menu" id="fabMenu" style="display: none; position: absolute; bottom: 70px; right: 0; min-width: 220px;">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-2">
+                <h6 class="text-uppercase text-muted small mb-2 px-2">Quick Add</h6>
+                
+                {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                <!-- Admin/Registrar Academic Management -->
+                <h6 class="text-uppercase text-muted small mb-2 px-2 mt-2">Academic Management</h6>
+                
+                <a href="{% url 'academics:programme_edit' programme.pk %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-pencil text-warning"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Edit Programme</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Modify details</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:programme_courses' programme.pk %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-plus-circle text-primary"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Manage Courses</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Add/assign courses</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'students:student_create' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-person-plus-fill text-success"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Add Student</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Create new student</div>
+                    </div>
+                </a>
+                
+                <div class="dropdown-divider my-2"></div>
+                
+                <!-- Lecturer Management -->
+                <h6 class="text-uppercase text-muted small mb-2 px-2">Lecturer Management</h6>
+                
+                <a href="{% url 'staff:staff_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-dark bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-people-fill text-dark"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Manage Lecturers</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">View all staff</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'staff:workload_overview' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-purple bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-bar-chart-line text-purple" style="color: #6f42c1;"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Workload Overview</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Staff assignments</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:course_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-journal-text text-info"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">All Courses</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage all courses</div>
+                    </div>
+                </a>
+                
+                <div class="dropdown-divider my-2"></div>
+                
+                <!-- Academic Structure -->
+                <h6 class="text-uppercase text-muted small mb-2 px-2">Academic Structure</h6>
+                
+                <a href="{% url 'academics:department_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-secondary bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-building text-secondary"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Departments</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage departments</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:session_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-calendar-event text-success"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Academic Sessions</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage sessions</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:intake_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-people text-primary"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Intakes</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage intakes</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:study_level_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-layers text-warning"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Study Levels</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage levels</div>
+                    </div>
+                </a>
+                
+                <div class="dropdown-divider my-2"></div>
+                {% endif %}
+                
+                <!-- Common Options -->
+                <a href="#students" onclick="switchTab('students')" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-person-plus text-success"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">View Students</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">{{ total_students }} enrolled</div>
+                    </div>
+                </a>
+                
+                <a href="#documents" onclick="switchTab('documents')" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-file-earmark-plus text-info"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Documents</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage files</div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'academics:programme_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                    <div class="bg-secondary bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
+                        <i class="bi bi-arrow-left text-secondary"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small">Back to List</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">All programmes</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main FAB Button -->
+    <button class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center" 
+            id="fabButton"
+            style="width: 56px; height: 56px; border: none;"
+            onclick="toggleFabMenu()">
+        <i class="bi bi-plus-lg fs-4" id="fabIcon"></i>
+    </button>
+</div>
+
+<style>
+.fab-menu .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+}
+.fab-menu .dropdown-item {
+    transition: background-color 0.2s ease;
+}
+</style>
+
+<script>
+function toggleFabMenu() {
+    const menu = document.getElementById('fabMenu');
+    const icon = document.getElementById('fabIcon');
+    const button = document.getElementById('fabButton');
+    
+    if (menu.style.display === 'none') {
+        menu.style.display = 'block';
+        icon.classList.remove('bi-plus-lg');
+        icon.classList.add('bi-x-lg');
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-secondary');
+    } else {
+        menu.style.display = 'none';
+        icon.classList.remove('bi-x-lg');
+        icon.classList.add('bi-plus-lg');
+        button.classList.remove('btn-secondary');
+        button.classList.add('btn-primary');
+    }
+}
+
+function switchTab(tabId) {
+    // Hide all tab panes
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('show', 'active');
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const tabPane = document.getElementById(tabId);
+    const tabButton = document.getElementById(tabId + '-tab');
+    if (tabPane) tabPane.classList.add('show', 'active');
+    if (tabButton) tabButton.classList.add('active');
+    
+    // Close FAB menu
+    toggleFabMenu();
+}
+
+// Close FAB menu when clicking outside
+document.addEventListener('click', function(event) {
+    const fabContainer = document.querySelector('.fab-container');
+    const menu = document.getElementById('fabMenu');
+    
+    if (!fabContainer.contains(event.target) && menu.style.display === 'block') {
+        toggleFabMenu();
+    }
+});
+
+{% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+// Add Student Modal Handler
+document.getElementById('saveStudentBtn')?.addEventListener('click', function() {
+    const form = document.getElementById('addStudentForm');
+    const btn = document.getElementById('saveStudentBtn');
+    const originalText = btn.innerHTML;
+    
+    // Show loading
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Creating...';
+    
+    const formData = new FormData(form);
+    
+    fetch('{% url "students:student_create" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addStudentModal'));
+            modal.hide();
+            
+            // Show success message
+            alert(data.message);
+            
+            // Reload page to show new student
+            window.location.reload();
+        } else {
+            // Show errors
+            let errorMsg = 'Please fix the following errors:\n';
+            Object.keys(data.errors).forEach(field => {
+                errorMsg += `- ${field}: ${data.errors[field].join(', ')}\n`;
+            });
+            alert(errorMsg);
+            
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    });
+});
+{% endif %}
+</script>
+{% endblock %}

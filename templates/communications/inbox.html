@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-megaphone"></i> Inbox ({{ unread_count }} unread)</h1>
+</div>
+
+<div class="mb-3 text-end">
+    <a href="{% url 'communications:compose' %}" class="btn btn-primary btn-sm"><i class="bi bi-pencil me-1"></i> Compose</a>
+    <a href="{% url 'communications:sent' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-send me-1"></i> Sent</a>
+</div>
+
+<div class="card">
+    <div class="list-group list-group-flush">
+        {% for msg in messages_list %}
+        <a href="{% url 'communications:read_message' msg.pk %}" class="list-group-item list-group-item-action {% if not msg.is_read %}bg-light{% endif %}">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="mb-1 {% if not msg.is_read %}fw-bold{% endif %}">{{ msg.subject }}</h6>
+                    <small class="text-muted">From: {{ msg.sender.get_full_name }}</small>
+                </div>
+                <small class="text-muted">{{ msg.sent_at|date:"M d, H:i" }}</small>
+            </div>
+        </a>
+        {% empty %}
+        <div class="p-4 text-center text-muted">No messages in inbox.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Admissions{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-mortarboard"></i> Admission Applications</h1>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>Name</th><th>Programme</th><th>Email</th><th>Status</th><th>Applied</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td class="fw-medium">{{ app.first_name }} {{ app.last_name }}</td>
+                    <td>{{ app.programme_applied }}</td>
+                    <td>{{ app.email }}</td>
+                    <td>
+                        {% if app.status == 'submitted' %}<span class="badge bg-info badge-role">Submitted</span>
+                        {% elif app.status == 'accepted' %}<span class="badge bg-success badge-role">Accepted</span>
+                        {% elif app.status == 'rejected' %}<span class="badge bg-danger badge-role">Rejected</span>
+                        {% else %}<span class="badge bg-secondary badge-role">{{ app.get_status_display }}</span>{% endif %}
+                    </td>
+                    <td>{{ app.application_date|date:"M d, Y" }}</td>
+                    <td><a href="{% url 'students:admission_review' app.pk %}" class="btn btn-sm btn-outline-primary">Review</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No applications.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

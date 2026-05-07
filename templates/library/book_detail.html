@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-journal-bookmark"></i> Book Details</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h5>{{ book.title }}</h5>
+            <p class="text-muted">by {{ book.author }}</p>
+            <hr>
+            <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+            <p><strong>Publisher:</strong> {{ book.publisher|default:"N/A" }}</p>
+            <p><strong>Year:</strong> {{ book.publication_year|default:"N/A" }}</p>
+            <p><strong>Category:</strong> {{ book.category|default:"N/A" }}</p>
+            <p><strong>Location:</strong> {{ book.shelf_location|default:"N/A" }}</p>
+            <p><strong>Available:</strong> {{ book.available_copies }}/{{ book.total_copies }}</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Borrowing History</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Borrower</th><th>Borrowed</th><th>Due</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for b in borrowings %}
+                        <tr>
+                            <td>{{ b.borrower.get_full_name }}</td>
+                            <td>{{ b.borrow_date|date:"M d, Y" }}</td>
+                            <td>{{ b.due_date|date:"M d, Y" }}</td>
+                            <td><span class="badge bg-{% if b.status == 'returned' %}success{% elif b.status == 'overdue' %}danger{% else %}warning{% endif %} badge-role">{{ b.get_status_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-muted text-center">No borrowing history.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

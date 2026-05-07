@@ -1,0 +1,391 @@
+{% extends "admin/base.html" %}
+{% load i18n static log %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    #content { padding: 24px !important; max-width: 100%; }
+    #content > h1 { display: none; }
+
+    /* Stats Row */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        border: 1px solid #e8ecf1;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    .stat-icon {
+        width: 50px; height: 50px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; flex-shrink: 0;
+    }
+    .stat-icon.ic-blue    { background: #dbeafe; color: #2563eb; }
+    .stat-icon.ic-pink    { background: #fce7f3; color: #db2777; }
+    .stat-icon.ic-green   { background: #d1fae5; color: #059669; }
+    .stat-icon.ic-purple  { background: #ede9fe; color: #7c3aed; }
+    .stat-info h3 { margin: 0; font-size: 24px; font-weight: 700; color: #1e293b; }
+    .stat-info p  { margin: 2px 0 0; font-size: 12px; color: #64748b; font-weight: 500; }
+    .stat-sub     { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+
+    /* Quick Actions */
+    .section-title {
+        font-size: 15px; font-weight: 600; color: #334155;
+        margin: 0 0 14px; padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .actions-row {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin-bottom: 30px;
+    }
+    .qa-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 16px;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+        color: #475569; text-decoration: none;
+        font-size: 13px; font-weight: 500;
+        transition: all 0.12s;
+    }
+    .qa-btn:hover {
+        background: #f8fafc; border-color: #94a3b8; color: #0f172a;
+        text-decoration: none;
+    }
+
+    /* App Cards Grid */
+    .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    .app-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e8ecf1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        overflow: hidden;
+        text-decoration: none;
+        display: block;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .app-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+        text-decoration: none;
+    }
+    .app-card-top {
+        padding: 24px 20px 18px;
+        text-align: center;
+    }
+    .app-card-icon {
+        width: 56px; height: 56px;
+        border-radius: 14px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+    .app-card-top h3 {
+        margin: 0; font-size: 14px; font-weight: 600; color: #1e293b;
+    }
+    .app-card-top .app-count {
+        font-size: 11px; color: #94a3b8; margin-top: 4px;
+    }
+    .app-card-bottom {
+        padding: 10px 20px;
+        background: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        text-align: center;
+        font-size: 12px; font-weight: 500; color: #64748b;
+    }
+    .app-card:hover .app-card-bottom { color: #1e3a5f; }
+
+    /* Card icon colors - UMS indigo theme */
+    .aic-accounts      { background: #e0e7ff; color: #4f46e5; }
+    .aic-students     { background: #dbeafe; color: #2563eb; }
+    .aic-academics    { background: #fef3c7; color: #d97706; }
+    .aic-staff        { background: #d1fae5; color: #059669; }
+    .aic-finance      { background: #fce7f3; color: #db2777; }
+    .aic-library      { background: #ede9fe; color: #7c3aed; }
+    .aic-hostel       { background: #cffafe; color: #0891b2; }
+    .aic-communications { background: #ffedd5; color: #ea580c; }
+    .aic-reports      { background: #f1f5f9; color: #475569; }
+    .aic-auth         { background: #ccfbf1; color: #0d9488; }
+    .aic-default      { background: #f1f5f9; color: #64748b; }
+
+    /* Recent Actions Dropdown */
+    .ra-dropdown {
+        position: fixed;
+        top: 8px;
+        right: 16px;
+        z-index: 9999;
+    }
+    .ra-toggle {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 7px 14px;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+        color: #475569; cursor: pointer;
+        font-size: 13px; font-weight: 500;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        transition: all 0.12s;
+    }
+    .ra-toggle:hover { background: #f8fafc; border-color: #94a3b8; color: #1e293b; }
+    .ra-badge {
+        background: #ef4444; color: #fff;
+        font-size: 10px; font-weight: 700;
+        padding: 1px 6px; border-radius: 10px;
+        line-height: 1.4;
+    }
+    .ra-panel {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        width: 380px;
+        max-height: 420px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+        overflow: hidden;
+    }
+    .ra-panel.open { display: block; }
+    .ra-panel-header {
+        padding: 14px 16px;
+        font-size: 14px; font-weight: 600; color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        background: #f8fafc;
+    }
+    .ra-panel-body {
+        max-height: 360px;
+        overflow-y: auto;
+    }
+    .ra-item {
+        padding: 10px 16px;
+        border-bottom: 1px solid #f8fafc;
+        display: flex; align-items: center; gap: 10px;
+        font-size: 13px;
+    }
+    .ra-item:last-child { border-bottom: none; }
+    .ra-item:hover { background: #f8fafc; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-add { background: #10b981; }
+    .dot-chg { background: #f59e0b; }
+    .dot-del { background: #ef4444; }
+    .ra-item a { color: #334155; text-decoration: none; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ra-item a:hover { color: #1e3a5f; }
+    .ra-item .time {
+        margin-left: auto; font-size: 11px; color: #94a3b8; white-space: nowrap; flex-shrink: 0;
+    }
+    .ra-empty { padding: 24px; text-align: center; color: #94a3b8; font-size: 13px; }
+
+    /* Popup Modal */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15,23,42,0.45);
+        backdrop-filter: blur(4px);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+    }
+    .popup-overlay.active { display: flex; }
+    .popup-modal {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+        width: 80vw; max-width: 80%;
+        height: 80vh; max-height: 80%;
+        display: flex; flex-direction: column;
+        overflow: hidden;
+        animation: popIn 0.2s ease;
+    }
+    @keyframes popIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .popup-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 20px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        flex-shrink: 0;
+    }
+    .popup-header h3 {
+        margin: 0; font-size: 15px; font-weight: 600; color: #1e293b;
+    }
+    .popup-close {
+        width: 32px; height: 32px;
+        border-radius: 8px; border: none;
+        background: #f1f5f9; color: #64748b;
+        font-size: 18px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.1s;
+    }
+    .popup-close:hover { background: #e2e8f0; color: #1e293b; }
+    .popup-body {
+        flex: 1; overflow: hidden;
+    }
+    .popup-body iframe {
+        width: 100%; height: 100%; border: none;
+    }
+    .popup-loading {
+        display: flex; align-items: center; justify-content: center;
+        height: 100%; color: #94a3b8; font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+        .stats-row { grid-template-columns: 1fr 1fr; }
+        .apps-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    }
+    @media (max-width: 520px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .apps-grid { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; {% trans 'Dashboard' %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<!-- Stats -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-icon ic-blue">🎓</div>
+        <div class="stat-info">
+            <h3>{{ total_students|default:"0" }}</h3>
+            <p>{% trans 'Students' %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon ic-pink">📚</div>
+        <div class="stat-info">
+            <h3>{{ total_courses|default:"0" }}</h3>
+            <p>{% trans 'Courses' %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon ic-green">👨‍🏫</div>
+        <div class="stat-info">
+            <h3>{{ total_staff|default:"0" }}</h3>
+            <p>{% trans 'Staff' %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon ic-purple">💰</div>
+        <div class="stat-info">
+            <h3>{{ total_revenue|default:"0" }}</h3>
+            <p>{% trans 'Revenue (UGX)' %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<h2 class="section-title">{% trans 'Quick Actions' %}</h2>
+<div class="actions-row">
+    <a class="qa-btn" href="{% url 'admin:students_student_changelist' %}">👨‍🎓 {% trans 'Students' %}</a>
+    <a class="qa-btn" href="{% url 'admin:academics_course_changelist' %}">📖 {% trans 'Courses' %}</a>
+    <a class="qa-btn" href="{% url 'admin:finance_invoice_changelist' %}">💳 {% trans 'Invoices' %}</a>
+    <a class="qa-btn" href="{% url 'admin:library_book_changelist' %}">📚 {% trans 'Library' %}</a>
+    <a class="qa-btn" href="{% url 'admin:hostel_hostel_changelist' %}">🏠 {% trans 'Hostels' %}</a>
+    <a class="qa-btn" href="{% url 'admin:staff_staffprofile_changelist' %}">👥 {% trans 'Staff' %}</a>
+    <a class="qa-btn" href="{% url 'admin:accounts_user_changelist' %}">🔐 {% trans 'Users' %}</a>
+</div>
+
+<!-- App Cards -->
+<h2 class="section-title">{% trans 'Modules' %}</h2>
+<div class="apps-grid">
+    {% for app in app_list %}
+    <a class="app-card" href="{{ app.app_url }}">
+        <div class="app-card-top">
+            <div class="app-card-icon aic-{{ app.app_label|default:'default' }}">
+                {% if app.app_label == 'accounts' %}🔐
+                {% elif app.app_label == 'students' %}🎓
+                {% elif app.app_label == 'academics' %}📚
+                {% elif app.app_label == 'staff' %}👨‍🏫
+                {% elif app.app_label == 'finance' %}💰
+                {% elif app.app_label == 'library' %}📖
+                {% elif app.app_label == 'hostel' %}🏠
+                {% elif app.app_label == 'communications' %}📢
+                {% elif app.app_label == 'reports' %}📊
+                {% elif app.app_label == 'auth' %}🔑
+                {% else %}📁{% endif %}
+            </div>
+            <h3>{{ app.name }}</h3>
+            <div class="app-count">{{ app.models|length }} model{{ app.models|length|pluralize }}</div>
+        </div>
+        <div class="app-card-bottom">{% trans 'Open' %} &rarr;</div>
+    </a>
+    {% empty %}
+    <p style="color:#94a3b8; padding:20px;">{% trans "No modules available." %}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<!-- Recent Actions Dropdown -->
+{% get_admin_log 15 as admin_log for_user user %}
+<div class="ra-dropdown" id="raDropdown">
+    <div class="ra-toggle" id="raToggle">
+        🕘 {% trans 'Recent' %}
+        {% if admin_log %}<span class="ra-badge">{{ admin_log|length }}</span>{% endif %}
+    </div>
+    <div class="ra-panel" id="raPanel">
+        <div class="ra-panel-header">{% trans 'Recent Actions' %}</div>
+        <div class="ra-panel-body">
+            {% for entry in admin_log %}
+            <div class="ra-item">
+                <span class="dot {% if entry.is_addition %}dot-add{% elif entry.is_change %}dot-chg{% else %}dot-del{% endif %}"></span>
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    <span style="color:#64748b;">{{ entry.object_repr|truncatewords:6 }}</span>
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr|truncatewords:6 }}</a>
+                {% endif %}
+                <span class="time">{{ entry.action_time|timesince }} {% trans "ago" %}</span>
+            </div>
+            {% empty %}
+            <div class="ra-empty">{% trans 'No recent actions.' %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    var toggle = document.getElementById('raToggle');
+    var panel = document.getElementById('raPanel');
+    toggle.addEventListener('click', function(e){
+        e.stopPropagation();
+        panel.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e){
+        if (!document.getElementById('raDropdown').contains(e.target)){
+            panel.classList.remove('open');
+        }
+    });
+})();
+</script>
+{% endblock %}

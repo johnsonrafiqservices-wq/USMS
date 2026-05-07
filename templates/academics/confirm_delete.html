@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Delete {{ model_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Delete {{ model_name }}</h1>
+    <p class="text-muted mb-0">Confirm deletion of this {{ model_name|lower }}</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <h5 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Warning</h5>
+            <p class="mb-0">Are you sure you want to delete <strong>{{ object }}</strong>?</p>
+            <hr>
+            <p class="mb-0">This action cannot be undone. Please confirm that you want to proceed with the deletion.</p>
+        </div>
+
+        <form method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash me-1"></i>Yes, Delete {{ model_name }}
+            </button>
+        </form>
+        
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Cancel
+        </a>
+    </div>
+</div>
+{% endblock %}

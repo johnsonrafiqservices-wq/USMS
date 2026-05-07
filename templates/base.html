@@ -1,0 +1,818 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>{% block title %}UMS{% endblock %} | University Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #1e3a5f;
+            --primary-dark: #152d4a;
+            --primary-light: #2a5280;
+            --secondary-color: #424242;
+            --success-color: #2E7D32;
+            --danger-color: #C62828;
+            --warning-color: #F57C00;
+            --info-color: #0277BD;
+            --background-light: #F5F5F5;
+            --text-dark: #212121;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 100%);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(30, 58, 95, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(66, 66, 66, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .modal { z-index: 1060 !important; }
+        .modal-backdrop { z-index: 1040 !important; }
+        .modal-backdrop.show { opacity: 0.55; }
+        .modal.show { display: block !important; }
+        .modal-dialog { pointer-events: all !important; position: relative; z-index: 1061; }
+        .modal-content { pointer-events: all !important; background: #ffffff !important; position: relative; z-index: 1062; }
+        .modal .card { background: #ffffff !important; backdrop-filter: none !important; border: 1px solid rgba(0,0,0,0.05); }
+        .modal .card-header { background: #f8f9fa !important; }
+        .modal .card-body { background: #ffffff !important; }
+        .modal input, .modal select, .modal textarea, .modal button { pointer-events: auto !important; }
+
+        .navbar-brand { font-weight: 500; font-size: 1rem; }
+
+        /* Sidebar */
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #1e3a5f 0%, #152d4a 100%);
+            box-shadow: none;
+            transition: all 0.3s ease-in-out;
+            position: fixed;
+            left: 0; top: 0;
+            z-index: 999;
+            overflow-x: hidden;
+        }
+        .sidebar.collapsed { width: 60px !important; min-width: 60px !important; }
+        .sidebar.collapsed .sidebar-text, .sidebar.collapsed h4 { opacity: 0; display: none; }
+        .sidebar.collapsed .nav-link { padding: 0.55rem; text-align: center; justify-content: center; }
+        .sidebar.collapsed .nav-link i { margin-right: 0; }
+        .sidebar h4 { font-size: 0.875rem; font-weight: 500; margin-bottom: 1rem; white-space: nowrap; transition: opacity 0.2s; }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.85);
+            padding: 0.55rem 0.9rem; margin: 0.15rem 0;
+            border-radius: 0.4rem; transition: all 0.2s;
+            font-size: 0.8rem; white-space: nowrap;
+            display: flex; align-items: center;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background-color: rgba(255,255,255,0.15); }
+        .sidebar .nav-link i { margin-right: 0.5rem; font-size: 0.9rem; transition: margin 0.3s; }
+        .sidebar .p-3 { padding: 1rem !important; }
+        .sidebar-text { transition: opacity 0.2s; }
+
+        /* Main content */
+        .main-content-area { transition: all 0.3s ease-in-out; width: 100%; padding-left: 0; padding-right: 0; }
+        .main-content-area.sidebar-collapsed { margin-left: 60px !important; width: calc(100% - 60px) !important; max-width: calc(100% - 60px) !important; }
+        @media (min-width: 768px) { .main-content-area { flex: 0 0 auto; width: 75%; } .main-content-area.sidebar-collapsed { width: calc(100% - 60px) !important; } }
+        @media (min-width: 992px) { .main-content-area { width: 83.333333%; } .main-content-area.sidebar-collapsed { width: calc(100% - 60px) !important; } }
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            cursor: pointer; font-size: 1.25rem; transition: transform 0.2s, color 0.2s;
+            padding: 0.5rem 0.75rem; border: none; background: transparent; color: var(--text-dark);
+        }
+        .sidebar-toggle:hover { transform: scale(1.1); color: var(--primary-color); }
+        .sidebar-toggle:focus { box-shadow: none; outline: none; }
+        .sidebar-toggle i { font-size: 1.5rem; transition: transform 0.3s ease; }
+
+        /* Cards */
+        .card {
+            border: none; border-radius: 0.5rem;
+            background: rgba(255,255,255,0.95); backdrop-filter: none;
+            box-shadow: none; transition: all 0.3s ease;
+            margin-bottom: 0.75rem; border: 1px solid rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: none; box-shadow: none; border-color: rgba(30,58,95,0.2); }
+        .card-header {
+            background: rgba(249,250,251,1); border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-weight: 500; padding: 0.6rem 0.85rem; font-size: 0.8rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .card-header i { margin-right: 0.5rem; color: var(--primary-color); font-size: 0.85rem; }
+        .card-body { padding: 0.85rem; }
+        .card-custom { background: #fff; border-radius: 0.5rem; border: 1px solid rgba(0,0,0,0.1); margin-bottom: 0.75rem; }
+        .card-custom .card-header {
+            background: rgba(249,250,251,1); border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-weight: 500; padding: 0.6rem 0.85rem; font-size: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn { border-radius: 0.4rem; padding: 0.45rem 1rem; font-weight: 500; font-size: 0.8rem; transition: all 0.2s ease; border: none; box-shadow: none; }
+        .btn:hover { transform: none; box-shadow: none; }
+        .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.75rem; border-radius: 0.35rem; }
+        .btn-lg { padding: 0.6rem 1.3rem; font-size: 0.85rem; border-radius: 0.5rem; }
+        .btn-primary { background: linear-gradient(135deg, #1e3a5f 0%, #152d4a 100%); border: none; }
+        .btn-primary:hover { background: linear-gradient(135deg, #152d4a 0%, #0f2035 100%); }
+        .btn-outline-primary { border: 2px solid #1e3a5f; color: #1e3a5f; background: transparent; }
+        .btn-outline-primary:hover { background: #1e3a5f; color: white; }
+
+        /* Badges */
+        .badge { padding: 0.35em 0.65em; border-radius: 0.35rem; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; box-shadow: none; }
+        .badge-role { font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 0.35rem; }
+        .badge.bg-secondary { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important; }
+        .badge.bg-warning { background: linear-gradient(135deg, #F57C00 0%, #E65100 100%) !important; color: white !important; }
+        .badge.bg-success { background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%) !important; }
+        .badge.bg-primary { background: linear-gradient(135deg, #0277BD 0%, #01579B 100%) !important; }
+        .badge.bg-info { background: linear-gradient(135deg, #0277BD 0%, #01579B 100%) !important; }
+        .badge.bg-danger { background: linear-gradient(135deg, #C62828 0%, #B71C1C 100%) !important; }
+
+        /* Tables */
+        .table { background-color: rgba(255,255,255,0.98); font-size: 0.8rem; border-radius: 0.4rem; overflow: hidden; }
+        .table th { font-weight: 500; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3px; color: #616161; padding: 0.65rem; background: #f5f6f8; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .table td { padding: 0.65rem; vertical-align: middle; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .table tbody tr { transition: all 0.2s ease; }
+        .table tbody tr:hover { background-color: rgba(30,58,95,0.02); transform: scale(1.001); }
+        .table-responsive { border-radius: 0.4rem; box-shadow: none; }
+
+        /* Stat Cards */
+        .stat-card {
+            background: rgba(255,255,255,0.95); backdrop-filter: none;
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 0.5rem;
+            padding: 1rem; box-shadow: none; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #1e3a5f, #2a5280);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .stat-card:hover { transform: none; box-shadow: none; border-color: rgba(30,58,95,0.25); }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-card .stat-icon { font-size: 2rem; color: #1e3a5f; opacity: 0.15; position: absolute; right: 1rem; bottom: 1rem; }
+        .stat-card .stat-value, .stat-card h3 { font-size: 1.6rem; font-weight: 600; color: #212121; margin-bottom: 0.25rem; }
+        .stat-card .stat-label, .stat-card p { font-size: 0.75rem; color: #757575; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin: 0; }
+
+        /* Content wrapper */
+        .content-wrapper { padding: 1.25rem; transition: max-width 0.3s ease-in-out; }
+        .sidebar-collapsed .content-wrapper { max-width: 100%; padding-left: 1.5rem; padding-right: 1.5rem; }
+
+        /* Page Header */
+        .page-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(0,0,0,0.05); }
+        .page-title {
+            font-size: 1.4rem; font-weight: 600; color: #212121; margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5280 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-title i { margin-right: 0.5rem; }
+        .page-header p { font-size: 0.8rem; margin-bottom: 0; color: #757575; }
+
+        /* Form Elements */
+        .form-label { margin-bottom: 0.35rem; font-weight: 500; font-size: 0.75rem; color: #424242; text-transform: uppercase; letter-spacing: 0.3px; }
+        .form-control, .form-select {
+            padding: 0.5rem 0.75rem; font-size: 0.8rem; border-radius: 0.4rem;
+            border: 1px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus { border-color: #1e3a5f; box-shadow: 0 0 0 0.2rem rgba(30,58,95,0.1); background: #ffffff; }
+        .form-control:hover, .form-select:hover { border-color: rgba(0,0,0,0.15); }
+        textarea.form-control { min-height: 80px; }
+        .form-check { padding-left: 1.75rem; margin-bottom: 0.5rem; }
+        .form-check-label { font-size: 0.8rem; font-weight: 500; color: #424242; }
+        .form-check-input { margin-top: 0.2rem; width: 1.25rem; height: 1.25rem; border: 2px solid rgba(0,0,0,0.15); border-radius: 0.35rem; }
+        .form-check-input:checked { background-color: #1e3a5f; border-color: #1e3a5f; }
+
+        .text-primary { color: var(--primary-color) !important; }
+        .bg-primary { background-color: var(--primary-color) !important; }
+        html { scroll-behavior: smooth; }
+        ::selection { background: rgba(30,58,95,0.2); color: #212121; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(30,58,95,0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(30,58,95,0.5); }
+
+        .breadcrumb { background-color: transparent; padding: 0; font-size: 0.75rem; margin-bottom: 0.5rem; }
+
+        /* Alerts */
+        .alert { padding: 0.75rem 1rem; font-size: 0.8rem; border-radius: 0.5rem; margin-bottom: 0.75rem; border: none; box-shadow: none; }
+        .alert-success { background: linear-gradient(135deg, rgba(46,125,50,0.15) 0%, rgba(27,94,32,0.1) 100%); color: #1B5E20; border-left: 4px solid #2E7D32; }
+        .alert-danger { background: linear-gradient(135deg, rgba(198,40,40,0.15) 0%, rgba(183,28,28,0.1) 100%); color: #B71C1C; border-left: 4px solid #C62828; }
+        .alert-warning { background: linear-gradient(135deg, rgba(245,124,0,0.15) 0%, rgba(230,81,0,0.1) 100%); color: #E65100; border-left: 4px solid #F57C00; }
+        .alert-info { background: linear-gradient(135deg, rgba(2,119,189,0.15) 0%, rgba(1,87,155,0.1) 100%); color: #01579B; border-left: 4px solid #0277BD; }
+        .alert-dismissible .btn-close { padding: 0.75rem; }
+
+        /* Dropdowns */
+        .dropdown-menu { font-size: 0.8rem; border-radius: 0.5rem; border: 1px solid rgba(0,0,0,0.1); box-shadow: none; padding: 0.5rem; background: rgba(255,255,255,0.98); }
+        .dropdown-item { padding: 0.6rem 1rem; border-radius: 0.5rem; transition: all 0.2s ease; margin-bottom: 0.25rem; }
+        .dropdown-item:hover { background: rgba(30,58,95,0.08); color: #1e3a5f; }
+        .dropdown-item i { margin-right: 0.5rem; opacity: 0.7; }
+        .dropdown-divider { margin: 0.5rem 0; border-color: rgba(0,0,0,0.06); }
+
+        /* Navbar */
+        .navbar {
+            padding: 0.4rem 0.9rem; transition: all 0.3s ease-in-out;
+            background: rgba(255,255,255,0.95) !important; backdrop-filter: none;
+            box-shadow: none; border-bottom: 1px solid rgba(0,0,0,0.1) !important; min-height: 3rem;
+        }
+        .navbar-nav .nav-link { font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 0.35rem; transition: all 0.2s ease; }
+        .navbar-nav .nav-link:hover { background: rgba(30,58,95,0.05); color: #1e3a5f; }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 { font-weight: 600; line-height: 1.3; }
+        h5 { font-size: 0.85rem; }
+        h6 { font-size: 0.75rem; }
+        a { text-decoration: none; }
+        a:hover { text-decoration: none; }
+        .row { margin-bottom: 0.5rem; }
+
+        /* Avatar */
+        .avatar-sm {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.8rem;
+        }
+
+        /* Mobile menu */
+        .mobile-menu-toggle { display: none; padding: 0.5rem; margin-right: 0.5rem; font-size: 1.25rem; background: none; border: none; color: var(--primary-color); }
+
+        @media (max-width: 768px) {
+            .sidebar { min-height: auto; position: relative; }
+            .sidebar.collapsed { display: none; }
+            body { font-size: 0.8rem; }
+            .page-title { font-size: 1.25rem; }
+            .main-content-area { margin-left: 0 !important; }
+            .sidebar-toggle { display: none !important; }
+        }
+        @media (max-width: 991.98px) {
+            .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; z-index: 1040; transition: left 0.3s ease-in-out; overflow-y: auto; }
+            .sidebar.show { left: 0; }
+            .main-content-area { margin-left: 0 !important; width: 100%; padding: 15px; }
+            .mobile-menu-toggle { display: block; }
+            .d-md-block { display: none !important; }
+        }
+        @media (max-width: 575.98px) {
+            .navbar-nav .nav-link { padding: 0.5rem 0.5rem; }
+            .dropdown-menu { border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); }
+        }
+        .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .sidebar-collapsed .card, .sidebar-collapsed .table-responsive { transition: all 0.3s ease-in-out; }
+        .sidebar-collapsed .row, .sidebar-collapsed .container-fluid { transition: all 0.3s ease-in-out; }
+        .sidebar-collapsed .stat-card { transition: all 0.3s ease-in-out; }
+        .sidebar-collapsed .table-responsive { overflow-x: auto; }
+        @keyframes contentExpand { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 1; } }
+        .main-content-area.expanding { animation: contentExpand 0.3s ease-in-out; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body {% if user.is_authenticated %}data-user-authenticated="true"{% endif %}>
+    {% if user.is_authenticated %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 sidebar d-none d-md-block" id="sidebar">
+                <div class="p-3">
+                    <h4 class="text-white mb-4">
+                        <i class="bi bi-mortarboard-fill"></i> <span class="sidebar-text">UMS</span>
+                    </h4>
+
+                    <nav class="nav flex-column">
+                        {% for item in nav_items %}
+                        <a class="nav-link" href="{% url item.url %}" title="{{ item.label }}">
+                            <i class="bi {{ item.icon }}"></i> <span class="sidebar-text">{{ item.label }}</span>
+                        </a>
+                        {% endfor %}
+
+                        <hr class="text-white">
+
+                        <a class="nav-link" href="{% url 'accounts:logout' %}" title="Logout">
+                            <i class="bi bi-box-arrow-right"></i> <span class="sidebar-text">Logout</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-auto main-content-area" id="mainContent">
+                <!-- Top Navigation -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+                    <div class="container-fluid">
+                        <button class="btn btn-link text-dark sidebar-toggle d-none d-md-block" id="sidebarToggle" type="button" title="Collapse Sidebar (Ctrl+B)">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="d-md-none">
+                                    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" title="Menu">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'communications:notifications' %}" title="Notifications">
+                                        <i class="bi bi-bell"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'communications:inbox' %}" title="Messages">
+                                        <i class="bi bi-envelope"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-person-circle"></i> {{ user.get_full_name|default:user.username }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><span class="dropdown-item-text"><small class="text-muted">{{ user.get_role_display }}</small></span></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person"></i> Profile</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Messages & Content -->
+                <div class="content-wrapper">
+                    {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container-fluid">
+        {% block login_content %}{% endblock %}
+    </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+
+            if (!sidebar || !mainContent || !sidebarToggle) return;
+
+            const toggleIcon = sidebarToggle.querySelector('i');
+
+            function updateToggleButton(isCollapsed) {
+                if (isCollapsed) {
+                    toggleIcon.classList.remove('bi-list');
+                    toggleIcon.classList.add('bi-chevron-right');
+                    sidebarToggle.setAttribute('title', 'Expand Sidebar (Ctrl+B)');
+                } else {
+                    toggleIcon.classList.remove('bi-chevron-right');
+                    toggleIcon.classList.add('bi-list');
+                    sidebarToggle.setAttribute('title', 'Collapse Sidebar (Ctrl+B)');
+                }
+            }
+
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('sidebar-collapsed');
+                updateToggleButton(true);
+            }
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+                mainContent.classList.add('expanding');
+                setTimeout(() => { mainContent.classList.remove('expanding'); }, 300);
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+                updateToggleButton(isCollapsed);
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'b') { e.preventDefault(); sidebarToggle.click(); }
+            });
+        });
+    </script>
+
+    <!-- Mobile Menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            if (mobileMenuToggle && sidebar) {
+                mobileMenuToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    sidebar.classList.toggle('show');
+                    const overlay = document.createElement('div');
+                    overlay.className = 'sidebar-overlay';
+                    if (sidebar.classList.contains('show')) {
+                        body.style.overflow = 'hidden';
+                        body.appendChild(overlay);
+                        const closeMenu = (e) => {
+                            if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                                sidebar.classList.remove('show'); body.style.overflow = '';
+                                if (document.querySelector('.sidebar-overlay')) document.querySelector('.sidebar-overlay').remove();
+                                document.removeEventListener('click', closeMenu);
+                            }
+                        };
+                        setTimeout(() => { document.addEventListener('click', closeMenu); }, 100);
+                        overlay.addEventListener('click', () => {
+                            sidebar.classList.remove('show'); body.style.overflow = ''; overlay.remove();
+                        });
+                    } else {
+                        body.style.overflow = '';
+                        if (document.querySelector('.sidebar-overlay')) document.querySelector('.sidebar-overlay').remove();
+                    }
+                });
+                sidebar.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        sidebar.classList.remove('show'); body.style.overflow = '';
+                        const o = document.querySelector('.sidebar-overlay'); if (o) o.remove();
+                    });
+                });
+            }
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (window.innerWidth > 991.98) {
+                        if (sidebar) sidebar.classList.remove('show'); body.style.overflow = '';
+                        const o = document.querySelector('.sidebar-overlay'); if (o) o.remove();
+                    }
+                }, 250);
+            });
+        });
+    </script>
+
+    <style>
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5); z-index: 1039; backdrop-filter: blur(2px);
+        }
+        body.menu-open { overflow: hidden; height: 100%; }
+    </style>
+
+    <!-- Table Paginator -->
+    <script>
+        class TablePaginator {
+            constructor(tableId, paginationId, perPageSelectId, defaultPerPage = 10) {
+                this.table = document.getElementById(tableId);
+                this.paginationContainer = document.getElementById(paginationId);
+                this.perPageSelect = document.getElementById(perPageSelectId);
+                this.rows = []; this.currentPage = 1; this.perPage = defaultPerPage;
+                if (!this.table) return;
+                this.init();
+            }
+            init() {
+                this.rows = Array.from(this.table.querySelectorAll('tbody tr'));
+                if (this.perPageSelect) {
+                    this.perPageSelect.addEventListener('change', (e) => {
+                        this.perPage = e.target.value === 'all' ? this.rows.length : parseInt(e.target.value);
+                        this.currentPage = 1; this.render();
+                    });
+                }
+                this.render();
+            }
+            render() {
+                const totalPages = Math.ceil(this.rows.length / this.perPage);
+                this.rows.forEach(row => row.style.display = 'none');
+                const start = (this.currentPage - 1) * this.perPage;
+                this.rows.slice(start, start + this.perPage).forEach(row => row.style.display = '');
+                this.renderPagination(totalPages);
+            }
+            renderPagination(totalPages) {
+                if (!this.paginationContainer) return;
+                this.paginationContainer.innerHTML = '';
+                if (totalPages <= 1) return;
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${this.currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `<a class="page-link" href="#">Previous</a>`;
+                prevLi.querySelector('a').onclick = (e) => { e.preventDefault(); if (this.currentPage > 1) { this.currentPage--; this.render(); } };
+                this.paginationContainer.appendChild(prevLi);
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement('li');
+                    li.className = `page-item ${i === this.currentPage ? 'active' : ''}`;
+                    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    li.querySelector('a').onclick = (e) => { e.preventDefault(); this.currentPage = i; this.render(); };
+                    this.paginationContainer.appendChild(li);
+                }
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${this.currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `<a class="page-link" href="#">Next</a>`;
+                nextLi.querySelector('a').onclick = (e) => { e.preventDefault(); if (this.currentPage < totalPages) { this.currentPage++; this.render(); } };
+                this.paginationContainer.appendChild(nextLi);
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+    {% if user.is_authenticated %}
+    {# ── FAB Quick-Create ─────────────────────────────────────────────── #}
+    <style>
+        .qc-fab-wrap { position: fixed; bottom: 2rem; right: 2rem; z-index: 1050; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: .65rem; }
+        .qc-fab-main {
+            width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,#1e3a5f,#2a5280);
+            color: #fff; border: none; box-shadow: 0 4px 18px rgba(30,58,95,.45); font-size: 1.6rem;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .qc-fab-main:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(30,58,95,.55); }
+        .qc-fab-main .qc-icon { transition: transform .3s; }
+        .qc-fab-wrap.open .qc-fab-main .qc-icon { transform: rotate(45deg); }
+        .qc-actions { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+        .qc-action-item {
+            display: flex; align-items: center; gap: .5rem;
+            opacity: 0; transform: translateY(12px) scale(.92);
+            transition: opacity .22s, transform .22s; pointer-events: none;
+        }
+        .qc-fab-wrap.open .qc-action-item { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .qc-fab-wrap.open .qc-action-item:nth-child(1){transition-delay:0ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(2){transition-delay:15ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(3){transition-delay:30ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(4){transition-delay:45ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(5){transition-delay:60ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(6){transition-delay:75ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(7){transition-delay:90ms}
+        .qc-fab-wrap.open .qc-action-item:nth-child(8){transition-delay:105ms}
+        .qc-action-label { background:#1e3a5f; color:#fff; padding:.28rem .65rem; border-radius:.35rem; font-size:.72rem; font-weight:500; white-space:nowrap; box-shadow:0 2px 8px rgba(30,58,95,.3); }
+        .qc-action-btn {
+            width: 42px; height: 42px; border-radius: 50%; border: none; background: #fff;
+            color: #1e3a5f; box-shadow: 0 2px 10px rgba(30,58,95,.25); font-size: 1rem;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+        .qc-action-btn:hover { background: #1e3a5f; color: #fff; }
+        .qc-backdrop { display: none; position: fixed; inset: 0; z-index: 1049; }
+        .qc-fab-wrap.open ~ .qc-backdrop { display: block; }
+        #qcModal .modal-header { background: linear-gradient(135deg,#1e3a5f,#2a5280); color: #fff; border-radius: .5rem .5rem 0 0; }
+        #qcModal .modal-header .btn-close { filter: invert(1); }
+        #qcModal .modal-body { padding: 1.5rem; }
+        #qcModal .modal-footer { background: #f8f9fa; }
+        #qcSuccessAlert, #qcErrorAlert { display: none; }
+    </style>
+
+    {# FAB container #}
+    <div class="qc-fab-wrap" id="qcFabWrap">
+        <button class="qc-fab-main" id="qcFabMain" title="Quick Add">
+            <i class="bi bi-plus qc-icon"></i>
+        </button>
+        <div class="qc-actions" id="qcActions">
+        {% if user.is_admin or user.is_superuser %}
+            <div class="qc-action-item"><span class="qc-action-label">Add User</span><button class="qc-action-btn" data-action="add_user" data-title="Add New User"><i class="bi bi-person-plus"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">New Admission</span><button class="qc-action-btn" data-action="new_admission" data-title="New Admission Application"><i class="bi bi-person-lines-fill"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Create Invoice</span><button class="qc-action-btn" data-action="create_invoice" data-title="Create Invoice"><i class="bi bi-receipt"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Record Payment</span><button class="qc-action-btn" data-action="record_payment" data-title="Record Payment"><i class="bi bi-credit-card"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Issue Book</span><button class="qc-action-btn" data-action="issue_book" data-title="Issue Book"><i class="bi bi-book"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Allocate Room</span><button class="qc-action-btn" data-action="allocate_room" data-title="Allocate Hostel Room"><i class="bi bi-house-door"></i></button></div>
+        {% elif user.is_registrar %}
+            <div class="qc-action-item"><span class="qc-action-label">New Admission</span><button class="qc-action-btn" data-action="new_admission" data-title="New Admission Application"><i class="bi bi-person-lines-fill"></i></button></div>
+        {% elif user.is_finance_staff %}
+            <div class="qc-action-item"><span class="qc-action-label">Create Invoice</span><button class="qc-action-btn" data-action="create_invoice" data-title="Create Invoice"><i class="bi bi-receipt"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Record Payment</span><button class="qc-action-btn" data-action="record_payment" data-title="Record Payment"><i class="bi bi-credit-card"></i></button></div>
+        {% elif user.is_librarian %}
+            <div class="qc-action-item"><span class="qc-action-label">Book Management</span><button class="qc-action-btn" onclick="window.location.href='/library/books/'"><i class="bi bi-list-ul"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Issue Book</span><button class="qc-action-btn" data-action="issue_book" data-title="Issue Book"><i class="bi bi-book"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Book</span><button class="qc-action-btn" data-action="add_book" data-title="Add Book to Catalog"><i class="bi bi-journal-plus"></i></button></div>
+        {% elif user.role == 'hostel_manager' %}
+            <div class="qc-action-item"><span class="qc-action-label">Allocate Room</span><button class="qc-action-btn" data-action="allocate_room" data-title="Allocate Hostel Room"><i class="bi bi-house-door"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Maintenance Request</span><button class="qc-action-btn" data-action="add_maintenance" data-title="New Maintenance Request"><i class="bi bi-tools"></i></button></div>
+        {% elif user.is_student %}
+            <div class="qc-action-item"><span class="qc-action-label">Register Course</span><button class="qc-action-btn" data-action="register_course" data-title="Register for Courses"><i class="bi bi-journal-bookmark"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Maintenance Request</span><button class="qc-action-btn" data-action="add_maintenance" data-title="New Maintenance Request"><i class="bi bi-tools"></i></button></div>
+        {% endif %}
+        </div>
+    </div>
+    <div class="qc-backdrop" id="qcBackdrop"></div>
+
+    {# Universal Quick-Create Modal #}
+    <div class="modal fade" id="qcModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="qcModalTitle"><i class="bi bi-plus-circle me-2"></i>Quick Create</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="qcSuccessAlert" class="alert alert-success">
+                        <i class="bi bi-check-circle me-1"></i> <span id="qcSuccessMsg"></span>
+                    </div>
+                    <div id="qcErrorAlert" class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-1"></i> <span id="qcErrorMsg"></span>
+                    </div>
+                    <div id="qcFormBody">
+                        <div class="text-center py-5 text-muted">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2">Loading…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="qcModalFooter">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="qcSubmitBtn">
+                        <span id="qcSubmitSpinner" class="spinner-border spinner-border-sm me-1 d-none"></span>
+                        <i class="bi bi-check-circle me-1" id="qcSubmitIcon"></i>
+                        <span id="qcSubmitLabel">Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        const fabWrap = document.getElementById('qcFabWrap');
+        const fabMain = document.getElementById('qcFabMain');
+        const backdrop = document.getElementById('qcBackdrop');
+        const modalEl = document.getElementById('qcModal');
+        const modalTitle = document.getElementById('qcModalTitle');
+        const formBody = document.getElementById('qcFormBody');
+        const submitBtn = document.getElementById('qcSubmitBtn');
+        const submitSpinner = document.getElementById('qcSubmitSpinner');
+        const submitIcon = document.getElementById('qcSubmitIcon');
+        const submitLabel = document.getElementById('qcSubmitLabel');
+        const successAlert = document.getElementById('qcSuccessAlert');
+        const successMsg = document.getElementById('qcSuccessMsg');
+        const errorAlert = document.getElementById('qcErrorAlert');
+        const errorMsg = document.getElementById('qcErrorMsg');
+
+        let bsModal = null;
+        let currentAction = null;
+        let redirectAfter = null;
+
+        if (modalEl) bsModal = new bootstrap.Modal(modalEl);
+
+        function closeFab() { fabWrap.classList.remove('open'); }
+        function openFab() { fabWrap.classList.add('open'); }
+
+        fabMain.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fabWrap.classList.toggle('open');
+        });
+        backdrop.addEventListener('click', closeFab);
+
+        function resetModal() {
+            successAlert.style.display = 'none';
+            errorAlert.style.display = 'none';
+            submitBtn.disabled = false;
+            submitSpinner.classList.add('d-none');
+            submitIcon.classList.remove('d-none');
+            redirectAfter = null;
+        }
+
+        function showSuccess(msg) {
+            successAlert.style.display = '';
+            successMsg.textContent = msg;
+            errorAlert.style.display = 'none';
+        }
+
+        function showError(msg) {
+            errorAlert.style.display = '';
+            errorMsg.textContent = msg;
+            successAlert.style.display = 'none';
+        }
+
+        async function loadForm(action, title) {
+            currentAction = action;
+            resetModal();
+            modalTitle.innerHTML = `<i class="bi bi-plus-circle me-2"></i>${title}`;
+            formBody.innerHTML = `<div class="text-center py-5 text-muted"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading…</p></div>`;
+            document.getElementById('qcModalFooter').style.display = '';
+            bsModal.show();
+            closeFab();
+            try {
+                const resp = await fetch(`/quick-create/${action}/`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!resp.ok) throw new Error('Failed to load form');
+                const html = await resp.text();
+                formBody.innerHTML = html;
+            } catch (err) {
+                formBody.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>Could not load form. ${err.message}</div>`;
+            }
+        }
+
+        // Universal modal loader for any form URL
+        window.loadModalForm = async function(url, title, submitLabel = 'Save') {
+            currentAction = url;
+            resetModal();
+            modalTitle.innerHTML = title;
+            formBody.innerHTML = `<div class="text-center py-5 text-muted"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading…</p></div>`;
+            document.getElementById('qcModalFooter').style.display = '';
+            document.getElementById('qcSubmitLabel').textContent = submitLabel;
+            bsModal.show();
+            closeFab();
+            try {
+                const resp = await fetch(url, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!resp.ok) throw new Error('Failed to load form');
+                const html = await resp.text();
+                formBody.innerHTML = html;
+            } catch (err) {
+                formBody.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>Could not load form. ${err.message}</div>`;
+            }
+        };
+
+        document.querySelectorAll('.qc-action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const action = btn.dataset.action;
+                const title = btn.dataset.title;
+                loadForm(action, title);
+            });
+        });
+
+        submitBtn.addEventListener('click', async () => {
+            if (!currentAction) return;
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('d-none');
+            submitIcon.classList.add('d-none');
+            errorAlert.style.display = 'none';
+
+            const formData = new FormData();
+            const csrfEl = formBody.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfEl) formData.append('csrfmiddlewaretoken', csrfEl.value);
+
+            formBody.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.name === 'csrfmiddlewaretoken') return;
+                if (el.type === 'checkbox') { if (el.checked) formData.append(el.name, el.value); }
+                else if (el.type === 'radio') { if (el.checked) formData.append(el.name, el.value); }
+                else { formData.append(el.name, el.value); }
+            });
+
+            try {
+                const resp = await fetch(currentAction, {
+                    method: 'POST', body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await resp.json();
+                if (data.success) {
+                    showSuccess(data.message || 'Saved successfully.');
+                    formBody.querySelectorAll('input:not([type=hidden]):not([name=csrfmiddlewaretoken]), select, textarea').forEach(el => { el.value = ''; });
+                    formBody.querySelectorAll('input[type=checkbox]').forEach(el => { el.checked = false; });
+                    redirectAfter = data.redirect || null;
+                    submitLabel.textContent = redirectAfter ? 'Go to Page' : 'Done';
+                    submitIcon.className = redirectAfter ? 'bi bi-arrow-right-circle me-1' : 'bi bi-check-circle me-1';
+                    submitIcon.classList.remove('d-none');
+                    submitSpinner.classList.add('d-none');
+                    submitBtn.disabled = false;
+                    submitBtn.onclick = redirectAfter
+                        ? () => { window.location.href = redirectAfter; }
+                        : () => { bsModal.hide(); location.reload(); };
+                } else {
+                    showError(data.message || 'An error occurred.');
+                    submitBtn.disabled = false;
+                    submitSpinner.classList.add('d-none');
+                    submitIcon.classList.remove('d-none');
+                }
+            } catch (err) {
+                showError('Network error. Please try again.');
+                submitBtn.disabled = false;
+                submitSpinner.classList.add('d-none');
+                submitIcon.classList.remove('d-none');
+            }
+        });
+
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            currentAction = null;
+            redirectAfter = null;
+            submitBtn.onclick = null;
+            submitLabel.textContent = 'Save';
+            submitIcon.className = 'bi bi-check-circle me-1';
+            submitIcon.classList.remove('d-none');
+            resetModal();
+        });
+    })();
+    </script>
+    {% endif %}
+</body>
+</html>

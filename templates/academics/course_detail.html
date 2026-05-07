@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ course.code }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-book"></i> {{ course.code }} - {{ course.title }}</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h6 class="fw-bold mb-3">Course Information</h6>
+            <p><strong>Code:</strong> {{ course.code }}</p>
+            <p><strong>Title:</strong> {{ course.title }}</p>
+            <p><strong>Department:</strong> {{ course.department.name }}</p>
+            <p><strong>Credit Units:</strong> {{ course.credit_units }}</p>
+            <p><strong>Type:</strong> {{ course.get_course_type_display }}</p>
+            <p><strong>Level:</strong> {{ course.level }}</p>
+            <p><strong>Max Students:</strong> {{ course.max_students }}</p>
+            {% if course.description %}
+            <p><strong>Description:</strong> {{ course.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">Course Allocations</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Lecturer</th><th>Semester</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for a in allocations %}
+                        <tr>
+                            <td>{{ a.lecturer }}</td>
+                            <td>{{ a.semester }}</td>
+                            <td>{% if a.is_active %}<span class="badge bg-success badge-role">Active</span>{% else %}<span class="badge bg-secondary badge-role">Past</span>{% endif %}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-muted text-center">No allocations.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

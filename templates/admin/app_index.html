@@ -1,0 +1,295 @@
+{% extends "admin/base.html" %}
+{% load i18n static log %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    #content { padding: 24px !important; max-width: 100%; }
+    #content > h1 { display: none; }
+
+    .app-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+        padding: 24px 28px;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #e8ecf1;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .app-header-icon {
+        width: 60px; height: 60px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; flex-shrink: 0;
+    }
+    .app-header-info h1 {
+        margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;
+    }
+    .app-header-info p {
+        margin: 4px 0 0; font-size: 13px; color: #64748b;
+    }
+    .app-header-back {
+        margin-left: auto;
+        padding: 8px 16px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.12s;
+    }
+    .app-header-back:hover {
+        background: #e2e8f0; color: #1e293b; text-decoration: none;
+    }
+
+    /* Icon bg colors - UMS */
+    .aih-accounts        { background: #e0e7ff; color: #4f46e5; }
+    .aih-students        { background: #dbeafe; color: #2563eb; }
+    .aih-academics       { background: #fef3c7; color: #d97706; }
+    .aih-staff           { background: #d1fae5; color: #059669; }
+    .aih-finance         { background: #fce7f3; color: #db2777; }
+    .aih-library         { background: #ede9fe; color: #7c3aed; }
+    .aih-hostel          { background: #cffafe; color: #0891b2; }
+    .aih-communications  { background: #ffedd5; color: #ea580c; }
+    .aih-reports         { background: #f1f5f9; color: #475569; }
+    .aih-auth            { background: #ccfbf1; color: #0d9488; }
+    .aih-default         { background: #f1f5f9; color: #64748b; }
+
+    .section-title {
+        font-size: 15px; font-weight: 600; color: #334155;
+        margin: 0 0 16px; padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .models-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 14px;
+        margin-bottom: 32px;
+    }
+    .model-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e8ecf1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .model-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        text-decoration: none;
+    }
+    .model-icon {
+        width: 42px; height: 42px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; flex-shrink: 0;
+        background: #f1f5f9; color: #64748b;
+    }
+    .model-info { flex: 1; min-width: 0; }
+    .model-info h3 {
+        margin: 0; font-size: 14px; font-weight: 600; color: #1e293b;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .model-actions {
+        display: flex; gap: 6px; margin-top: 6px;
+    }
+    .model-actions a {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px; font-weight: 500;
+        text-decoration: none;
+        transition: all 0.1s;
+    }
+    .btn-view { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .btn-view:hover { background: #dbeafe; text-decoration: none; }
+    .btn-add  { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .btn-add:hover  { background: #dcfce7; text-decoration: none; }
+
+    .model-arrow { color: #cbd5e1; font-size: 18px; flex-shrink: 0; transition: color 0.1s; }
+    .model-card:hover .model-arrow { color: #1e3a5f; }
+
+    /* Recent Actions Dropdown */
+    .ra-dropdown { position:fixed; top:8px; right:16px; z-index:9999; }
+    .ra-toggle {
+        display:inline-flex; align-items:center; gap:6px;
+        padding:7px 14px; background:#fff; border:1px solid #e2e8f0;
+        border-radius:8px; color:#475569; cursor:pointer;
+        font-size:13px; font-weight:500;
+        box-shadow:0 1px 4px rgba(0,0,0,0.06); transition:all 0.12s;
+    }
+    .ra-toggle:hover { background:#f8fafc; border-color:#94a3b8; color:#1e293b; }
+    .ra-badge { background:#ef4444; color:#fff; font-size:10px; font-weight:700; padding:1px 6px; border-radius:10px; line-height:1.4; }
+    .ra-panel {
+        display:none; position:absolute; top:calc(100% + 6px); right:0;
+        width:380px; max-height:420px; background:#fff;
+        border:1px solid #e2e8f0; border-radius:12px;
+        box-shadow:0 12px 36px rgba(0,0,0,0.12); overflow:hidden;
+    }
+    .ra-panel.open { display:block; }
+    .ra-panel-header { padding:14px 16px; font-size:14px; font-weight:600; color:#1e293b; border-bottom:1px solid #f1f5f9; background:#f8fafc; }
+    .ra-panel-body { max-height:360px; overflow-y:auto; }
+    .ra-item { padding:10px 16px; border-bottom:1px solid #f8fafc; display:flex; align-items:center; gap:10px; font-size:13px; }
+    .ra-item:last-child { border-bottom:none; }
+    .ra-item:hover { background:#f8fafc; }
+    .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .dot-add { background:#10b981; } .dot-chg { background:#f59e0b; } .dot-del { background:#ef4444; }
+    .ra-item a { color:#334155; text-decoration:none; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ra-item a:hover { color:#1e3a5f; }
+    .ra-item .time { margin-left:auto; font-size:11px; color:#94a3b8; white-space:nowrap; flex-shrink:0; }
+    .ra-empty { padding:24px; text-align:center; color:#94a3b8; font-size:13px; }
+
+    @media (max-width: 640px) {
+        .models-grid { grid-template-columns: 1fr; }
+        .app-header { flex-wrap: wrap; }
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% for app in app_list %}
+    &rsaquo; {{ app.name }}
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+{% for app in app_list %}
+<div class="app-header">
+    <div class="app-header-icon aih-{{ app.app_label|default:'default' }}">
+        {% if app.app_label == 'accounts' %}🔐
+        {% elif app.app_label == 'students' %}🎓
+        {% elif app.app_label == 'academics' %}📚
+        {% elif app.app_label == 'staff' %}👨‍🏫
+        {% elif app.app_label == 'finance' %}💰
+        {% elif app.app_label == 'library' %}📖
+        {% elif app.app_label == 'hostel' %}🏠
+        {% elif app.app_label == 'communications' %}📢
+        {% elif app.app_label == 'reports' %}📊
+        {% elif app.app_label == 'auth' %}🔑
+        {% else %}📁{% endif %}
+    </div>
+    <div class="app-header-info">
+        <h1>{{ app.name }}</h1>
+        <p>{{ app.models|length }} model{{ app.models|length|pluralize }} available</p>
+    </div>
+    <a href="{% url 'admin:index' %}" class="app-header-back">← {% trans 'Back to Dashboard' %}</a>
+</div>
+
+<h2 class="section-title">{% trans 'Models' %}</h2>
+<div class="models-grid">
+    {% for model in app.models %}
+    <div class="model-card">
+        <div class="model-icon">
+            {% if 'user' in model.object_name|lower %}🔐
+            {% elif 'student' in model.object_name|lower %}🎓
+            {% elif 'enrollment' in model.object_name|lower %}📋
+            {% elif 'admission' in model.object_name|lower %}📝
+            {% elif 'faculty' in model.object_name|lower %}🏛️
+            {% elif 'department' in model.object_name|lower %}🏢
+            {% elif 'programme' in model.object_name|lower %}📜
+            {% elif 'campus' in model.object_name|lower %}🏫
+            {% elif 'course' in model.object_name|lower %}📖
+            {% elif 'semester' in model.object_name|lower or 'session' in model.object_name|lower %}📅
+            {% elif 'timetable' in model.object_name|lower %}🗓️
+            {% elif 'attendance' in model.object_name|lower %}✅
+            {% elif 'grade' in model.object_name|lower or 'result' in model.object_name|lower %}🏆
+            {% elif 'staff' in model.object_name|lower %}👨‍🏫
+            {% elif 'performance' in model.object_name|lower %}📈
+            {% elif 'invoice' in model.object_name|lower %}🧾
+            {% elif 'payment' in model.object_name|lower %}💳
+            {% elif 'fee' in model.object_name|lower %}💰
+            {% elif 'scholarship' in model.object_name|lower %}🎖️
+            {% elif 'book' in model.object_name|lower %}📚
+            {% elif 'borrow' in model.object_name|lower %}🔄
+            {% elif 'fine' in model.object_name|lower %}⚠️
+            {% elif 'hostel' in model.object_name|lower %}🏠
+            {% elif 'room' in model.object_name|lower %}🚪
+            {% elif 'allocation' in model.object_name|lower %}🔑
+            {% elif 'maintenance' in model.object_name|lower %}🔧
+            {% elif 'announcement' in model.object_name|lower %}📢
+            {% elif 'message' in model.object_name|lower %}💬
+            {% elif 'notification' in model.object_name|lower %}🔔
+            {% elif 'audit' in model.object_name|lower or 'log' in model.object_name|lower %}📜
+            {% elif 'report' in model.object_name|lower %}📊
+            {% elif 'group' in model.object_name|lower %}👥
+            {% else %}📄{% endif %}
+        </div>
+        <div class="model-info">
+            <h3>{{ model.name }}</h3>
+            <div class="model-actions">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}" class="btn-view">{% trans 'View All' %}</a>
+                {% endif %}
+                {% if model.add_url %}
+                <a href="{{ model.add_url }}" class="btn-add">+ {% trans 'Add' %}</a>
+                {% endif %}
+            </div>
+        </div>
+        {% if model.admin_url %}
+        <a href="{{ model.admin_url }}" class="model-arrow">›</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block footer %}
+{% get_admin_log 15 as admin_log for_user user %}
+<div class="ra-dropdown" id="raDropdown">
+    <div class="ra-toggle" id="raToggle">
+        🕘 {% trans 'Recent' %}
+        {% if admin_log %}<span class="ra-badge">{{ admin_log|length }}</span>{% endif %}
+    </div>
+    <div class="ra-panel" id="raPanel">
+        <div class="ra-panel-header">{% trans 'Recent Actions' %}</div>
+        <div class="ra-panel-body">
+            {% for entry in admin_log %}
+            <div class="ra-item">
+                <span class="dot {% if entry.is_addition %}dot-add{% elif entry.is_change %}dot-chg{% else %}dot-del{% endif %}"></span>
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    <span style="color:#64748b;">{{ entry.object_repr|truncatewords:6 }}</span>
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr|truncatewords:6 }}</a>
+                {% endif %}
+                <span class="time">{{ entry.action_time|timesince }} {% trans "ago" %}</span>
+            </div>
+            {% empty %}
+            <div class="ra-empty">{% trans 'No recent actions.' %}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    var toggle = document.getElementById('raToggle');
+    var panel = document.getElementById('raPanel');
+    toggle.addEventListener('click', function(e){
+        e.stopPropagation();
+        panel.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e){
+        if (!document.getElementById('raDropdown').contains(e.target)){
+            panel.classList.remove('open');
+        }
+    });
+})();
+</script>
+{% endblock %}

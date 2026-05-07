@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Student - UMS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'students:student_list' %}">Students</a></li>
+            <li class="breadcrumb-item active">Add New Student</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-plus me-2 text-primary"></i>Add New Student
+                    </h5>
+                    <p class="text-muted small mb-0 mt-1">Create a new student account with user credentials</p>
+                </div>
+                <div class="card-body p-4">
+                    <form id="studentCreateForm" method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                <div class="invalid-feedback" id="first_name_error"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                <div class="invalid-feedback" id="last_name_error"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback" id="email_error"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Academic Information -->
+                        <h6 class="text-uppercase text-muted small mb-3">Academic Information</h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="student_id" class="form-label">Student ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="student_id" name="student_id" required>
+                                <div class="form-text">Unique student identification number</div>
+                                <div class="invalid-feedback" id="student_id_error"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="active">Active</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="admitted">Admitted</option>
+                                    <option value="suspended">Suspended</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="programme" class="form-label">Programme</label>
+                                <select class="form-select" id="programme" name="programme">
+                                    <option value="">-- Select Programme --</option>
+                                    {% for prog in programmes %}
+                                    <option value="{{ prog.id }}">{{ prog.name }} ({{ prog.code }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="intake" class="form-label">Intake</label>
+                                <select class="form-select" id="intake" name="intake">
+                                    <option value="">-- Select Intake --</option>
+                                    {% for intake in intakes %}
+                                    <option value="{{ intake.id }}">{{ intake.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="current_year" class="form-label">Current Year</label>
+                                <select class="form-select" id="current_year" name="current_year">
+                                    <option value="">-- Select Year --</option>
+                                    {% for year in study_years %}
+                                    <option value="{{ year.id }}">{{ year.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="current_semester" class="form-label">Current Semester</label>
+                                <select class="form-select" id="current_semester" name="current_semester">
+                                    <option value="">-- Select Semester --</option>
+                                    {% for sem in study_semesters %}
+                                    <option value="{{ sem.id }}">{{ sem.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Note:</strong> The student's initial password will be set to their Student ID. They should change this upon first login.
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'students:student_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="bi bi-person-plus me-2"></i>Create Student
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('studentCreateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const submitBtn = document.getElementById('submitBtn');
+    const originalBtnText = submitBtn.innerHTML;
+
+    // Clear previous errors
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+    document.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+
+    // Submit form data
+    const formData = new FormData(form);
+
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            alert(data.message);
+            // Redirect to student list
+            window.location.href = "{% url 'students:student_list' %}";
+        } else {
+            // Show errors
+            Object.keys(data.errors).forEach(field => {
+                const errorEl = document.getElementById(field + '_error');
+                const inputEl = document.getElementById(field);
+                if (errorEl && inputEl) {
+                    errorEl.textContent = data.errors[field].join(', ');
+                    inputEl.classList.add('is-invalid');
+                } else if (field === '__all__') {
+                    alert(data.errors[field].join(', '));
+                }
+            });
+
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    });
+});
+</script>
+{% endblock %}

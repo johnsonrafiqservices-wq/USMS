@@ -1,0 +1,164 @@
+<form id="addCourseForm" method="post" action="{% url 'academics:course_create' %}">
+    {% csrf_token %}
+    <input type="hidden" name="programme_id" value="{{ programme_id }}">
+    
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Course Code</label>
+            {{ form.code }}
+            {% if form.code.errors %}
+            <div class="text-danger small">{{ form.code.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Course Title</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <div class="text-danger small">{{ form.title.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Department</label>
+            {{ form.department }}
+            {% if form.department.errors %}
+            <div class="text-danger small">{{ form.department.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Credit Units</label>
+            {{ form.credit_units }}
+            {% if form.credit_units.errors %}
+            <div class="text-danger small">{{ form.credit_units.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}
+            <div class="text-danger small">{{ form.course_type.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Level</label>
+            {{ form.level }}
+            {% if form.level.errors %}
+            <div class="text-danger small">{{ form.level.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Semester</label>
+            {{ form.semester }}
+            {% if form.semester.errors %}
+            <div class="text-danger small">{{ form.semester.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-12">
+            <label class="form-label">Programmes</label>
+            <div class="border rounded p-3 bg-light">
+                {% if form.programmes.help_text %}
+                <small class="text-muted d-block mb-3">{{ form.programmes.help_text }}</small>
+                {% endif %}
+                <div class="row g-2">
+                    {% for programme in form.programmes.field.queryset %}
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                   class="form-check-input" 
+                                   name="programmes" 
+                                   value="{{ programme.pk }}"
+                                   id="programme_{{ programme.pk }}">
+                            <label class="form-check-label" for="programme_{{ programme.pk }}">
+                                {{ programme.name }} ({{ programme.code }})
+                            </label>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-muted">No programmes available.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if form.programmes.errors %}
+                <div class="text-danger small mt-2">{{ form.programmes.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="text-danger small">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Max Students</label>
+            {{ form.max_students }}
+            {% if form.max_students.errors %}
+            <div class="text-danger small">{{ form.max_students.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <div class="form-check mt-4">
+                {{ form.is_active }}
+                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Create Course
+        </button>
+        <button type="button" class="btn btn-outline-secondary" onclick="closeAddCourseModal()">
+            <i class="bi bi-arrow-left me-1"></i>Cancel
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('addCourseForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+    
+    const formData = new FormData(e.target);
+    fetch(e.target.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to programme courses page if coming from there, otherwise go to course list
+            const programmeId = document.querySelector('input[name="programme_id"]').value;
+            if (programmeId) {
+                window.location.href = `/academics/programmes/${programmeId}/courses/`;
+            } else {
+                window.location.href = '/academics/courses/';
+            }
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            // Show errors more clearly
+            let errorMessage = 'Error creating course:\n';
+            try {
+                const errors = JSON.parse(data.errors);
+                for (const field in errors) {
+                    errorMessage += `${field}: ${errors[field].join(', ')}\n`;
+                }
+            } catch {
+                errorMessage += data.errors || 'Unknown error';
+            }
+            alert(errorMessage);
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        alert('Error creating course. Please try again.');
+    });
+});
+</script>

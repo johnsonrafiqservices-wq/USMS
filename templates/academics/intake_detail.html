@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ intake.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-people"></i> {{ intake.name }}</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0 small">
+            <li class="breadcrumb-item"><a href="{% url 'academics:intake_list' %}">Intakes</a></li>
+            <li class="breadcrumb-item active">{{ intake.name }}</li>
+        </ol></nav>
+    </div>
+    <span class="badge bg-success fs-6">{{ intake.students.count }} Students</span>
+</div>
+
+<div class="row g-4">
+    {# ── Intake Info ──────────────────────────────────────────────── #}
+    <div class="col-lg-4">
+        <div class="card p-4 mb-3">
+            <h6 class="fw-bold mb-3" style="font-size:.8rem;letter-spacing:.5px;text-transform:uppercase;color:#1e3a5f;">Intake Details</h6>
+            <div class="mb-2">
+                <div style="font-size:.73rem;color:#888;text-transform:uppercase;">Code</div>
+                <div><code class="fw-bold fs-6">{{ intake.code }}</code></div>
+            </div>
+            <div class="mb-2">
+                <div style="font-size:.73rem;color:#888;text-transform:uppercase;">Name</div>
+                <div class="fw-medium">{{ intake.name }}</div>
+            </div>
+            <div class="mb-2">
+                <div style="font-size:.73rem;color:#888;text-transform:uppercase;">Created</div>
+                <div style="font-size:.85rem;">{{ intake.created_at|date:"F d, Y" }}</div>
+            </div>
+        </div>
+
+        <div class="card p-3 text-center">
+            <div style="font-size:.7rem;color:#888;text-transform:uppercase;">Total Students</div>
+            <div class="fw-bold" style="font-size:2rem;color:#1e3a5f;">{{ students|length }}</div>
+        </div>
+    </div>
+
+    {# ── Students List ────────────────────────────────────────────── #}
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header fw-bold" style="font-size:.8rem;letter-spacing:.5px;text-transform:uppercase;">
+                <i class="bi bi-person-lines-fill me-1"></i>Enrolled Students ({{ students|length }})
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Programme</th>
+                            <th>Year / Sem</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><code>{{ student.student_id }}</code></td>
+                            <td class="fw-medium">{{ student.user.get_full_name }}</td>
+                            <td style="font-size:.82rem;">{{ student.programme.code|default:"—" }}</td>
+                            <td style="font-size:.82rem;">{{ student.level_display }}</td>
+                            <td>
+                                {% if student.status == 'active' %}
+                                <span class="badge bg-success badge-role">Active</span>
+                                {% elif student.status == 'graduated' %}
+                                <span class="badge bg-primary badge-role">Graduated</span>
+                                {% elif student.status == 'suspended' %}
+                                <span class="badge bg-danger badge-role">Suspended</span>
+                                {% else %}
+                                <span class="badge bg-secondary badge-role">{{ student.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'students:student_detail' student.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-person-plus" style="font-size:2rem;"></i>
+                                <p class="mt-2 mb-0">No students assigned to this intake yet.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

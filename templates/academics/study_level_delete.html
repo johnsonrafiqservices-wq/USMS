@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Delete Study Level{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-layers me-2"></i>Delete Study Level</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> You are about to delete a study level. This action cannot be undone.
+                </div>
+                
+                <h5 class="mb-3">Study Level Details</h5>
+                <table class="table table-sm">
+                    <tr>
+                        <th width="120">Code:</th>
+                        <td><span class="badge bg-primary">{{ study_level.code }}</span></td>
+                    </tr>
+                    <tr>
+                        <th>Name:</th>
+                        <td class="fw-semibold">{{ study_level.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Level Number:</th>
+                        <td><span class="badge bg-info">{{ study_level.level_number }}</span></td>
+                    </tr>
+                    {% if study_level.description %}
+                    <tr>
+                        <th>Description:</th>
+                        <td>{{ study_level.description }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            {% if study_level.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Programmes:</th>
+                        <td>
+                            <span class="badge bg-success">{{ study_level.programmes.count }}</span>
+                            {% if study_level.programmes.exists %}
+                                <small class="text-muted ms-1">programmes use this level</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                
+                {% if study_level.programmes.exists %}
+                <div class="alert alert-danger mt-3">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Cannot Delete:</strong> This study level is associated with {{ study_level.programmes.count }} programme(s). 
+                    You must first reassign or delete all programmes using this level before it can be deleted.
+                </div>
+                {% endif %}
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    
+                    {% if not study_level.programmes.exists %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Confirm Delete
+                        </button>
+                        <a href="{% url 'academics:study_level_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Back to List
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'academics:study_level_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Back to List
+                        </a>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

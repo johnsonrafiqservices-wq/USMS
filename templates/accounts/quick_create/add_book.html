@@ -1,0 +1,36 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-sm-8">
+        <label class="form-label">Title <span class="text-danger">*</span></label>
+        <input type="text" name="title" class="form-control" placeholder="Book title" required>
+    </div>
+    <div class="col-sm-4">
+        <label class="form-label">Copies <span class="text-danger">*</span></label>
+        <input type="number" name="total_copies" class="form-control" min="1" value="1" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Author <span class="text-danger">*</span></label>
+        <input type="text" name="author" class="form-control" placeholder="Author name" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">ISBN <span class="text-danger">*</span></label>
+        <input type="text" name="isbn" class="form-control" placeholder="978-…" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+            <option value="">— Uncategorised —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.pk }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Publisher</label>
+        <input type="text" name="publisher" class="form-control" placeholder="Publisher name">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Publication Year</label>
+        <input type="number" name="publication_year" class="form-control" min="1900" max="2100" placeholder="e.g. 2024">
+    </div>
+</div>

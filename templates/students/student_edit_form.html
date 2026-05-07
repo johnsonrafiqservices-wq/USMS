@@ -1,0 +1,96 @@
+<form id="studentEditForm" method="post" action="{% url 'students:student_edit' student.pk %}">
+    {% csrf_token %}
+    <div class="row g-3">
+        <h6 class="border-bottom pb-2 mb-3 text-primary"><i class="bi bi-person me-2"></i>Personal Information</h6>
+        <div class="col-md-6">
+            <label class="form-label">First Name</label>
+            {{ form.first_name }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            {{ form.last_name }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Email</label>
+            {{ form.email }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Phone Number</label>
+            {{ form.phone_number }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Date of Birth</label>
+            {{ form.date_of_birth }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            {{ form.gender }}
+        </div>
+        <div class="col-12">
+            <label class="form-label">Address</label>
+            {{ form.address }}
+        </div>
+
+        <h6 class="border-bottom pb-2 mt-4 mb-3 text-primary"><i class="bi bi-mortarboard me-2"></i>Academic Information</h6>
+        <div class="col-md-6">
+            <label class="form-label">Programme</label>
+            {{ form.programme }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Intake</label>
+            {{ form.intake }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Current Year</label>
+            {{ form.current_year }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Current Semester</label>
+            {{ form.current_semester_number }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Admission Date</label>
+            {{ form.admission_date }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Expected Graduation</label>
+            {{ form.expected_graduation }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Status</label>
+            {{ form.status }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Nationality</label>
+            {{ form.nationality }}
+        </div>
+
+        <h6 class="border-bottom pb-2 mt-4 mb-3 text-primary"><i class="bi bi-people me-2"></i>Guardian Information</h6>
+        <div class="col-md-6">
+            <label class="form-label">Guardian Name</label>
+            {{ form.guardian_name }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Relationship</label>
+            {{ form.guardian_relationship }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Guardian Phone</label>
+            {{ form.guardian_phone }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Guardian Email</label>
+            {{ form.guardian_email }}
+        </div>
+
+        <h6 class="border-bottom pb-2 mt-4 mb-3 text-primary"><i class="bi bi-heart-pulse me-2"></i>Medical & Other</h6>
+        <div class="col-md-6">
+            <label class="form-label">Blood Group</label>
+            {{ form.blood_group }}
+        </div>
+        <div class="col-12">
+            <label class="form-label">Medical Conditions</label>
+            {{ form.medical_conditions }}
+        </div>
+    </div>
+</form>

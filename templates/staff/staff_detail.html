@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ staff_member.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-person-badge"></i> Staff Profile</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card p-4 text-center">
+            <div class="avatar-sm bg-primary text-white mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                {{ staff_member.user.first_name.0 }}{{ staff_member.user.last_name.0 }}
+            </div>
+            <h5>{{ staff_member.user.get_full_name }}</h5>
+            <p class="text-muted">{{ staff_member.staff_id }}</p>
+            <span class="badge bg-primary badge-role">{{ staff_member.get_rank_display|default:"Staff" }}</span>
+            <hr>
+            <div class="text-start">
+                <p class="mb-1"><strong>Department:</strong> {{ staff_member.department|default:"N/A" }}</p>
+                <p class="mb-1"><strong>Type:</strong> {{ staff_member.get_staff_type_display }}</p>
+                <p class="mb-1"><strong>Qualification:</strong> {{ staff_member.qualification|default:"N/A" }}</p>
+                <p class="mb-1"><strong>Workload:</strong> {{ staff_member.current_workload }}/{{ staff_member.max_workload }} CU</p>
+                <p class="mb-0"><strong>Office:</strong> {{ staff_member.office_location|default:"N/A" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">Course Allocations</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Course</th><th>Semester</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for a in allocations %}
+                        <tr><td>{{ a.course.code }} - {{ a.course.title }}</td><td>{{ a.semester }}</td><td>{% if a.is_active %}<span class="badge bg-success badge-role">Active</span>{% else %}<span class="badge bg-secondary badge-role">Past</span>{% endif %}</td></tr>
+                        {% empty %}<tr><td colspan="3" class="text-muted text-center">No allocations.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

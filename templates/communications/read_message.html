@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ message.subject }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-megaphone"></i> Message</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h5>{{ message.subject }}</h5>
+            <div class="d-flex justify-content-between text-muted mb-3">
+                <small>From: {{ message.sender.get_full_name }} &rarr; To: {{ message.recipient.get_full_name }}</small>
+                <small>{{ message.sent_at|date:"M d, Y H:i" }}</small>
+            </div>
+            <hr>
+            <div class="py-3">{{ message.body|linebreaks }}</div>
+            <hr>
+            <a href="{% url 'communications:inbox' %}" class="btn btn-outline-secondary btn-sm">Back to Inbox</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

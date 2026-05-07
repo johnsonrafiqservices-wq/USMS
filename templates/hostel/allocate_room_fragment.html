@@ -1,0 +1,21 @@
+{% csrf_token %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <div class="mb-3">
+                <label class="form-label">Student</label>
+                <select name="student" class="form-select" required>
+                    <option value="">Select student...</option>
+                    {% for s in students %}<option value="{{ s.id }}">{{ s.student_id }} - {{ s.full_name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Room</label>
+                <select name="room" class="form-select" required>
+                    <option value="">Select room...</option>
+                    {% for r in rooms %}<option value="{{ r.id }}">{{ r.hostel.name }} - Room {{ r.room_number }} ({{ r.current_occupancy }}/{{ r.capacity }})</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

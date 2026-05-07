@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-megaphone"></i> Announcements</h1>
+</div>
+
+{% if user.is_admin or user.is_registrar or user.is_lecturer %}
+<div class="mb-3 text-end">
+    <a href="{% url 'communications:create_announcement' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i> New Announcement</a>
+</div>
+{% endif %}
+
+<div class="row g-3">
+    {% for ann in announcements %}
+    <div class="col-12">
+        <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="fw-bold mb-1">
+                        {% if ann.priority == 'urgent' %}<i class="bi bi-exclamation-circle text-danger me-1"></i>{% endif %}
+                        {{ ann.title }}
+                    </h6>
+                    <p class="mb-2">{{ ann.content|truncatewords:50 }}</p>
+                    <small class="text-muted">
+                        <i class="bi bi-person me-1"></i>{{ ann.author.get_full_name }}
+                        <i class="bi bi-clock ms-2 me-1"></i>{{ ann.publish_date|date:"M d, Y H:i" }}
+                        <span class="badge bg-secondary badge-role ms-2">{{ ann.get_target_audience_display }}</span>
+                    </small>
+                </div>
+                <span class="badge bg-{% if ann.priority == 'urgent' %}danger{% elif ann.priority == 'high' %}warning{% else %}info{% endif %}">{{ ann.get_priority_display }}</span>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="card p-4 text-center"><p class="text-muted">No announcements.</p></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

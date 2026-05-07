@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Library{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-journal-bookmark"></i> Library Catalog</h1>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form class="d-flex gap-2" method="get">
+        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search books..." value="{{ request.GET.search }}">
+        <select name="category" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}<option value="{{ cat.id }}">{{ cat.name }}</option>{% endfor %}
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary">Search</button>
+    </form>
+    {% if user.is_librarian or user.is_admin %}
+    <div class="d-flex gap-2">
+        <a href="{% url 'library:book_list' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-list-ul me-1"></i> Manage Books
+        </a>
+        <button onclick="loadModalForm('/library/issue/', '<i class=&quot;bi bi-journal-bookmark me-2&quot;></i>Issue Book', 'Issue Book')" class="btn btn-primary btn-sm"><i class="bi bi-plus me-1"></i> Issue Book</button>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row g-3">
+    {% for book in books %}
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h6 class="fw-bold mb-1">{{ book.title }}</h6>
+            <p class="text-muted mb-1"><small>by {{ book.author }}</small></p>
+            <small class="d-block mb-2">ISBN: {{ book.isbn }} | {{ book.category|default:"Uncategorized" }}</small>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %} badge-role">
+                    {{ book.available_copies }}/{{ book.total_copies }} available
+                </span>
+                <a href="{% url 'library:book_detail' book.pk %}" class="btn btn-sm btn-outline-primary">Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="card p-4 text-center"><p class="text-muted">No books in catalog.</p></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

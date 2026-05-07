@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-person-badge"></i> My Course Allocations</h1>
+</div>
+
+<div class="row g-3">
+    {% for alloc in current_allocations %}
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6 class="fw-bold">{{ alloc.course.code }}</h6>
+            <p class="mb-1">{{ alloc.course.title }}</p>
+            <small class="text-muted">{{ alloc.course.credit_units }} CU | {{ alloc.semester }}</small>
+            <div class="mt-2">
+                <a href="{% url 'academics:enter_results' alloc.pk %}" class="btn btn-sm btn-outline-primary me-1">Grades</a>
+                <a href="{% url 'academics:take_attendance' alloc.pk %}" class="btn btn-sm btn-outline-success">Attendance</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card p-4 text-center">
+            <p class="text-muted">No courses allocated for the current semester.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

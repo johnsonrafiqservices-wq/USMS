@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ hostel.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-building"></i> {{ hostel.name }}</h1>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <span>Rooms</span>
+        <a href="{% url 'hostel:allocate_room' %}" class="btn btn-sm btn-primary">Allocate Room</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead><tr><th>Room</th><th>Floor</th><th>Type</th><th>Capacity</th><th>Occupied</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for room in rooms %}
+                <tr>
+                    <td class="fw-medium">{{ room.room_number }}</td>
+                    <td>{{ room.floor }}</td>
+                    <td>{{ room.get_room_type_display }}</td>
+                    <td>{{ room.capacity }}</td>
+                    <td>{{ room.current_occupancy }}</td>
+                    <td>{% if room.is_full %}<span class="badge bg-danger badge-role">Full</span>{% else %}<span class="badge bg-success badge-role">Available</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

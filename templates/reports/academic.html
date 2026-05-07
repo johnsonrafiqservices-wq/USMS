@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Academic Report{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-graph-up"></i> Academic Performance Report</h1>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Average GPA</div>
+            <div class="stat-value">{{ avg_gpa }}</div>
+            <i class="bi bi-trophy stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Pass Rate</div>
+            <div class="stat-value">{{ pass_rate }}%</div>
+            <i class="bi bi-check-circle stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Passes</div>
+            <div class="stat-value">{{ pass_count }}</div>
+            <i class="bi bi-hand-thumbs-up stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Fails</div>
+            <div class="stat-value">{{ fail_count }}</div>
+            <i class="bi bi-hand-thumbs-down stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><i class="bi bi-pie-chart"></i> Grade Distribution</div>
+    <div class="card-body p-3">
+        <canvas id="gradeChart" height="100"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const gradeData = {{ grade_distribution|safe }};
+if (gradeData && gradeData.length > 0) {
+    new Chart(document.getElementById('gradeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: gradeData.map(d => d.grade),
+            datasets: [{
+                data: gradeData.map(d => d.count),
+                backgroundColor: ['#4f46e5','#10b981','#f59e0b','#ef4444','#6b7280','#8b5cf6'],
+            }]
+        },
+        options: { responsive: true }
+    });
+}
+</script>
+{% endblock %}

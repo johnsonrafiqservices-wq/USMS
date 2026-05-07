@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ department.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-book"></i> {{ department.code }} - {{ department.name }}</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h6 class="fw-bold">Department Info</h6>
+            <hr>
+            <p><strong>Code:</strong> {{ department.code }}</p>
+            <p><strong>Faculty:</strong> {{ department.faculty.name }}</p>
+            <p><strong>HOD:</strong> {{ department.head_of_department|default:"Not assigned" }}</p>
+            <p class="mb-0"><strong>Programmes:</strong> {{ programmes.count }}</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header">Programmes</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Code</th><th>Name</th><th>Level</th><th>Duration</th></tr></thead>
+                    <tbody>
+                        {% for p in programmes %}
+                        <tr><td>{{ p.code }}</td><td>{{ p.name }}</td><td>{{ p.get_level_display }}</td><td>{{ p.duration_years }} years</td></tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-muted text-center">No programmes.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Courses</div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Code</th><th>Title</th><th>Credits</th><th>Level</th><th>Type</th></tr></thead>
+                    <tbody>
+                        {% for c in courses %}
+                        <tr><td>{{ c.code }}</td><td>{{ c.title }}</td><td>{{ c.credit_units }}</td><td>{{ c.level }}</td><td>{{ c.get_course_type_display }}</td></tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-muted text-center">No courses.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

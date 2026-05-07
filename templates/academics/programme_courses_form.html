@@ -1,0 +1,15 @@
+<form method="post">
+    {% csrf_token %}
+    <h5>Assign Courses to {{ programme.name }}</h5>
+    <div class="mb-3">
+        {% for course in form.courses %}
+        <div class="form-check">
+            {{ course.tag }}
+            <label class="form-check-label" for="{{ course.id_for_label }}">
+                {{ course.choice_label }}
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Update Courses</button>
+</form>

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block title %}Finance Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+  .fin-stat {
+    background:#fff; border:1px solid #e9ecef; border-radius:10px;
+    padding:20px 22px; position:relative; overflow:hidden;
+  }
+  .fin-stat .fs-label { font-size:.75rem; text-transform:uppercase; letter-spacing:.6px; color:#888; }
+  .fin-stat .fs-val { font-size:1.7rem; font-weight:700; color:#1e3a5f; line-height:1.2; margin:4px 0 2px; }
+  .fin-stat .fs-sub { font-size:.78rem; color:#aaa; }
+  .fin-stat .fs-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:2.4rem; opacity:.12; color:#1e3a5f; }
+  .fin-stat.danger .fs-val { color:#dc3545; }
+  .fin-stat.danger .fs-icon { color:#dc3545; }
+  .fin-stat.success .fs-val { color:#198754; }
+  .fin-stat.success .fs-icon { color:#198754; }
+  .fin-stat.warning .fs-val { color:#f59e0b; }
+  .fin-stat.warning .fs-icon { color:#f59e0b; }
+  .section-hdr {
+    font-size:.75rem; font-weight:700; letter-spacing:.8px; color:#1e3a5f;
+    text-transform:uppercase; border-bottom:2px solid #1e3a5f;
+    display:inline-block; padding-bottom:3px; margin-bottom:14px;
+  }
+  .collection-bar { height:10px; border-radius:5px; background:#e9ecef; }
+  .collection-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,#1e3a5f,#3b82f6); transition:width .6s; }
+  .qaction-btn {
+    display:flex; align-items:center; gap:10px; padding:12px 16px;
+    border:1px solid #e9ecef; border-radius:8px; color:#333;
+    text-decoration:none; font-size:.88rem; font-weight:500;
+    transition:all .2s; margin-bottom:8px;
+  }
+  .qaction-btn:hover { background:#f0f4ff; border-color:#1e3a5f; color:#1e3a5f; }
+  .qaction-btn i { font-size:1.2rem; color:#1e3a5f; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-cash-stack"></i> Finance Dashboard</h1>
+        <p class="text-muted mb-0">Financial overview and activity</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'finance:create_invoice' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle me-1"></i>New Invoice
+        </a>
+        <a href="{% url 'finance:payment_list' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-credit-card me-1"></i>Payments
+        </a>
+    </div>
+</div>
+
+{# ── KPI row ────────────────────────────────────────────────── #}
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="fin-stat success">
+            <div class="fs-label">Total Revenue</div>
+            <div class="fs-val">{{ total_revenue|floatformat:0 }}</div>
+            <div class="fs-sub">UGX collected</div>
+            <i class="bi bi-cash-stack fs-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="fin-stat danger">
+            <div class="fs-label">Outstanding</div>
+            <div class="fs-val">{{ total_outstanding|floatformat:0 }}</div>
+            <div class="fs-sub">UGX unpaid</div>
+            <i class="bi bi-exclamation-circle fs-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="fin-stat warning">
+            <div class="fs-label">Pending / Partial</div>
+            <div class="fs-val">{{ pending_invoices }} / {{ partial_invoices }}</div>
+            <div class="fs-sub">invoices</div>
+            <i class="bi bi-receipt fs-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="fin-stat danger">
+            <div class="fs-label">Overdue</div>
+            <div class="fs-val">{{ overdue_invoices }}</div>
+            <div class="fs-sub">invoices</div>
+            <i class="bi bi-clock-history fs-icon"></i>
+        </div>
+    </div>
+</div>
+
+{# ── Collection rate + chart row ─────────────────────────────── #}
+<div class="row g-3 mb-4">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="section-hdr">Monthly Revenue (Last 6 Months)</span>
+            </div>
+            <canvas id="revenueChart" height="90"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card p-4 mb-3">
+            <div class="section-hdr">Collection Rate</div>
+            <div class="d-flex justify-content-between mb-1">
+                <span style="font-size:.85rem;">{{ collection_rate }}% collected</span>
+                <span style="font-size:.85rem;" class="text-muted">of {{ total_invoiced|floatformat:0 }} UGX</span>
+            </div>
+            <div class="collection-bar">
+                <div class="collection-fill" style="width:{{ collection_rate }}%;"></div>
+            </div>
+        </div>
+        <div class="card p-4">
+            <div class="section-hdr">Scholarships</div>
+            <div class="d-flex justify-content-between">
+                <span class="text-muted" style="font-size:.85rem;">Active scholarships</span>
+                <strong>{{ scholarships_count }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+                <span class="text-muted" style="font-size:.85rem;">Total awarded</span>
+                <strong class="text-success">{{ scholarships_total|floatformat:0 }} UGX</strong>
+            </div>
+            <a href="{% url 'finance:scholarship_list' %}" class="btn btn-sm btn-outline-primary w-100 mt-3">
+                <i class="bi bi-award me-1"></i>View Scholarships
+            </a>
+        </div>
+    </div>
+</div>
+
+{# ── Recent payments + overdue ────────────────────────────────── #}
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="section-hdr mb-0">Recent Payments</span>
+                <a href="{% url 'finance:payment_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>Receipt</th><th>Student</th><th>Amount (UGX)</th><th>Method</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for p in recent_payments %}
+                        <tr>
+                            <td><code>{{ p.receipt_number }}</code></td>
+                            <td>{{ p.student.user.get_full_name }}</td>
+                            <td class="text-success fw-bold">{{ p.amount|floatformat:0 }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ p.get_payment_method_display }}</span></td>
+                            <td style="font-size:.82rem;">{{ p.payment_date|date:"M d, Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-muted text-center py-4">No payments recorded yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card mb-3">
+            <div class="card-header"><span class="section-hdr mb-0 text-danger">Overdue Invoices</span></div>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light">
+                        <tr><th>Student</th><th>Session</th><th>Balance</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for inv in overdue_list %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'finance:invoice_detail' inv.pk %}" class="text-decoration-none fw-medium">
+                                    {{ inv.student.user.get_full_name }}
+                                </a><br>
+                                <small class="text-muted">{{ inv.student.student_id }}</small>
+                            </td>
+                            <td style="font-size:.82rem;">{{ inv.session.name }}</td>
+                            <td class="text-danger fw-bold">{{ inv.balance|floatformat:0 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-muted text-center py-3">No overdue invoices.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card p-3">
+            <div class="section-hdr">Quick Actions</div>
+            <a href="{% url 'finance:create_invoice' %}" class="qaction-btn"><i class="bi bi-plus-circle"></i>Create Invoice</a>
+            <a href="{% url 'finance:invoice_list' %}" class="qaction-btn"><i class="bi bi-receipt"></i>All Invoices</a>
+            <a href="{% url 'finance:fee_structure' %}" class="qaction-btn"><i class="bi bi-gear"></i>Fee Structure</a>
+            <a href="{% url 'finance:scholarship_list' %}" class="qaction-btn"><i class="bi bi-award"></i>Scholarships</a>
+            <a href="{% url 'reports:financial' %}" class="qaction-btn"><i class="bi bi-graph-up"></i>Financial Report</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const monthlyData = {{ monthly_data|safe }};
+if (monthlyData && monthlyData.length) {
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'bar',
+        data: {
+            labels: monthlyData.map(d => d.label),
+            datasets: [{
+                label: 'Revenue (UGX)',
+                data: monthlyData.map(d => d.value),
+                backgroundColor: 'rgba(30,58,95,.75)',
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString() } } }
+        }
+    });
+}
+</script>
+{% endblock %}

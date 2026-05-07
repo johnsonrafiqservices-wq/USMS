@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Review Application{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-mortarboard"></i> Review Application</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Application Details</div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6"><strong>Name:</strong> {{ application.first_name }} {{ application.last_name }}</div>
+                    <div class="col-md-6"><strong>Email:</strong> {{ application.email }}</div>
+                    <div class="col-md-6"><strong>Phone:</strong> {{ application.phone }}</div>
+                    <div class="col-md-6"><strong>Gender:</strong> {{ application.get_gender_display }}</div>
+                    <div class="col-md-6"><strong>Programme:</strong> {{ application.programme_applied }}</div>
+                    <div class="col-md-6"><strong>Previous School:</strong> {{ application.previous_school }}</div>
+                    <div class="col-md-6"><strong>Qualification:</strong> {{ application.qualification }}</div>
+                    <div class="col-md-6"><strong>Status:</strong> {{ application.get_status_display }}</div>
+                </div>
+                <hr>
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <button name="action" value="accept" class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Accept</button>
+                    <button name="action" value="reject" class="btn btn-danger"><i class="bi bi-x-circle me-1"></i>Reject</button>
+                    <a href="{% url 'students:admission_list' %}" class="btn btn-outline-secondary">Back</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

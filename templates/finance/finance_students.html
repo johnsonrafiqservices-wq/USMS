@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Students Finance{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-mortarboard"></i> Students Finance</h1>
+        <p class="text-muted mb-0">Student financial overview and billing status</p>
+    </div>
+</div>
+
+{# ── Filters ────────────────────────────────────────────────── #}
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <form method="get" id="filterForm" class="row g-1 align-items-center">
+            <div class="col-md-3">
+                <input type="text" name="search" value="{{ request.GET.search }}" class="form-control form-control-sm" placeholder="Search ID or name…" onchange="this.form.submit()">
+            </div>
+            <div class="col-md-2">
+                <select name="programme" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Programmes</option>
+                    {% for prog in programmes %}
+                    <option value="{{ prog.id }}" {% if programme_filter == prog.id|stringformat:"s" %}selected{% endif %}>{{ prog.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="intake" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Intakes</option>
+                    {% for intk in intakes %}
+                    <option value="{{ intk.id }}" {% if intake_filter == intk.id|stringformat:"s" %}selected{% endif %}>{{ intk.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Years</option>
+                    {% for yr in years %}
+                    <option value="{{ yr.id }}" {% if year_filter == yr.id|stringformat:"s" %}selected{% endif %}>{{ yr.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All Semesters</option>
+                    {% for sem in semesters %}
+                    <option value="{{ sem.id }}" {% if semester_filter == sem.id|stringformat:"s" %}selected{% endif %}>{{ sem.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1">
+                <a href="{% url 'finance:students' %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ── Summary Cards ────────────────────────────────────────────── #}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Total Students</div>
+            <div class="fw-bold" style="font-size:1.2rem;color:#1e3a5f;">{{ students|length }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Active</div>
+            <div class="fw-bold text-success" style="font-size:1.2rem;">{{ students|length }}</div>
+        </div>
+    </div>
+</div>
+
+{# ── Students Table ─────────────────────────────────────────────── #}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Programme</th>
+                    <th>Year</th>
+                    <th>Semester</th>
+                    <th class="text-end">Total Billed</th>
+                    <th class="text-end">Total Paid</th>
+                    <th class="text-end">Balance</th>
+                    <th class="text-center">Invoices</th>
+                    <th class="text-center">Payments</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td><code class="fw-bold">{{ student.student_id }}</code></td>
+                    <td>
+                        <div class="fw-medium">{{ student.user.get_full_name }}</div>
+                        <small class="text-muted">{{ student.user.email }}</small>
+                    </td>
+                    <td><small>{{ student.programme.name|default:"—" }}</small></td>
+                    <td><small>{{ student.current_year.name|default:"—" }}</small></td>
+                    <td><small>{{ student.current_semester_number.name|default:"—" }}</small></td>
+                    <td class="text-end">{{ student.total_billed|floatformat:0|default:"0" }}</td>
+                    <td class="text-end text-success">{{ student.total_paid|floatformat:0|default:"0" }}</td>
+                    <td class="text-end {% if student.total_balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
+                        {{ student.total_balance|floatformat:0|default:"0" }}
+                    </td>
+                    <td class="text-center">{{ student.invoice_count }}</td>
+                    <td class="text-center">{{ student.payment_count }}</td>
+                    <td>
+                        {% if student.total_balance > 0 %}
+                            <span class="badge bg-danger badge-role">Outstanding</span>
+                        {% else %}
+                            <span class="badge bg-success badge-role">Clear</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'finance:student_payment_history' student.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;" title="View Payment History">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="12" class="text-center text-muted py-5">
+                        <i class="bi bi-mortarboard" style="font-size:2rem;"></i>
+                        <p class="mt-2 mb-0">No students found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

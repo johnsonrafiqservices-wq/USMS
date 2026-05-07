@@ -1,0 +1,48 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-12">
+        <label class="form-label">Student <span class="text-danger">*</span></label>
+        <select name="student" class="form-select" required>
+            <option value="">— Select Student —</option>
+            {% for s in students %}
+            <option value="{{ s.pk }}">{{ s.student_id }} — {{ s.user.get_full_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+        <select name="session" class="form-select" required>
+            <option value="">— Select Session —</option>
+            {% for s in sessions %}
+            <option value="{{ s.pk }}" {% if s.is_current %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Semester</label>
+        <select name="semester" class="form-select">
+            <option value="">— All Semesters —</option>
+            {% for sm in semesters %}
+            <option value="{{ sm.pk }}">{{ sm.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Due Date</label>
+        <input type="date" name="due_date" class="form-control">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
+        <input type="number" name="amount" class="form-control" min="0" step="0.01" placeholder="0.00" required>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Fee Description <span class="text-danger">*</span></label>
+        <input type="text" name="description" class="form-control" placeholder="e.g. Tuition Fee – Semester 1" required>
+    </div>
+    <div class="col-12">
+        <div class="alert alert-info py-2 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            For multiple fee lines, use the <a href="/finance/invoices/create/" class="alert-link">full invoice form</a>.
+        </div>
+    </div>
+</div>

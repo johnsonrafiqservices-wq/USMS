@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Hostel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-building"></i> Hostel Management</h1>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Total Capacity</div>
+            <div class="stat-value">{{ total_capacity }}</div>
+            <i class="bi bi-house-door stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Occupied</div>
+            <div class="stat-value">{{ total_occupied }}</div>
+            <i class="bi bi-people stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Occupancy Rate</div>
+            <div class="stat-value">{{ occupancy_rate }}%</div>
+            <i class="bi bi-bar-chart stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Maintenance Pending</div>
+            <div class="stat-value">{{ pending_maintenance }}</div>
+            <i class="bi bi-tools stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for hostel in hostels %}
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h6 class="fw-bold">{{ hostel.name }}</h6>
+            <small class="text-muted">{{ hostel.get_hostel_type_display }} | {{ hostel.total_rooms }} rooms</small>
+            <div class="progress mt-2" style="height:8px;">
+                <div class="progress-bar" style="width:{{ hostel.occupancy_rate }}%"></div>
+            </div>
+            <small>{{ hostel.occupied_beds }}/{{ hostel.total_capacity }} beds ({{ hostel.occupancy_rate }}%)</small>
+            <div class="mt-2">
+                <a href="{% url 'hostel:hostel_detail' hostel.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="card p-4 text-center"><p class="text-muted">No hostels configured.</p></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

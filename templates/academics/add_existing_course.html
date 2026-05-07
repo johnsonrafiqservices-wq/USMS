@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}Add Existing Course to Programme{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-plus-circle"></i> Add Existing Course to Programme</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <button type="button" class="btn btn-primary mb-3" id="openCourseSelectModal">
+            <i class="bi bi-search me-2"></i>Select Course to Add to Programme
+        </button>
+        
+        <form method="post" id="addExistingCourseForm">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Programme</label>
+                    <select class="form-select" name="programme_id" id="programmeSelect" required>
+                        <option value="">-- Select Programme --</option>
+                        {% for programme in programmes %}
+                        <option value="{{ programme.pk }}">{{ programme.name }} ({{ programme.code }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Course</label>
+                    <select class="form-select" name="course_id" id="courseSelect" required>
+                        <option value="">-- Select Course --</option>
+                        {% for course in courses %}
+                        <option value="{{ course.pk }}">{{ course.code }} - {{ course.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Year of Study</label>
+                    <select class="form-select" name="year_id" id="yearSelect" required>
+                        <option value="">-- Select Year --</option>
+                        {% for year in study_years %}
+                        <option value="{{ year.pk }}">{{ year.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Semester</label>
+                    <select class="form-select" name="semester_id" id="semesterSelect" required>
+                        <option value="">-- Select Semester --</option>
+                        {% for semester in study_semesters %}
+                        <option value="{{ semester.pk }}">{{ semester.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Course Type</label>
+                    <select class="form-select" name="course_type" id="courseTypeSelect" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="core">Core</option>
+                        <option value="elective">Elective</option>
+                        <option value="general">General Education</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Add Course to Programme
+                    </button>
+                    <a href="{% url 'academics:programme_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Programmes
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Course Selection Modal -->
+<div id="courseSelectModal" class="pc-modal-overlay" style="display:none;">
+    <div class="pc-modal-content">
+        <div class="pc-modal-header">
+            <h5 class="mb-0"><i class="bi bi-search me-2"></i>Select Course to Add to Programme</h5>
+            <button type="button" class="btn-close btn-close-white" id="closeCourseSelectModal"></button>
+        </div>
+        <div class="pc-modal-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <th>Department</th>
+                            <th>Credits</th>
+                            <th>Level</th>
+                            <th>Type</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseTableBody">
+                        {% for course in courses %}
+                        <tr data-course-id="{{ course.pk }}" data-course-code="{{ course.code }}" data-course-title="{{ course.title }}" data-course-credits="{{ course.credit_units }}" data-course-level="{{ course.level }}" data-course-type="{{ course.course_type }}" data-course-description="{{ course.description|escape }}" data-course-max-students="{{ course.max_students }}" data-course-department="{{ course.department.pk }}" data-course-active="{{ course.is_active|yesno:'true,false' }}">
+                            <td class="fw-medium">{{ course.code }}</td>
+                            <td>{{ course.title }}</td>
+                            <td><small>{{ course.department.name }}</small></td>
+                            <td>{{ course.credit_units }}</td>
+                            <td>{{ course.level }}</td>
+                            <td><span class="badge bg-secondary badge-role">{{ course.get_course_type_display }}</span></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary select-course-btn" data-course-id="{{ course.pk }}">
+                                    <i class="bi bi-check-circle"></i> Select
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No courses available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const courseSelectModal = document.getElementById('courseSelectModal');
+    const openCourseSelectModal = document.getElementById('openCourseSelectModal');
+    const closeCourseSelectModal = document.getElementById('closeCourseSelectModal');
+    const openManageCoursesBtn = document.getElementById('openManageCoursesBtn');
+    const programmeSelect = document.getElementById('programmeSelect');
+    const courseSelect = document.getElementById('courseSelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const semesterSelect = document.getElementById('semesterSelect');
+    const courseTypeSelect = document.getElementById('courseTypeSelect');
+    const addExistingCourseForm = document.getElementById('addExistingCourseForm');
+    
+    function openCourseSelectionModal() {
+        if (courseSelectModal) courseSelectModal.classList.add('show');
+    }
+    
+    function closeCourseSelectionModal() {
+        if (courseSelectModal) courseSelectModal.classList.remove('show');
+    }
+    
+    // Open course selection modal
+    if (openCourseSelectModal) openCourseSelectModal.addEventListener('click', openCourseSelectionModal);
+    if (closeCourseSelectModal) closeCourseSelectModal.addEventListener('click', closeCourseSelectionModal);
+    if (courseSelectModal) courseSelectModal.addEventListener('click', function(e) {
+        if (e.target === courseSelectModal) closeCourseSelectionModal();
+    });
+    
+    // Handle course selection
+    document.querySelectorAll('.select-course-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const courseId = this.dataset.courseId;
+            const courseRow = document.querySelector(`tr[data-course-id="${courseId}"]`);
+            
+            // Populate form with course data
+            if (programmeSelect) programmeSelect.value = courseRow.dataset.courseDepartment;
+            if (courseSelect) courseSelect.value = courseId;
+            if (yearSelect) yearSelect.value = '';
+            if (semesterSelect) semesterSelect.value = '';
+            if (courseTypeSelect) courseTypeSelect.value = courseRow.dataset.courseType;
+            
+            // Close modal and scroll to form
+            closeCourseSelectionModal();
+            document.getElementById('courseTableBody').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+    
+    // Filter courses when programme changes
+    if (programmeSelect) {
+        programmeSelect.addEventListener('change', function() {
+            const selectedProgramme = this.value;
+            const courseRows = document.querySelectorAll('#courseTableBody tr');
+            
+            courseRows.forEach(function(row) {
+                if (selectedProgramme === '' || row.dataset.courseDepartment === selectedProgramme) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // Handle form submission
+    if (addExistingCourseForm) {
+        addExistingCourseForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Adding Course...';
+            
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    let errorMsg = 'Error adding course to programme:\n';
+                    try {
+                        const errors = JSON.parse(data.errors);
+                        for (const field in errors) {
+                            errorMsg += `${field}: ${errors[field].join(', ')}\n`;
+                        }
+                    } catch {
+                        errorMsg += data.errors || 'Unknown error';
+                    }
+                    alert(errorMsg);
+                }
+            })
+            .catch(err => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                alert('Error adding course to programme. Please try again.');
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

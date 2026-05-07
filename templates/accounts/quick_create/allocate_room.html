@@ -1,0 +1,33 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-12">
+        <label class="form-label">Student <span class="text-danger">*</span></label>
+        <select name="student" class="form-select" required>
+            <option value="">— Select Active Student —</option>
+            {% for s in students %}
+            <option value="{{ s.pk }}">{{ s.student_id }} — {{ s.user.get_full_name }}</option>
+            {% endfor %}
+        </select>
+        {% if not students %}
+        <div class="form-text text-warning"><i class="bi bi-exclamation-triangle me-1"></i>No active students found.</div>
+        {% endif %}
+    </div>
+    <div class="col-12">
+        <label class="form-label">Room <span class="text-danger">*</span></label>
+        <select name="room" class="form-select" required>
+            <option value="">— Select Available Room —</option>
+            {% for r in rooms %}
+            <option value="{{ r.pk }}">{{ r.hostel.name }} › Room {{ r.room_number }} ({{ r.room_type }} — {{ r.current_occupancy }}/{{ r.capacity }} occupied)</option>
+            {% endfor %}
+        </select>
+        {% if not rooms %}
+        <div class="form-text text-warning"><i class="bi bi-exclamation-triangle me-1"></i>No rooms with available space.</div>
+        {% endif %}
+    </div>
+    <div class="col-12">
+        <div class="alert alert-info py-2 mb-0">
+            <i class="bi bi-info-circle me-1"></i>
+            Allocation will be assigned to the <strong>current academic session</strong>.
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+{% csrf_token %}
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-7">
+        <div class="card p-4">
+            <h6 class="fw-bold mb-3" style="font-size:.8rem;letter-spacing:.6px;text-transform:uppercase;color:#1e3a5f;border-bottom:2px solid #1e3a5f;display:inline-block;padding-bottom:3px;">Payment Details</h6>
+            <div class="mb-3">
+                <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text">UGX</span>
+                    <input type="number" name="amount" class="form-control form-control-lg"
+                           step="1" min="1" max="{{ invoice.balance }}"
+                           placeholder="0" required>
+                </div>
+                <div class="form-text">Maximum: UGX {{ invoice.balance|floatformat:0 }}</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Payment Method <span class="text-danger">*</span></label>
+                <select name="payment_method" class="form-select" required>
+                    <option value="">— Select Method —</option>
+                    {% for val, label in methods %}
+                    <option value="{{ val }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Reference / Transaction Number</label>
+                <input type="text" name="reference_number" class="form-control" placeholder="Bank ref, mobile money ID, cheque no…">
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Notes</label>
+                <textarea name="notes" class="form-control" rows="2" placeholder="Optional notes…"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card p-4">
+            <h6 class="fw-bold mb-3" style="font-size:.8rem;letter-spacing:.6px;text-transform:uppercase;color:#1e3a5f;">Invoice Summary</h6>
+            <div class="mb-2">
+                <div style="font-size:.75rem;color:#888;">Invoice #</div>
+                <code class="fw-bold">{{ invoice.invoice_number }}</code>
+            </div>
+            <div class="mb-2">
+                <div style="font-size:.75rem;color:#888;">Student</div>
+                <div class="fw-medium">{{ invoice.student.user.get_full_name }}</div>
+                <small class="text-muted">{{ invoice.student.student_id }}</small>
+            </div>
+            <div class="mb-2">
+                <div style="font-size:.75rem;color:#888;">Session</div>
+                <div>{{ invoice.session.name }}</div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Total Billed</span>
+                <span>{{ invoice.total_amount|floatformat:0 }} UGX</span>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Amount Paid</span>
+                <span class="text-success">{{ invoice.amount_paid|floatformat:0 }} UGX</span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold">
+                <span class="text-danger">Balance Due</span>
+                <span class="text-danger" style="font-size:1.1rem;">{{ invoice.balance|floatformat:0 }} UGX</span>
+            </div>
+        </div>
+    </div>
+</div>

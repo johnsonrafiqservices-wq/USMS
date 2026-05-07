@@ -1,0 +1,81 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-sm-6">
+        <label class="form-label">First Name <span class="text-danger">*</span></label>
+        <input type="text" name="first_name" class="form-control" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Last Name <span class="text-danger">*</span></label>
+        <input type="text" name="last_name" class="form-control" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Phone</label>
+        <input type="text" name="phone" class="form-control">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+        <input type="date" name="date_of_birth" class="form-control" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Gender <span class="text-danger">*</span></label>
+        <select name="gender" class="form-select" required>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="O">Other</option>
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Programme <span class="text-danger">*</span></label>
+        <select name="programme" class="form-select" required>
+            <option value="">— Select Programme —</option>
+            {% for p in programmes %}
+            <option value="{{ p.pk }}">{{ p.code }} — {{ p.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+        <select name="session" class="form-select" required>
+            <option value="">— Select Session —</option>
+            {% for s in sessions %}
+            <option value="{{ s.pk }}" {% if s.is_current %}selected{% endif %}>{{ s.name }}{% if s.is_current %} (Current){% endif %}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Intake</label>
+        <select name="intake" class="form-select">
+            <option value="">— None —</option>
+            {% for i in intakes %}
+            <option value="{{ i.pk }}">{{ i.code }} — {{ i.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Previous School</label>
+        <input type="text" name="previous_school" class="form-control">
+    </div>
+</div>
+
+<div class="mt-4">
+    <label class="form-label fw-bold">Fee Structures (Select applicable fees)</label>
+    <div class="card">
+        <div class="card-body py-2" style="max-height: 200px; overflow-y: auto;">
+            {% for fee in fee_structures %}
+            <div class="form-check py-1">
+                <input type="checkbox" name="fees" value="{{ fee.pk }}" class="form-check-input" id="fee_{{ fee.pk }}">
+                <label class="form-check-label" for="fee_{{ fee.pk }}">
+                    {{ fee.name }} - UGX {{ fee.amount|floatformat:0 }} 
+                    <small class="text-muted">({{ fee.get_frequency_display }}{% if fee.programme %}, {{ fee.programme.name }}{% endif %})</small>
+                </label>
+            </div>
+            {% empty %}
+            <div class="text-muted">No fee structures available.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

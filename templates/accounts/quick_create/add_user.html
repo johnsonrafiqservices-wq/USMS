@@ -1,0 +1,31 @@
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-sm-6">
+        <label class="form-label">First Name</label>
+        <input type="text" name="first_name" class="form-control" placeholder="First name">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Last Name</label>
+        <input type="text" name="last_name" class="form-control" placeholder="Last name">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Username <span class="text-danger">*</span></label>
+        <input type="text" name="username" class="form-control" placeholder="e.g. jdoe2026" required>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" placeholder="user@university.edu">
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Role <span class="text-danger">*</span></label>
+        <select name="role" class="form-select" required>
+            {% for value, label in roles %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <label class="form-label">Password <span class="text-danger">*</span></label>
+        <input type="password" name="password" class="form-control" placeholder="Temporary password" required>
+    </div>
+</div>

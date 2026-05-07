@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+{% block title %}{{ student.student_id }} - Payment History{% endblock %}
+
+{% block extra_css %}
+<style>
+  .profile-header {
+    background: #fff;
+    border-bottom: 1px solid #e9ecef;
+    padding: 28px 32px 0;
+    margin-bottom: 0;
+  }
+  .profile-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: #1e3a5f;
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .profile-id-badge {
+    background: #1e3a5f;
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+  }
+  .profile-tabs .nav-link {
+    color: #555; font-size: .88rem; padding: 10px 18px;
+    border: none; border-bottom: 2px solid transparent;
+    border-radius: 0;
+  }
+  .profile-tabs .nav-link.active {
+    color: #1e3a5f; border-bottom-color: #1e3a5f;
+    font-weight: 600; background: none;
+  }
+  .profile-tabs .nav-link i { margin-right: 5px; }
+  .section-card {
+    background: #fff; border: 1px solid #e9ecef;
+    border-radius: 8px; padding: 22px 26px; margin-bottom: 18px;
+  }
+  .section-card h6 {
+    font-size: .78rem; font-weight: 700; letter-spacing: .8px;
+    color: #1e3a5f; text-transform: uppercase;
+    border-bottom: 2px solid #1e3a5f; display: inline-block;
+    padding-bottom: 4px; margin-bottom: 16px;
+  }
+  .info-label { font-size: .78rem; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+  .info-value { font-size: .93rem; color: #222; font-weight: 500; }
+  .stat-chip {
+    background: #f0f4ff; border-radius: 8px; padding: 14px 20px; text-align: center;
+  }
+  .stat-chip .chip-val { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; }
+  .stat-chip .chip-lbl { font-size: .75rem; color: #777; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+{# ── Profile header ─────────────────────────────────────────── #}
+<div class="profile-header">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+    {# Left: avatar + name #}
+    <div class="d-flex gap-3 align-items-center">
+      <div class="profile-avatar">
+        {{ student.user.first_name.0 }}{{ student.user.last_name.0 }}
+      </div>
+      <div>
+        <h4 class="mb-0 fw-bold text-uppercase">{{ student.user.get_full_name }} <span class="info-value text-primary mb-0" style="font-size: .82rem; text-transform: lowercase;">{{ student.user.email }}</span></h4>
+        <div class="text-muted mt-1" style="font-size:.88rem;">
+          <i class="bi bi-mortarboard me-1"></i>{{ student.programme.name|default:"No Programme" }}
+          <span class="mx-2">•</span>
+          <i class="bi bi-building me-1"></i>{{ student.current_year.name|default:"—" }} / {{ student.current_semester_number.name|default:"—" }}
+        </div>
+        <div class="mt-2">
+          <span class="badge {% if student.status == 'active' %}bg-success{% elif student.status == 'graduated' %}bg-primary{% elif student.status == 'suspended' %}bg-danger{% else %}bg-secondary{% endif %} me-2">
+            {{ student.get_status_display }}
+          </span>
+          <span class="badge bg-light text-dark border">{{ student.intake.name|default:"—" }}</span>
+        </div>
+      </div>
+    </div>
+
+    {# Right: ID badge + actions #}
+    <div class="text-end">
+      <div class="mb-2">
+        <span class="profile-id-badge"><i class="bi bi-person-badge me-1"></i>{{ student.student_id }}</span>
+      </div>
+      <div class="text-muted mb-3" style="font-size:.8rem;">
+        <i class="bi bi-calendar-check"></i> Admitted: {{ student.admission_date|date:"M d, Y" }}
+      </div>
+      <div class="d-flex gap-2 flex-wrap justify-content-end">
+        <a href="{% url 'finance:students' %}" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-arrow-left me-1"></i>Back to Students
+        </a>
+        <a href="{% url 'students:student_detail' student.pk %}?tab=finance" class="btn btn-sm btn-outline-success">
+          <i class="bi bi-person me-1"></i>Full Profile
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── Tab nav ──────────────────────────────────────────────── #}
+<div class="profile-header" style="padding: 0 32px 0;">
+  <ul class="nav profile-tabs mt-4" id="financeTabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="#" data-tab="overview"><i class="bi bi-grid"></i>Overview</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" data-tab="invoices"><i class="bi bi-receipt"></i>Invoices</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" data-tab="payments"><i class="bi bi-credit-card"></i>Payments</a>
+    </li>
+  </ul>
+</div>
+
+{# ── Tab content ────────────────────────────────────────────── #}
+<div class="p-2" style="padding-left: 2px !important; padding-right: 2px !important;">
+
+{# ── Overview Tab ────────────────────────────────────────────── #}
+<div class="tab-content active" id="tab-overview">
+  {# Summary Stats #}
+  <div class="row g-3 mb-4">
+    <div class="col-sm-4">
+      <div class="stat-chip">
+        <div class="chip-val">{{ total_billed|floatformat:0 }}</div>
+        <div class="chip-lbl">Total Billed (UGX)</div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="stat-chip">
+        <div class="chip-val text-success">{{ total_paid|floatformat:0 }}</div>
+        <div class="chip-lbl">Total Paid (UGX)</div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="stat-chip">
+        <div class="chip-val {% if total_balance > 0 %}text-danger{% else %}text-success{% endif %}">{{ total_balance|floatformat:0 }}</div>
+        <div class="chip-lbl">Balance (UGX)</div>
+      </div>
+    </div>
+  </div>
+
+  {# Student Info Card #}
+  <!-- <div class="section-card mb-4 py-3">
+    <h6 class="mb-3">Student Information</h6>
+    <div class="row g-2">
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">EMAIL:</span>
+        <span class="info-value text-primary mb-0" style="font-size: .82rem;">{{ student.user.email }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">PHONE:</span>
+        <span class="info-value text-dark mb-0" style="font-size: .82rem;">{{ student.user.phone_number|default:"—" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">PROGRAMME:</span>
+        <span class="info-value text-primary mb-0" style="font-size: .82rem;">{{ student.programme.name|default:"—" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">INTAKE:</span>
+        <span class="info-value text-dark mb-0" style="font-size: .82rem;">{{ student.intake.name|default:"—" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">CURRENT YEAR:</span>
+        <span class="info-value text-primary mb-0" style="font-size: .82rem;">{{ student.current_year.name|default:"—" }} : {{ student.current_semester_number.number|default:"—" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">CURRENT SEMESTER:</span>
+        <span class="info-value text-dark mb-0" style="font-size: .82rem;">{{ student.current_semester_number.name|default:"—" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">ADMISSION DATE:</span>
+        <span class="info-value text-primary mb-0" style="font-size: .82rem;">{{ student.admission_date|date:"M d, Y" }}</span>
+      </div>
+      <div class="col-sm-4 d-flex align-items-center gap-2">
+        <span class="info-label mb-0" style="font-size: .82rem; white-space: nowrap;">EXPECTED GRADUATION:</span>
+        <span class="info-value text-dark mb-0" style="font-size: .82rem;">{{ student.expected_graduation|date:"M Y"|default:"—" }}</span>
+      </div>
+    </div>
+  </div> -->
+
+  {# Recent Activity #}
+  <div class="section-card">
+    <h6>Recent Activity</h6>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <thead class="table-light">
+          <tr><th>Type</th><th>Reference</th><th>Date</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices|slice:":3" %}
+          <tr>
+            <td><span class="badge bg-info badge-role">Invoice</span></td>
+            <td><code>{{ invoice.invoice_number }}</code></td>
+            <td>{{ invoice.issued_date|date:"M d, Y" }}</td>
+            <td class="text-end">{{ invoice.total_amount|floatformat:0 }}</td>
+          </tr>
+          {% endfor %}
+          {% for payment in payments|slice:":2" %}
+          <tr>
+            <td><span class="badge bg-success badge-role">Payment</span></td>
+            <td><code>{{ payment.receipt_number }}</code></td>
+            <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+            <td class="text-end text-success">{{ payment.amount|floatformat:0 }}</td>
+          </tr>
+          {% endfor %}
+          {% if not invoices and not payments %}
+          <tr><td colspan="4" class="text-muted text-center py-3">No recent activity.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{# ── Invoices Tab ────────────────────────────────────────────── #}
+<div class="tab-content" id="tab-invoices">
+  {# Filters #}
+  <div class="section-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">Filter by Period</h6>
+    </div>
+    <form method="get" class="row g-2 align-items-center">
+      <input type="hidden" name="tab" value="invoices">
+      <div class="col-md-5">
+        <select name="session" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Sessions</option>
+          {% for s in sessions %}
+          <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Semesters</option>
+          {% for s in semesters %}
+          <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <a href="{% url 'finance:student_payment_history' student.pk %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
+      </div>
+    </form>
+  </div>
+
+{# Invoices Table #}
+  <div class="section-card">
+    <h6>Invoices</h6>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Invoice #</th>
+            <th>Session</th>
+            <th>Semester</th>
+            <th>Issued</th>
+            <th>Due Date</th>
+            <th class="text-end">Total</th>
+            <th class="text-end">Paid</th>
+            <th class="text-end">Balance</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices %}
+          <tr>
+            <td><code class="fw-bold">{{ invoice.invoice_number }}</code></td>
+            <td>{{ invoice.session.name }}</td>
+            <td>{{ invoice.semester.name|default:"—" }}</td>
+            <td>{{ invoice.issued_date|date:"M d, Y" }}</td>
+            <td>{{ invoice.due_date|date:"M d, Y"|default:"—" }}</td>
+            <td class="text-end">{{ invoice.total_amount|floatformat:0 }}</td>
+            <td class="text-end text-success">{{ invoice.amount_paid|floatformat:0 }}</td>
+            <td class="text-end {% if invoice.balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
+              {{ invoice.balance|floatformat:0 }}
+            </td>
+            <td>
+              {% if invoice.status == 'paid' %}
+                <span class="badge bg-success badge-role">Paid</span>
+              {% elif invoice.status == 'partial' %}
+                <span class="badge bg-info badge-role">Partial</span>
+              {% elif invoice.status == 'overdue' %}
+                <span class="badge bg-danger badge-role">Overdue</span>
+              {% elif invoice.status == 'cancelled' %}
+                <span class="badge bg-secondary badge-role">Cancelled</span>
+              {% else %}
+                <span class="badge bg-warning text-dark badge-role">Pending</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'finance:invoice_detail' invoice.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;">
+                <i class="bi bi-eye"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="10" class="text-center text-muted py-4">No invoices found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{# ── Payments Tab ────────────────────────────────────────────── #}
+<div class="tab-content" id="tab-payments">
+  {# Filters #}
+  <div class="section-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">Filter by Period</h6>
+    </div>
+    <form method="get" class="row g-2 align-items-center">
+      <input type="hidden" name="tab" value="payments">
+      <div class="col-md-5">
+        <select name="session" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Sessions</option>
+          {% for s in sessions %}
+          <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Semesters</option>
+          {% for s in semesters %}
+          <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <a href="{% url 'finance:student_payment_history' student.pk %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
+      </div>
+    </form>
+  </div>
+
+  {# Payments Table #}
+  <div class="section-card">
+    <h6>Payments</h6>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Receipt #</th>
+            <th>Invoice #</th>
+            <th>Date</th>
+            <th>Method</th>
+            <th>Reference</th>
+            <th class="text-end">Amount</th>
+            <th>Processed By</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+          <tr>
+            <td><code class="fw-bold">{{ payment.receipt_number }}</code></td>
+            <td><code>{{ payment.invoice.invoice_number }}</code></td>
+            <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+            <td>{{ payment.get_payment_method_display }}</td>
+            <td>{{ payment.reference_number|default:"—" }}</td>
+            <td class="text-end text-success fw-bold">{{ payment.amount|floatformat:0 }}</td>
+            <td>{{ payment.processed_by.get_full_name }}</td>
+            <td>
+              {% if payment.status == 'completed' %}
+                <span class="badge bg-success badge-role">Completed</span>
+              {% else %}
+                <span class="badge bg-warning text-dark badge-role">{{ payment.get_status_display }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center text-muted py-4">No payments found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>{# /p-4 #}
+</div>{# /container-fluid #}
+
+<script>
+(function() {
+    const tabs = document.querySelectorAll('#financeTabs .nav-link');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabName = this.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding content
+            contents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === 'tab-' + tabName) {
+                    content.classList.add('active');
+                }
+            });
+        });
+    });
+    
+    // Check for tab in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+        const targetTab = document.querySelector(`#financeTabs .nav-link[data-tab="${tabParam}"]`);
+        if (targetTab) {
+            targetTab.click();
+        }
+    }
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Allocate Room{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-building"></i> Allocate Room</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Student</label>
+                    <select name="student" class="form-select" required>
+                        <option value="">Select student...</option>
+                        {% for s in students %}<option value="{{ s.id }}">{{ s.student_id }} - {{ s.full_name }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Room</label>
+                    <select name="room" class="form-select" required>
+                        <option value="">Select room...</option>
+                        {% for r in rooms %}<option value="{{ r.id }}">{{ r.hostel.name }} - Room {{ r.room_number }} ({{ r.current_occupancy }}/{{ r.capacity }})</option>{% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-check me-1"></i> Allocate</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

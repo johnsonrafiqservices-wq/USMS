@@ -1,0 +1,25 @@
+{% csrf_token %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <div class="mb-3">
+                <label class="form-label">Book</label>
+                <select name="book" class="form-select" required>
+                    <option value="">Select a book...</option>
+                    {% for book in books %}<option value="{{ book.id }}">{{ book.title }} ({{ book.available_copies }} avail.)</option>{% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Borrower</label>
+                <select name="borrower" class="form-select" required>
+                    <option value="">Select user...</option>
+                    {% for u in users %}<option value="{{ u.id }}">{{ u.get_full_name }} ({{ u.username }})</option>{% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="date" name="due_date" class="form-control" required>
+            </div>
+        </div>
+    </div>
+</div>

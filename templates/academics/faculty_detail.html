@@ -1,0 +1,739 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ faculty.name }} - Faculty Details{% endblock %}
+
+{% block content %}
+<div class="container ">
+    <!-- Header Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center text-white" 
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <nav aria-label="breadcrumb" class="mb-2">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'academics:faculty_list' %}">Faculties</a></li>
+                            <li class="breadcrumb-item active">{{ faculty.name }}</li>
+                        </ol>
+                    </nav>
+                    <h4 class="mb-1">{{ faculty.name }}</h4>
+                    <p class="text-muted mb-0">
+                        <span class="badge bg-dark me-2">{{ faculty.code }}</span>
+                        <i class="bi bi-geo-alt me-1"></i>{{ faculty.campus.name|default:"N/A" }}
+                    </p>
+                </div>
+                <div class="col-auto text-end">
+                    <span class="badge bg-dark mb-2 d-block">FACULTY</span>
+                    <div class="btn-group btn-group-sm">
+                        {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editFacultyModal">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </button>
+                        {% endif %}
+                        <a href="{% url 'academics:faculty_list' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Faculties
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs border-0 mb-4" id="facultyTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                <i class="bi bi-grid me-2"></i>Overview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="departments-tab" data-bs-toggle="tab" data-bs-target="#departments" type="button" role="tab">
+                <i class="bi bi-building me-2"></i>Departments
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="programmes-tab" data-bs-toggle="tab" data-bs-target="#programmes" type="button" role="tab">
+                <i class="bi bi-journal-bookmark me-2"></i>Programmes
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="staff-tab" data-bs-toggle="tab" data-bs-target="#staff" type="button" role="tab">
+                <i class="bi bi-people me-2"></i>Staff
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab">
+                <i class="bi bi-mortarboard me-2"></i>Students
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses" type="button" role="tab">
+                <i class="bi bi-book me-2"></i>Courses
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="facultyTabContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <h6 class="mb-0 text-uppercase"><i class="bi bi-info-circle me-2"></i>Faculty Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="text-muted small">Faculty Code</label>
+                                    <p class="mb-0 fw-semibold">{{ faculty.code }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">Campus</label>
+                                    <p class="mb-0 fw-semibold">{{ faculty.campus.name|default:"Not Assigned" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">Dean</label>
+                                    <p class="mb-0 fw-semibold">{{ faculty.dean.get_full_name|default:"Not Assigned" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">Established</label>
+                                    <p class="mb-0 fw-semibold">{{ faculty.established_date|default:"N/A" }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-muted small">Description</label>
+                                    <p class="mb-0">{{ faculty.description|default:"No description available." }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom py-3">
+                            <h6 class="mb-0 text-uppercase"><i class="bi bi-speedometer2 me-2"></i>Quick Stats</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-building text-primary fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">{{ total_departments }}</h5>
+                                    <small class="text-muted">Departments</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-journal-bookmark text-success fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">{{ total_programmes }}</h5>
+                                    <small class="text-muted">Programmes</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-people text-info fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">{{ total_students }}</h5>
+                                    <small class="text-muted">Students</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Tab -->
+        <div class="tab-pane fade" id="departments" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-uppercase">
+                        <i class="bi bi-building me-2"></i>Departments
+                    </h6>
+                    <span class="badge bg-primary">{{ total_departments }}</span>
+                </div>
+                <div class="card-body">
+                    {% if departments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover border-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Head of Department</th>
+                                    <th>Programmes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dept in departments %}
+                                <tr>
+                                    <td><span class="text-primary fw-bold">{{ dept.code }}</span></td>
+                                    <td>{{ dept.name }}</td>
+                                    <td>{{ dept.head_of_department.get_full_name|default:"Not Assigned" }}</td>
+                                    <td><span class="text-success fw-semibold">{{ dept.programmes.count }}</span></td>
+                                    <td>
+                                        <a href="{% url 'academics:department_detail' dept.pk %}" class="btn btn-sm btn-link text-primary p-0">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-building text-muted" style="font-size: 4rem;"></i>
+                        <p class="mt-3 text-muted">No departments found in this faculty.</p>
+                        {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                        <a href="{% url 'academics:department_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-lg me-1"></i>Add Department
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Programmes Tab -->
+        <div class="tab-pane fade" id="programmes" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-uppercase">
+                        <i class="bi bi-journal-bookmark me-2"></i>Programmes
+                    </h6>
+                    <span class="badge bg-primary">{{ total_programmes }}</span>
+                </div>
+                <div class="card-body">
+                    {% if programmes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover border-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Level</th>
+                                    <th>Duration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prog in programmes %}
+                                <tr>
+                                    <td><span class="text-primary fw-bold">{{ prog.code }}</span></td>
+                                    <td>
+                                        <a href="{% url 'academics:programme_detail' prog.pk %}" class="text-decoration-none">
+                                            {{ prog.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ prog.department.name }}</td>
+                                    <td><span class="text-secondary">{{ prog.level.name }}</span></td>
+                                    <td>{{ prog.duration_years }} years</td>
+                                    <td>
+                                        <a href="{% url 'academics:programme_detail' prog.pk %}" class="btn btn-sm btn-link text-primary p-0">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-journal-bookmark text-muted" style="font-size: 4rem;"></i>
+                        <p class="mt-3 text-muted">No programmes found in this faculty.</p>
+                        {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                        <a href="{% url 'academics:programme_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-lg me-1"></i>Add Programme
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Tab -->
+        <div class="tab-pane fade" id="staff" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-uppercase">
+                        <i class="bi bi-people me-2"></i>Faculty Staff
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Dean Section -->
+                    <div class="mb-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Dean</h6>
+                        {% if faculty.dean %}
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                                <i class="bi bi-person-badge text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">{{ faculty.dean.get_full_name|default:faculty.dean.username }}</h6>
+                                <p class="text-muted mb-0 small">{{ faculty.dean.email }}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-3 bg-light rounded">
+                            <p class="text-muted mb-0">No Dean assigned</p>
+                            {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                            <button class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editFacultyModal">
+                                <i class="bi bi-plus-circle me-1"></i>Assign Dean
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Department Heads -->
+                    <div class="mb-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Department Heads</h6>
+                        {% for dept in departments %}
+                            {% if dept.head_of_department %}
+                            <div class="d-flex align-items-center p-3 bg-light rounded mb-2">
+                                <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3">
+                                    <i class="bi bi-person text-info fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">{{ dept.head_of_department.get_full_name|default:dept.head_of_department.username }}</h6>
+                                    <p class="text-muted mb-0 small">Head of {{ dept.name }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% empty %}
+                        <div class="text-center py-3 bg-light rounded">
+                            <p class="text-muted mb-0">No departments with assigned heads</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="border-top pt-3">
+                        <h6 class="text-muted text-uppercase small mb-3">Quick Actions</h6>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'staff:staff_list' %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-people me-1"></i>View All Staff
+                            </a>
+                            {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                            <a href="{% url 'academics:department_list' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-building me-1"></i>Manage Departments
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div class="tab-pane fade" id="students" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 text-uppercase">
+                            <i class="bi bi-mortarboard me-2"></i>Faculty Students
+                        </h6>
+                        <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-list me-1"></i>View All Students
+                        </a>
+                    </div>
+                    <!-- Stats and Filters Row -->
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                Total: <strong class="text-primary">{{ total_students }}</strong> |
+                                Active: <strong class="text-success">{% for status, count in student_status_counts.items %}{% if status == 'active' or status == 'admitted' %}{{ count }}{% endif %}{% endfor %}</strong> |
+                                Suspended: <strong class="text-warning">{% for status, count in student_status_counts.items %}{% if status == 'suspended' %}{{ count }}{% endif %}{% endfor %}</strong> |
+                                Graduated: <strong class="text-info">{% for status, count in student_status_counts.items %}{% if status == 'graduated' %}{{ count }}{% endif %}{% endfor %}</strong>
+                            </small>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm" id="studentProgrammeFilter">
+                                    <option value="">All Programmes</option>
+                                    {% for prog in programmes %}
+                                    <option value="{{ prog.id }}">{{ prog.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-select form-select-sm" id="studentDepartmentFilter">
+                                    <option value="">All Depts</option>
+                                    {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-select form-select-sm" id="studentIntakeFilter">
+                                    <option value="">All Intakes</option>
+                                    {% for intake in intakes %}
+                                    <option value="{{ intake.id }}">{{ intake.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-select form-select-sm" id="studentScheduleFilter">
+                                    <option value="">All Schedules</option>
+                                    <option value="fulltime">Full-time</option>
+                                    <option value="weekend">Weekend</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Students List -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Programme</th>
+                                    <th class="text-center">Department</th>
+                                    <th class="text-center">Intake</th>
+                                    <th class="text-center">Schedule</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                {% for student in faculty_students %}
+                                <tr data-programme="{{ student.programme.id }}" data-department="{{ student.programme.department.id }}" data-intake="{{ student.intake.id|default:'' }}" data-schedule="{{ student.programme.schedule }}">
+                                    <td>
+                                        <span class="font-monospace">{{ student.student_id }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person text-primary me-2"></i>
+                                            <strong>{{ student.user.get_full_name|default:student.user.username }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>{{ student.programme.name }}</td>
+                                    <td class="text-center">{{ student.programme.department.name }}</td>
+                                    <td class="text-center">{{ student.intake.name|default:'-' }}</td>
+                                    <td class="text-center">
+                                        {{ student.programme.get_schedule_display }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ student.get_status_display }}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{% url 'students:student_detail' student.pk %}" class="btn btn-sm text-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        <p class="text-muted mb-0">No students enrolled in this faculty</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="border-top pt-3 mt-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Quick Actions</h6>
+                        <div class="d-flex gap-2">
+                            {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                            <a href="{% url 'students:student_create' %}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle me-1"></i>Add Student
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'students:admission_list' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-person-plus me-1"></i>Admissions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Tab -->
+        <div class="tab-pane fade" id="courses" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 text-uppercase">
+                            <i class="bi bi-book me-2"></i>Faculty Courses
+                        </h6>
+                        <a href="{% url 'academics:course_list' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-list me-1"></i>View All Courses
+                        </a>
+                    </div>
+                    <!-- Stats and Filters Row -->
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                Total: <strong class="text-primary">{{ total_courses|default:0 }}</strong> |
+                                Core: <strong class="text-success">{{ core_courses|default:0 }}</strong> |
+                                Elective: <strong class="text-warning">{{ elective_courses|default:0 }}</strong>
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm" id="courseProgrammeFilter">
+                                    <option value="">All Programmes</option>
+                                    {% for prog in programmes %}
+                                    <option value="{{ prog.id }}">{{ prog.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-select form-select-sm" id="courseDepartmentFilter">
+                                    <option value="">All Depts</option>
+                                    {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-select form-select-sm" id="courseLevelFilter">
+                                    <option value="">All Levels</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="300">300</option>
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Courses List -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Programme</th>
+                                    <th class="text-center">Department</th>
+                                    <th class="text-center">Level</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Credits</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coursesTableBody">
+                                {% for course in faculty_courses %}
+                                <tr data-programme="{{ course.programme.first.id }}" data-department="{{ course.department.id }}" data-level="{{ course.level|default:'' }}">
+                                    <td>
+                                        <span class="font-monospace">{{ course.code }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-book text-primary me-2"></i>
+                                            <strong>{{ course.title }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>{{ course.programme.first.name|default:'-' }}</td>
+                                    <td class="text-center">{{ course.department.name|default:'-' }}</td>
+                                    <td class="text-center">{{ course.level|default:'-' }}</td>
+                                    <td class="text-center">{{ course.course_type|default:'-' }}</td>
+                                    <td class="text-center">{{ course.credit_units|default:'-' }}</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'academics:course_detail' course.pk %}" class="btn btn-sm text-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        <p class="text-muted mb-0">No courses available in this faculty</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="border-top pt-3 mt-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Quick Actions</h6>
+                        <div class="d-flex gap-2">
+                            {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+                            <a href="{% url 'academics:course_create' %}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle me-1"></i>Add Course
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'academics:course_list' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-search me-1"></i>Browse Courses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+<!-- Edit Faculty Modal -->
+<div class="modal fade" id="editFacultyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="editFacultyModalContent">
+            <!-- Content loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+<script>
+// Global function for form submission
+defineSubmitFacultyEdit();
+
+function defineSubmitFacultyEdit() {
+    window.submitFacultyEdit = function() {
+        const form = document.getElementById('editFacultyModalForm');
+        if (!form) return;
+        
+        const formData = new FormData(form);
+        const errorDiv = document.getElementById('facultyModalError');
+        const saveBtn = document.querySelector('#editFacultyModal .btn-primary');
+        
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="bi bi-hourglass me-1"></i>Saving...';
+        }
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editFacultyModal'));
+                modal.hide();
+                window.location.reload();
+            } else {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Save Changes';
+                }
+                let errorHtml = '<ul class="mb-0">';
+                for (const [field, errors] of Object.entries(data.errors)) {
+                    errors.forEach(error => {
+                        errorHtml += `<li>${field}: ${error}</li>`;
+                    });
+                }
+                errorHtml += '</ul>';
+                if (errorDiv) {
+                    errorDiv.innerHTML = errorHtml;
+                    errorDiv.classList.remove('d-none');
+                }
+            }
+        })
+        .catch(error => {
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Save Changes';
+            }
+            if (errorDiv) {
+                errorDiv.innerHTML = 'An error occurred. Please try again.';
+                errorDiv.classList.remove('d-none');
+            }
+        });
+    };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const editFacultyModal = document.getElementById('editFacultyModal');
+    if (editFacultyModal) {
+        editFacultyModal.addEventListener('show.bs.modal', function() {
+            document.getElementById('editFacultyModalContent').innerHTML = '<div class="modal-header"><h5 class="modal-title">Loading...</h5></div><div class="modal-body"><div class="text-center py-4"><div class="spinner-border text-primary"></div></div></div>';
+            
+            fetch('{% url "academics:faculty_edit" faculty.pk %}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('editFacultyModalContent').innerHTML = html;
+                defineSubmitFacultyEdit();
+            })
+            .catch(error => {
+                document.getElementById('editFacultyModalContent').innerHTML = '<div class="modal-body"><div class="alert alert-danger">Failed to load form. Please try again.</div></div>';
+            });
+        });
+    }
+
+    // Students Table Filtering
+    const studentProgFilter = document.getElementById('studentProgrammeFilter');
+    const studentDeptFilter = document.getElementById('studentDepartmentFilter');
+    const studentIntakeFilter = document.getElementById('studentIntakeFilter');
+    const studentScheduleFilter = document.getElementById('studentScheduleFilter');
+
+    if (studentProgFilter) studentProgFilter.addEventListener('change', filterStudents);
+    if (studentDeptFilter) studentDeptFilter.addEventListener('change', filterStudents);
+    if (studentIntakeFilter) studentIntakeFilter.addEventListener('change', filterStudents);
+    if (studentScheduleFilter) studentScheduleFilter.addEventListener('change', filterStudents);
+
+    function filterStudents() {
+        const progId = studentProgFilter ? studentProgFilter.value : '';
+        const deptId = studentDeptFilter ? studentDeptFilter.value : '';
+        const intakeId = studentIntakeFilter ? studentIntakeFilter.value : '';
+        const scheduleVal = studentScheduleFilter ? studentScheduleFilter.value : '';
+
+        const rows = document.querySelectorAll('#studentsTableBody tr');
+        rows.forEach(row => {
+            const rowProg = row.getAttribute('data-programme') || '';
+            const rowDept = row.getAttribute('data-department') || '';
+            const rowIntake = row.getAttribute('data-intake') || '';
+            const rowSchedule = row.getAttribute('data-schedule') || '';
+
+            const showByProg = !progId || rowProg === progId;
+            const showByDept = !deptId || rowDept === deptId;
+            const showByIntake = !intakeId || rowIntake === intakeId;
+            const showBySchedule = !scheduleVal || rowSchedule === scheduleVal;
+
+            row.style.display = (showByProg && showByDept && showByIntake && showBySchedule) ? '' : 'none';
+        });
+    }
+
+    // Courses Accordion Filtering
+    const courseProgFilter = document.getElementById('courseProgrammeFilter');
+    const courseDeptFilter = document.getElementById('courseDepartmentFilter');
+    const courseLevelFilter = document.getElementById('courseLevelFilter');
+    if (courseProgFilter) courseProgFilter.addEventListener('change', filterCourses);
+    if (courseDeptFilter) courseDeptFilter.addEventListener('change', filterCourses);
+    if (courseLevelFilter) courseLevelFilter.addEventListener('change', filterCourses);
+
+    function filterCourses() {
+        const progId = courseProgFilter ? courseProgFilter.value : '';
+        const deptId = courseDeptFilter ? courseDeptFilter.value : '';
+        const levelId = courseLevelFilter ? courseLevelFilter.value : '';
+        const rows = document.querySelectorAll('#coursesTableBody tr');
+        rows.forEach(row => {
+            const progVal = row.getAttribute('data-programme') || '';
+            const deptVal = row.getAttribute('data-department') || '';
+            const levelVal = row.getAttribute('data-level') || '';
+            const showByProg = !progId || progVal === progId;
+            const showByDept = !deptId || deptVal === deptId;
+            const showByLevel = !levelId || levelVal === levelId;
+            row.style.display = (showByProg && showByDept && showByLevel) ? '' : 'none';
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

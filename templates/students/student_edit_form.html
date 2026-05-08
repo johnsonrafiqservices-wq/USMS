@@ -92,5 +92,26 @@
             <label class="form-label">Medical Conditions</label>
             {{ form.medical_conditions }}
         </div>
+
+        <h6 class="border-bottom pb-2 mt-4 mb-3 text-primary"><i class="bi bi-cash-stack me-2"></i>Fee Structures</h6>
+        <div class="col-12">
+            <label class="form-label">Select Applicable Fees</label>
+            <div class="card">
+                <div class="card-body py-2" style="max-height: 200px; overflow-y: auto;">
+                    {% for fee in fee_structures %}
+                    <div class="form-check py-1">
+                        <input type="checkbox" name="fees" value="{{ fee.pk }}" class="form-check-input" id="fee_{{ fee.pk }}" 
+                               {% if fee.id in assigned_fee_ids %}checked{% endif %}>
+                        <label class="form-check-label" for="fee_{{ fee.pk }}">
+                            {{ fee.name }} - UGX {{ fee.amount|floatformat:0 }} 
+                            <small class="text-muted">({{ fee.get_frequency_display }}{% if fee.programme %}, {{ fee.programme.name }}{% endif %})</small>
+                        </label>
+                    </div>
+                    {% empty %}
+                    <div class="text-muted">No fee structures available.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </form>

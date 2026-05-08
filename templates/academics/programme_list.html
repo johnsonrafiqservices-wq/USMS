@@ -66,7 +66,7 @@
                 <tbody>
                     {% for programme in programmes %}
                     <tr>
-                        <td><span class="badge bg-primary">{{ programme.code }}</span></td>
+                        <td><span class="text-primary fw-bold">{{ programme.code }}</span></td>
                         <td>
                             <a href="{% url 'academics:programme_detail' programme.pk %}" class="text-decoration-none">
                                 {{ programme.name }}
@@ -74,10 +74,10 @@
                         </td>
                         <td>{{ programme.department.name }}</td>
                         <td>{{ programme.department.faculty.name }}</td>
-                        <td><span class="badge bg-info">{{ programme.level.name }}</span></td>
+                        <td><span class="text-secondary">{{ programme.level.name }}</span></td>
                         <td>{{ programme.duration_years }} years</td>
                         <td>
-                            <span class="badge bg-success">{{ programme.courses.count }}</span>
+                            <span class="text-success fw-semibold">{{ programme.courses.count }}</span>
                             <!-- {% if programme.courses.all %}
                                 <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-url="{% url 'academics:programme_courses' programme.pk %}">
                                     <i class="bi bi-list"></i> Manage
@@ -85,24 +85,29 @@
                             {% endif %} -->
                         </td>
                         <td>
-                            <span class="badge {% if programme.is_active %}bg-success{% else %}bg-secondary{% endif %}">
-                                {{ programme.get_status_display }}
+                            <span class="{% if programme.is_active %}text-success{% else %}text-secondary{% endif %}">
+                                <i class="bi bi-circle-fill" style="font-size: 8px;"></i> {{ programme.get_status_display }}
                             </span>
                         </td>
                         <td>
                             {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
-                            <a href="{% url 'academics:programme_edit' programme.pk %}" class="btn btn-sm btn-outline-warning me-1">
+                            <button class="btn btn-sm btn-link text-warning me-1 p-0 edit-programme-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editProgrammeModal"
+                                    data-url="{% url 'academics:programme_edit' programme.pk %}"
+                                    data-id="{{ programme.pk }}"
+                                    data-name="{{ programme.name }}">
                                 <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="{% url 'academics:programme_delete' programme.pk %}" class="btn btn-sm btn-outline-danger me-1">
+                            </button>
+                            <a href="{% url 'academics:programme_delete' programme.pk %}" class="btn btn-sm btn-link text-danger me-1 p-0">
                                 <i class="bi bi-trash"></i>
                             </a>
-                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-journal-bookmark"></i> Manage Courses
+                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-link text-primary p-0" style="text-decoration: none;">
+                                <i class="bi bi-journal-bookmark"></i>Courses
                             </a>
                             {% else %}
-                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-journal-bookmark"></i> Manage Courses
+                            <a href="{% url 'academics:programme_courses' programme.pk %}" class="btn btn-sm btn-link text-primary p-0">
+                                <i class="bi bi-journal-bookmark"></i>Courses
                             </a>
                             {% endif %}
                         </td>
@@ -122,13 +127,111 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const manageButtons = document.querySelectorAll('[data-url]');
-    manageButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            window.location.href = this.dataset.url;
+/* {% if request.user.role in 'admin,registrar' or request.user.is_superuser %} */
+// Edit Programme Modal Handler
+let currentEditUrl = '';
+
+document.querySelectorAll('.edit-programme-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        currentEditUrl = this.dataset.url;
+        const programmeId = this.dataset.id;
+        const programmeName = this.dataset.name;
+
+        // Update modal title
+        document.getElementById('editProgrammeModalLabel').innerHTML = '<i class="bi bi-pencil me-2 text-warning"></i>Edit: ' + programmeName;
+
+        // Load form content
+        const modalBody = document.getElementById('editProgrammeModalBody');
+        modalBody.innerHTML = '<div class="text-center py-4"><span class="spinner-border spinner-border-sm"></span> Loading...</div>';
+
+        fetch(currentEditUrl, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            modalBody.innerHTML = data.html;
+        })
+        .catch(error => {
+            modalBody.innerHTML = '<div class="alert alert-danger">Error loading form. Please try again.</div>';
         });
     });
 });
+
+document.getElementById('saveProgrammeBtn')?.addEventListener('click', function() {
+    const form = document.getElementById('editProgrammeForm');
+    const btn = document.getElementById('saveProgrammeBtn');
+    const originalText = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+    const formData = new FormData(form);
+
+    fetch(currentEditUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editProgrammeModal'));
+            modal.hide();
+
+            // Show success message
+            alert(data.message);
+
+            // Reload page to show updated data
+            window.location.reload();
+        } else {
+            alert('Error updating programme. Please check the form.');
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    });
+});
+/* {% endif %} */
 </script>
+
+{% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+<!-- Edit Programme Modal -->
+<div class="modal fade" id="editProgrammeModal" tabindex="-1" aria-labelledby="editProgrammeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProgrammeModalLabel">
+                    <i class="bi bi-pencil me-2 text-warning"></i>Edit Programme
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editProgrammeModalBody">
+                <div class="text-center py-4">
+                    <span class="spinner-border spinner-border-sm"></span> Loading...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" id="saveProgrammeBtn">
+                    <i class="bi bi-check-circle me-1"></i>Save Programme
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}

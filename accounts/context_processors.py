@@ -52,7 +52,9 @@ def _get_nav_items(user):
         items.extend([
             {'label': 'Users', 'url': 'accounts:user_list', 'icon': 'bi-people'},
             {'label': 'Students', 'url': 'students:student_list', 'icon': 'bi-mortarboard'},
-            {'label': 'Academics', 'url': 'academics:department_list', 'icon': 'bi-book'},
+            {'label': 'Faculties', 'url': 'academics:faculty_list', 'icon': 'bi-building'},
+            {'label': 'Programmes', 'url': 'academics:programme_list', 'icon': 'bi-journal-bookmark'},
+            {'label': 'Courses', 'url': 'academics:course_list', 'icon': 'bi-book'},
             {'label': 'Study Levels', 'url': 'academics:study_level_list', 'icon': 'bi-layers'},
             {'label': 'Staff', 'url': 'staff:staff_list', 'icon': 'bi-person-badge'},
             {'label': 'Finance', 'url': 'finance:dashboard', 'icon': 'bi-cash-stack'},
@@ -65,13 +67,14 @@ def _get_nav_items(user):
         items.extend([
             {'label': 'Students', 'url': 'students:student_list', 'icon': 'bi-mortarboard'},
             {'label': 'Admissions', 'url': 'students:admission_list', 'icon': 'bi-person-plus'},
-            {'label': 'Academics', 'url': 'academics:department_list', 'icon': 'bi-book'},
-            {'label': 'Study Levels', 'url': 'academics:study_level_list', 'icon': 'bi-layers'},
-            {'label': 'Departments', 'url': 'academics:department_list', 'icon': 'bi-building'},
+            {'label': 'Campuses', 'url': 'academics:campus_list', 'icon': 'bi-geo-alt'},
+            {'label': 'Faculties', 'url': 'academics:faculty_list', 'icon': 'bi-building'},
             {'label': 'Programmes', 'url': 'academics:programme_list', 'icon': 'bi-journal-bookmark'},
             {'label': 'Courses', 'url': 'academics:course_list', 'icon': 'bi-book'},
+            {'label': 'Study Levels', 'url': 'academics:study_level_list', 'icon': 'bi-layers'},
             {'label': 'Sessions', 'url': 'academics:session_list', 'icon': 'bi-calendar3'},
             {'label': 'Intakes', 'url': 'academics:intake_list', 'icon': 'bi-people-plus'},
+            {'label': 'Staff', 'url': 'staff:staff_list', 'icon': 'bi-person-badge'},
             {'label': 'Communications', 'url': 'communications:announcements', 'icon': 'bi-megaphone'},
             {'label': 'Reports', 'url': 'reports:dashboard', 'icon': 'bi-graph-up'},
         ])

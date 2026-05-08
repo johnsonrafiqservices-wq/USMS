@@ -14,6 +14,7 @@ from .forms import (
     ProgrammeCourseForm, CourseForm, CourseAllocationForm, TimetableForm,
     DepartmentForm, ProgrammeForm, AcademicSessionForm, IntakeForm, FacultyForm, CampusForm, StudyLevelForm
 )
+from students import models as students_models
 
 
 # CRUD Views for Departments
@@ -123,6 +124,9 @@ def programme_create(request):
     return render(request, 'academics/programme_form.html', {'form': form, 'title': 'Create Programme'})
 
 
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
 @login_required
 @role_required(['admin', 'registrar'])
 def programme_edit(request, pk):
@@ -131,10 +135,19 @@ def programme_edit(request, pk):
         form = ProgrammeForm(request.POST, instance=programme)
         if form.is_valid():
             form.save()
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'message': 'Programme updated successfully.'})
             messages.success(request, 'Programme updated successfully.')
             return redirect('academics:programme_list')
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': form.errors.as_json()})
     else:
         form = ProgrammeForm(instance=programme)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        html = render_to_string('academics/programme_edit_modal.html', {'form': form, 'programme': programme}, request=request)
+        return JsonResponse({'html': html})
     
     return render(request, 'academics/programme_form.html', {'form': form, 'title': 'Edit Programme'})
 
@@ -241,6 +254,34 @@ def intake_delete(request, pk):
 
 # CRUD Views for Faculties
 @login_required
+def faculty_list(request):
+    """List all faculties with statistics."""
+    faculties = Faculty.objects.prefetch_related('departments', 'departments__programmes').all()
+    campuses = Campus.objects.all()
+    
+    # Calculate stats for each faculty
+    for faculty in faculties:
+        faculty.programme_count = Programme.objects.filter(department__faculty=faculty).count()
+        faculty.student_count = students_models.Student.objects.filter(programme__department__faculty=faculty).count()
+    
+    # Overall stats
+    total_faculties = faculties.count()
+    active_faculties = faculties.filter(is_active=True).count()
+    total_departments = Department.objects.filter(faculty__in=faculties).count()
+    total_programmes = Programme.objects.filter(department__faculty__in=faculties).count()
+    
+    context = {
+        'faculties': faculties,
+        'campuses': campuses,
+        'total_faculties': total_faculties,
+        'active_faculties': active_faculties,
+        'total_departments': total_departments,
+        'total_programmes': total_programmes,
+    }
+    return render(request, 'academics/faculty_list.html', context)
+
+
+@login_required
 @role_required(['admin', 'registrar'])
 def faculty_create(request):
     if request.method == 'POST':
@@ -248,7 +289,7 @@ def faculty_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Faculty created successfully.')
-            return redirect('academics:department_list')
+            return redirect('academics:faculty_list')
     else:
         form = FacultyForm()
     
@@ -264,9 +305,17 @@ def faculty_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Faculty updated successfully.')
-            return redirect('academics:department_list')
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'message': 'Faculty updated successfully.'})
+            return redirect('academics:faculty_list')
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     else:
         form = FacultyForm(instance=faculty)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'academics/faculty_form_modal.html', {'form': form, 'faculty': faculty})
     
     return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Edit Faculty'})
 
@@ -278,12 +327,106 @@ def faculty_delete(request, pk):
     if request.method == 'POST':
         faculty.delete()
         messages.success(request, 'Faculty deleted successfully.')
-        return redirect('academics:department_list')
+        return redirect('academics:faculty_list')
     
     return render(request, 'academics/confirm_delete.html', {'object': faculty, 'model_name': 'Faculty'})
 
 
+@login_required
+def faculty_detail(request, pk):
+    """Faculty detail view showing departments, programmes, students, and courses."""
+    faculty = get_object_or_404(Faculty.objects.prefetch_related('departments', 'departments__programmes'), pk=pk)
+    
+    # Get all departments in this faculty
+    departments = faculty.departments.all()
+    
+    # Get all programmes in this faculty through departments (with courses)
+    programmes = Programme.objects.filter(department__faculty=faculty).select_related('department', 'level').prefetch_related('courses')
+    
+    # Calculate programme stats
+    for prog in programmes:
+        prog.student_count = students_models.Student.objects.filter(programme=prog).count()
+        prog.course_count = prog.courses.count()
+    
+    # Statistics
+    total_departments = departments.count()
+    total_programmes = programmes.count()
+    
+    # Student statistics - fetch actual students list with related data
+    faculty_students = students_models.Student.objects.filter(
+        programme__department__faculty=faculty
+    ).select_related('programme', 'programme__department', 'intake', 'user').prefetch_related('year_enrollments__academic_session')
+    
+    total_students = faculty_students.count()
+    
+    # Student status counts
+    student_status_counts = {}
+    for status, _ in students_models.Student.Status.choices:
+        student_status_counts[status] = students_models.Student.objects.filter(
+            programme__department__faculty=faculty, status=status
+        ).count()
+    
+    # Get intakes and sessions for filters (from academics models)
+    intakes = Intake.objects.all().order_by('-created_at')
+    academic_sessions = AcademicSession.objects.all().order_by('-name')
+    
+    # Get unique schedule options from programmes in this faculty
+    schedule_options = programmes.values_list('schedule', flat=True).distinct()
+    
+    # Course statistics - fetch actual courses list with related data
+    faculty_courses = Course.objects.filter(
+        programme__department__faculty=faculty
+    ).select_related('department').prefetch_related('programme', 'programme__department').distinct()
+    total_courses = faculty_courses.count()
+    core_courses = faculty_courses.filter(course_type='Core').count()
+    elective_courses = faculty_courses.filter(course_type='Elective').count()
+    
+    # Get study years and semesters
+    study_years = StudyYear.objects.all().order_by('level')
+    study_semesters = StudySemester.objects.all().order_by('number')
+    
+    context = {
+        'faculty': faculty,
+        'departments': departments,
+        'programmes': programmes,
+        'total_departments': total_departments,
+        'total_programmes': total_programmes,
+        'faculty_students': faculty_students,
+        'total_students': total_students,
+        'student_status_counts': student_status_counts,
+        'intakes': intakes,
+        'academic_sessions': academic_sessions,
+        'schedule_options': schedule_options,
+        'faculty_courses': faculty_courses,
+        'total_courses': total_courses,
+        'core_courses': core_courses,
+        'elective_courses': elective_courses,
+        'study_years': study_years,
+        'study_semesters': study_semesters,
+    }
+    return render(request, 'academics/faculty_detail.html', context)
+
+
 # CRUD Views for Campuses
+@login_required
+def campus_list(request):
+    """List all campuses with statistics."""
+    campuses = Campus.objects.all().prefetch_related('faculties', 'faculties__departments')
+    
+    # Calculate stats for each campus
+    for campus in campuses:
+        campus.faculty_count = Faculty.objects.filter(campus=campus).count()
+        campus.department_count = Department.objects.filter(faculty__campus=campus).count()
+        campus.student_count = students_models.Student.objects.filter(programme__department__faculty__campus=campus).count()
+    
+    context = {
+        'campuses': campuses,
+        'total_campuses': campuses.count(),
+        'active_campuses': campuses.filter(is_active=True).count(),
+    }
+    return render(request, 'academics/campus_list.html', context)
+
+
 @login_required
 @role_required(['admin', 'registrar'])
 def campus_create(request):
@@ -292,7 +435,7 @@ def campus_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Campus created successfully.')
-            return redirect('academics:department_list')
+            return redirect('academics:campus_list')
     else:
         form = CampusForm()
     
@@ -308,7 +451,7 @@ def campus_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Campus updated successfully.')
-            return redirect('academics:department_list')
+            return redirect('academics:campus_list')
     else:
         form = CampusForm(instance=campus)
     
@@ -322,7 +465,7 @@ def campus_delete(request, pk):
     if request.method == 'POST':
         campus.delete()
         messages.success(request, 'Campus deleted successfully.')
-        return redirect('academics:department_list')
+        return redirect('academics:campus_list')
     
     return render(request, 'academics/confirm_delete.html', {'object': campus, 'model_name': 'Campus'})
 

@@ -589,25 +589,39 @@
         {% if user.is_admin or user.is_superuser %}
             <div class="qc-action-item"><span class="qc-action-label">Add User</span><button class="qc-action-btn" data-action="add_user" data-title="Add New User"><i class="bi bi-person-plus"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">New Admission</span><button class="qc-action-btn" data-action="new_admission" data-title="New Admission Application"><i class="bi bi-person-lines-fill"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Create Faculty</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:faculty_create' %}'"><i class="bi bi-building"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Department</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:department_create' %}'"><i class="bi bi-diagram-3"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Programme</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:programme_create' %}'"><i class="bi bi-journal-bookmark"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Course</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:course_create' %}'"><i class="bi bi-book"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Campus</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:campus_create' %}'"><i class="bi bi-geo-alt"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Create Invoice</span><button class="qc-action-btn" data-action="create_invoice" data-title="Create Invoice"><i class="bi bi-receipt"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Record Payment</span><button class="qc-action-btn" data-action="record_payment" data-title="Record Payment"><i class="bi bi-credit-card"></i></button></div>
-            <div class="qc-action-item"><span class="qc-action-label">Issue Book</span><button class="qc-action-btn" data-action="issue_book" data-title="Issue Book"><i class="bi bi-book"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Book</span><button class="qc-action-btn" data-action="add_book" data-title="Add Book to Catalog"><i class="bi bi-journal-plus"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Allocate Room</span><button class="qc-action-btn" data-action="allocate_room" data-title="Allocate Hostel Room"><i class="bi bi-house-door"></i></button></div>
         {% elif user.is_registrar %}
             <div class="qc-action-item"><span class="qc-action-label">New Admission</span><button class="qc-action-btn" data-action="new_admission" data-title="New Admission Application"><i class="bi bi-person-lines-fill"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Create Faculty</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:faculty_create' %}'"><i class="bi bi-building"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Department</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:department_create' %}'"><i class="bi bi-diagram-3"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Programme</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:programme_create' %}'"><i class="bi bi-journal-bookmark"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Course</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:course_create' %}'"><i class="bi bi-book"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Add Campus</span><button class="qc-action-btn" onclick="window.location.href='{% url 'academics:campus_create' %}'"><i class="bi bi-geo-alt"></i></button></div>
         {% elif user.is_finance_staff %}
             <div class="qc-action-item"><span class="qc-action-label">Create Invoice</span><button class="qc-action-btn" data-action="create_invoice" data-title="Create Invoice"><i class="bi bi-receipt"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Record Payment</span><button class="qc-action-btn" data-action="record_payment" data-title="Record Payment"><i class="bi bi-credit-card"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Student Fees</span><button class="qc-action-btn" onclick="window.location.href='{% url 'finance:students' %}'"><i class="bi bi-cash-stack"></i></button></div>
         {% elif user.is_librarian %}
-            <div class="qc-action-item"><span class="qc-action-label">Book Management</span><button class="qc-action-btn" onclick="window.location.href='/library/books/'"><i class="bi bi-list-ul"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Book Management</span><button class="qc-action-btn" onclick="window.location.href='{% url 'library:book_list' %}'"><i class="bi bi-list-ul"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Issue Book</span><button class="qc-action-btn" data-action="issue_book" data-title="Issue Book"><i class="bi bi-book"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Add Book</span><button class="qc-action-btn" data-action="add_book" data-title="Add Book to Catalog"><i class="bi bi-journal-plus"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Return Book</span><button class="qc-action-btn" onclick="window.location.href='{% url 'library:return_book' %}'"><i class="bi bi-arrow-return-left"></i></button></div>
         {% elif user.role == 'hostel_manager' %}
             <div class="qc-action-item"><span class="qc-action-label">Allocate Room</span><button class="qc-action-btn" data-action="allocate_room" data-title="Allocate Hostel Room"><i class="bi bi-house-door"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Maintenance Request</span><button class="qc-action-btn" data-action="add_maintenance" data-title="New Maintenance Request"><i class="bi bi-tools"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">Room List</span><button class="qc-action-btn" onclick="window.location.href='{% url 'hostel:room_list' %}'"><i class="bi bi-door-open"></i></button></div>
         {% elif user.is_student %}
             <div class="qc-action-item"><span class="qc-action-label">Register Course</span><button class="qc-action-btn" data-action="register_course" data-title="Register for Courses"><i class="bi bi-journal-bookmark"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Maintenance Request</span><button class="qc-action-btn" data-action="add_maintenance" data-title="New Maintenance Request"><i class="bi bi-tools"></i></button></div>
+            <div class="qc-action-item"><span class="qc-action-label">My Profile</span><button class="qc-action-btn" onclick="window.location.href='{% url 'students:student_detail' user.student.pk %}'"><i class="bi bi-person"></i></button></div>
         {% endif %}
         </div>
     </div>

@@ -17,6 +17,7 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-ums-dev-key-change-in-production')
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*', '192.168.100.179', '172.16.61.71', '172.16.61.102']
 

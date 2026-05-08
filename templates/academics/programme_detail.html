@@ -797,13 +797,13 @@
                 <!-- Academic Structure -->
                 <h6 class="text-uppercase text-muted small mb-2 px-2">Academic Structure</h6>
                 
-                <a href="{% url 'academics:department_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
+                <a href="{% url 'academics:faculty_list' %}" class="dropdown-item d-flex align-items-center py-2 px-3 rounded hover-bg-light">
                     <div class="bg-secondary bg-opacity-10 rounded-circle p-2 me-3" style="width: 36px; height: 36px;">
                         <i class="bi bi-building text-secondary"></i>
                     </div>
                     <div>
-                        <div class="fw-semibold small">Departments</div>
-                        <div class="text-muted" style="font-size: 0.75rem;">Manage departments</div>
+                        <div class="fw-semibold small">Faculties</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Manage faculties</div>
                     </div>
                 </a>
                 
@@ -942,7 +942,7 @@ document.addEventListener('click', function(event) {
     }
 });
 
-{% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+/* {% if request.user.role in 'admin,registrar' or request.user.is_superuser %} */
 // Add Student Modal Handler
 document.getElementById('saveStudentBtn')?.addEventListener('click', function() {
     const form = document.getElementById('addStudentForm');
@@ -993,6 +993,6 @@ document.getElementById('saveStudentBtn')?.addEventListener('click', function() 
         btn.innerHTML = originalText;
     });
 });
-{% endif %}
+/* {% endif %} */
 </script>
 {% endblock %}

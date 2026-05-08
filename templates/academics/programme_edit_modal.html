@@ -1,0 +1,56 @@
+<form id="editProgrammeForm" method="post" action="{% url 'academics:programme_edit' programme.pk %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Programme Name <span class="text-danger">*</span></label>
+            {{ form.name }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Programme Code <span class="text-danger">*</span></label>
+            {{ form.code }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Department <span class="text-danger">*</span></label>
+            {{ form.department }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Level <span class="text-danger">*</span></label>
+            {{ form.level }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Duration (Years) <span class="text-danger">*</span></label>
+            {{ form.duration_years }}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Total Credits</label>
+            {{ form.total_credits }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label small text-muted">Schedule</label>
+            {{ form.schedule }}
+        </div>
+        <div class="col-md-6 mb-3 d-flex align-items-end">
+            <div class="form-check">
+                {{ form.is_active }}
+                <label class="form-check-label small text-muted">Active</label>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label small text-muted">Description</label>
+        {{ form.description }}
+    </div>
+</form>
+
+<style>
+#editProgrammeForm .form-control,
+#editProgrammeForm .form-select {
+    font-size: 0.875rem;
+}
+</style>

@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.utils import timezone
 from accounts.decorators import role_required
 from .models import Student, Enrollment, AdmissionApplication
 from .forms import StudentEditForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from finance.models import FeeStructure
 
 
 @login_required
@@ -17,10 +19,83 @@ def student_edit(request, pk):
     if request.method == 'POST':
         form = StudentEditForm(request.POST, instance=student)
         if form.is_valid():
-            form.save()
+            # Save student info first
+            student = form.save()
+            
+            # Handle fee selection and invoice creation
+            selected_fees = request.POST.getlist('fees')
+            if selected_fees:
+                from finance.models import Invoice, InvoiceItem, StudentFee
+                from academics.models import AcademicSession
+                
+                # Get current session
+                current_session = AcademicSession.objects.filter(is_current=True).first()
+                if not current_session:
+                    current_session = AcademicSession.objects.order_by('-name').first()
+                
+                # Clear existing fee assignments for this student and session
+                StudentFee.objects.filter(student=student, session=current_session).delete()
+                
+                # Create new fee assignments
+                fee_structures = FeeStructure.objects.filter(id__in=selected_fees)
+                total_amount = 0
+                
+                for fee_structure in fee_structures:
+                    # Create fee assignment
+                    StudentFee.objects.get_or_create(
+                        student=student,
+                        fee_structure=fee_structure,
+                        session=current_session,
+                        defaults={'is_active': True}
+                    )
+                    total_amount += fee_structure.amount
+                
+                # Create invoice if fees were selected
+                if total_amount > 0:
+                    # Check if invoice already exists for this student and session
+                    existing_invoice = Invoice.objects.filter(
+                        student=student, 
+                        session=current_session,
+                        status__in=['pending', 'partial']
+                    ).first()
+                    
+                    if existing_invoice:
+                        # Update existing invoice
+                        existing_invoice.items.all().delete()
+                        for fee_structure in fee_structures:
+                            InvoiceItem.objects.create(
+                                invoice=existing_invoice,
+                                fee_structure=fee_structure,
+                                description=fee_structure.name,
+                                amount=fee_structure.amount
+                            )
+                        existing_invoice.total_amount = total_amount
+                        existing_invoice.balance = total_amount - existing_invoice.amount_paid
+                        existing_invoice.save()
+                    else:
+                        # Create new invoice
+                        invoice = Invoice.objects.create(
+                            student=student,
+                            session=current_session,
+                            semester=student.current_semester_number,
+                            total_amount=total_amount,
+                            balance=total_amount,
+                            due_date=timezone.now() + timezone.timedelta(days=30),
+                            created_by=request.user
+                        )
+                        
+                        # Create invoice items
+                        for fee_structure in fee_structures:
+                            InvoiceItem.objects.create(
+                                invoice=invoice,
+                                fee_structure=fee_structure,
+                                description=fee_structure.name,
+                                amount=fee_structure.amount
+                            )
+            
             return JsonResponse({
                 'success': True,
-                'message': 'Student information updated successfully.'
+                'message': 'Student information updated successfully. Invoices created for selected fees.'
             })
         else:
             return JsonResponse({
@@ -29,7 +104,32 @@ def student_edit(request, pk):
             })
     
     form = StudentEditForm(instance=student)
-    html = render_to_string('students/student_edit_form.html', {'form': form, 'student': student}, request=request)
+    # Filter fee structures by student's programme or show all if no programme
+    if student.programme:
+        fee_structures = FeeStructure.objects.filter(
+            Q(programme=student.programme) | Q(programme__isnull=True)
+        )
+    else:
+        fee_structures = FeeStructure.objects.all()
+    
+    # Get assigned fee IDs for this student
+    from finance.models import StudentFee
+    from academics.models import AcademicSession
+    current_session = AcademicSession.objects.filter(is_current=True).first()
+    if not current_session:
+        current_session = AcademicSession.objects.order_by('-name').first()
+    
+    assigned_fee_ids = StudentFee.objects.filter(
+        student=student, 
+        session=current_session
+    ).values_list('fee_structure_id', flat=True)
+    
+    html = render_to_string('students/student_edit_form.html', {
+        'form': form, 
+        'student': student,
+        'fee_structures': fee_structures,
+        'assigned_fee_ids': assigned_fee_ids
+    }, request=request)
     return JsonResponse({'html': html})
 
 

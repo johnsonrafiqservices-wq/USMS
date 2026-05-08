@@ -4604,3 +4604,1996 @@ Traceback (most recent call last):
     )
 django.core.exceptions.FieldError: Unsupported lookup 'is_current' for ForeignKey or join on the field not permitted.
 ERROR 2026-05-07 20:16:43,503 basehttp 29568 23904 "GET /reports/attendance/ HTTP/1.1" 500 137416
+ERROR 2026-05-08 01:39:07,446 log 43924 14284 Internal Server Error: /academics/faculties/create/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 267, in faculty_create
+    return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Create Faculty'})
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: academics/faculty_form.html
+ERROR 2026-05-08 01:39:07,453 basehttp 43924 14284 "GET /academics/faculties/create/ HTTP/1.1" 500 109302
+WARNING 2026-05-08 01:44:01,143 log 27012 27796 Not Found: /favicon.ico
+WARNING 2026-05-08 01:44:01,144 basehttp 27012 27796 "GET /favicon.ico HTTP/1.1" 404 5629
+ERROR 2026-05-08 01:54:23,562 log 31840 25052 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 329, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 01:54:23,577 basehttp 31840 25052 "GET /academics/faculties/1/ HTTP/1.1" 500 215408
+WARNING 2026-05-08 08:10:49,350 log 4180 14012 Not Found: /favicon.ico
+WARNING 2026-05-08 08:10:49,355 basehttp 4180 14012 "GET /favicon.ico HTTP/1.1" 404 5629
+ERROR 2026-05-08 08:11:06,760 log 4180 14012 Internal Server Error: /academics/faculties/3/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 329, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:11:06,768 basehttp 4180 14012 "GET /academics/faculties/3/ HTTP/1.1" 500 213752
+ERROR 2026-05-08 08:12:33,277 log 4180 14012 Internal Server Error: /academics/faculties/3/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 329, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:12:33,282 basehttp 4180 14012 "GET /academics/faculties/3/ HTTP/1.1" 500 213889
+ERROR 2026-05-08 08:13:26,050 log 7608 16424 Internal Server Error: /academics/faculties/3/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 357, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:13:26,076 basehttp 7608 16424 "GET /academics/faculties/3/ HTTP/1.1" 500 213889
+ERROR 2026-05-08 08:13:45,969 log 24156 14388 Internal Server Error: /academics/faculties/4/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 357, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:13:45,982 basehttp 24156 14388 "GET /academics/faculties/4/ HTTP/1.1" 500 208392
+ERROR 2026-05-08 08:13:59,497 log 3504 11844 Internal Server Error: /academics/faculties/2/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 357, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:13:59,505 basehttp 3504 11844 "GET /academics/faculties/2/ HTTP/1.1" 500 210512
+ERROR 2026-05-08 08:35:22,449 log 21924 24164 Internal Server Error: /academics/faculties/4/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 357, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 08:35:22,458 basehttp 21924 24164 "GET /academics/faculties/4/ HTTP/1.1" 500 209658
+ERROR 2026-05-08 08:36:09,880 log 21924 24164 Internal Server Error: /academics/faculties/4/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 312, in faculty_edit
+    return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Edit Faculty'})
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: academics/faculty_form.html
+ERROR 2026-05-08 08:36:09,882 basehttp 21924 24164 "GET /academics/faculties/4/edit/ HTTP/1.1" 500 109832
+ERROR 2026-05-08 08:36:55,473 log 21616 22792 Internal Server Error: /academics/faculties/4/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 321, in faculty_edit
+    return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Edit Faculty'})
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: academics/faculty_form.html
+ERROR 2026-05-08 08:36:55,478 basehttp 21616 22792 "GET /academics/faculties/4/edit/ HTTP/1.1" 500 110036
+ERROR 2026-05-08 08:39:13,719 log 21616 22792 Internal Server Error: /academics/faculties/4/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 321, in faculty_edit
+    return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Edit Faculty'})
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: academics/faculty_form.html
+ERROR 2026-05-08 08:39:13,729 basehttp 21616 22792 "GET /academics/faculties/4/edit/ HTTP/1.1" 500 109899
+ERROR 2026-05-08 08:57:38,861 log 21616 12272 Internal Server Error: /academics/faculties/4/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 321, in faculty_edit
+    return render(request, 'academics/faculty_form.html', {'form': form, 'title': 'Edit Faculty'})
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: academics/faculty_form.html
+ERROR 2026-05-08 08:57:38,866 basehttp 21616 12272 "GET /academics/faculties/4/edit/ HTTP/1.1" 500 109899
+ERROR 2026-05-08 09:17:57,137 log 24684 5480 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 361, in faculty_detail
+    for status, _ in students_models.Student.STATUS_CHOICES:
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'Student' has no attribute 'STATUS_CHOICES'
+ERROR 2026-05-08 09:17:57,149 basehttp 24684 5480 "GET /academics/faculties/1/ HTTP/1.1" 500 88382
+ERROR 2026-05-08 09:19:24,175 log 9228 25560 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 365, in faculty_detail
+    faculty_courses = Course.objects.filter(programmes__department__faculty=faculty).distinct()
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'programmes' into field. Choices are: allocations, code, course_type, created_at, credit_units, department, department_id, description, enrollments, id, is_active, is_prerequisite_for, level, max_students, prerequisites, programme, semester, semester_id, title
+ERROR 2026-05-08 09:19:24,226 basehttp 9228 25560 "GET /academics/faculties/1/ HTTP/1.1" 500 135981
+ERROR 2026-05-08 09:27:57,196 log 24536 21200 Internal Server Error: /students/create/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 393, in student_create
+    return render(request, 'students/student_create.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-05-08 09:27:57,222 basehttp 24536 21200 "GET /students/create/ HTTP/1.1" 500 218969
+ERROR 2026-05-08 09:54:56,484 log 9840 19084 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:54:56,495 basehttp 9840 19084 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:08,510 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:08,518 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:12,566 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:12,569 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:15,150 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:15,155 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:18,991 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:18,995 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:20,023 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:20,028 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:20,931 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:20,934 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:21,613 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:21,616 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:22,449 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:22,453 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:23,067 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:23,070 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:23,758 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:23,761 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:24,405 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:24,409 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:25,020 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:25,025 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:26,029 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:26,033 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:26,822 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:26,825 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:27,517 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:27,520 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:55:44,796 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:55:44,799 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:00,538 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:00,543 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:01,314 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:01,317 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:02,458 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:02,461 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:11,214 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:11,217 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:17,850 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:17,854 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:18,835 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:18,840 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:19,654 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:19,658 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:56:54,124 log 20092 16816 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 370, in faculty_detail
+    intakes = students_models.Intake.objects.all().order_by('-start_date')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'students.models' has no attribute 'Intake'
+ERROR 2026-05-08 09:56:54,128 basehttp 20092 16816 "GET /academics/faculties/1/ HTTP/1.1" 500 88882
+ERROR 2026-05-08 09:57:49,455 log 21540 25456 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 371, in faculty_detail
+    academic_sessions = AcademicSession.objects.all().order_by('-start_year')
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1664, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2230, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'start_year' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 09:57:49,478 basehttp 21540 25456 "GET /academics/faculties/1/ HTTP/1.1" 500 105251
+ERROR 2026-05-08 10:24:16,157 log 20504 22300 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 407, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1886, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1200, in get_related_selections
+    raise FieldError(
+    ...<6 lines>...
+    )
+django.core.exceptions.FieldError: Non-relational field given in select_related: 'level'. Choices are: department, semester
+ERROR 2026-05-08 10:24:16,187 basehttp 20504 22300 "GET /academics/faculties/1/ HTTP/1.1" 500 240448
+ERROR 2026-05-08 10:24:43,318 log 10320 14696 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 407, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1886, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1367, in get_related_selections
+    raise FieldError(
+    ...<6 lines>...
+    )
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'programme'. Choices are: department, semester
+ERROR 2026-05-08 10:24:43,356 basehttp 10320 14696 "GET /academics/faculties/1/ HTTP/1.1" 500 242343
+ERROR 2026-05-08 10:25:00,373 log 10320 14696 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 407, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1886, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1367, in get_related_selections
+    raise FieldError(
+    ...<6 lines>...
+    )
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'programme'. Choices are: department, semester
+ERROR 2026-05-08 10:25:00,383 basehttp 10320 14696 "GET /academics/faculties/1/ HTTP/1.1" 500 242331
+ERROR 2026-05-08 10:25:13,794 log 10320 14696 Internal Server Error: /academics/faculties/1/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\academics\views.py", line 407, in faculty_detail
+    return render(request, 'academics/faculty_detail.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 382, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1886, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1367, in get_related_selections
+    raise FieldError(
+    ...<6 lines>...
+    )
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'programme'. Choices are: department, semester
+ERROR 2026-05-08 10:25:13,805 basehttp 10320 14696 "GET /academics/faculties/1/ HTTP/1.1" 500 242032
+WARNING 2026-05-08 10:41:41,683 log 12640 23360 Not Found: /quick-create/undefined/
+WARNING 2026-05-08 10:41:41,686 basehttp 12640 23360 "GET /quick-create/undefined/ HTTP/1.1" 404 14
+ERROR 2026-05-08 11:01:01,261 log 14108 19668 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 113, in student_edit
+    fee_structures = FeeStructure.objects.filter(
+                     ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'FeeStructure' where it is not associated with a value
+ERROR 2026-05-08 11:01:01,268 basehttp 14108 19668 "GET /students/1/edit/ HTTP/1.1" 500 91097
+ERROR 2026-05-08 11:01:04,457 log 14108 19668 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 113, in student_edit
+    fee_structures = FeeStructure.objects.filter(
+                     ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'FeeStructure' where it is not associated with a value
+ERROR 2026-05-08 11:01:04,458 basehttp 14108 19668 "GET /students/1/edit/ HTTP/1.1" 500 91097
+ERROR 2026-05-08 11:01:26,245 log 18932 28656 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\smartif.py", line 179, in translate_token
+    op = OPERATORS[token]
+         ~~~~~~~~~^^^^^^^
+KeyError: "student.assigned_fees.values_list('fee_structure_id',"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 118, in student_edit
+    html = render_to_string('students/student_edit_form.html', {
+        'form': form,
+        'student': student,
+        'fee_structures': fee_structures
+    }, request=request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ~~~~~~~~~~~~^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 853, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 513, in parse
+    raise self.error(token, e)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 511, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 952, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 885, in __init__
+    super().__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\smartif.py", line 170, in __init__
+    mapped_tokens.append(self.translate_token(token))
+                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\smartif.py", line 181, in translate_token
+    return self.create_var(token)
+           ~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 888, in create_var
+    return TemplateLiteral(self.template_parser.compile_filter(value), value)
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 600, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 703, in __init__
+    raise TemplateSyntaxError(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '('fee_structure_id',' from 'student.assigned_fees.values_list('fee_structure_id','
+ERROR 2026-05-08 11:01:26,258 basehttp 18932 28656 "GET /students/1/edit/ HTTP/1.1" 500 239235
+ERROR 2026-05-08 11:08:32,129 log 25380 19872 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 122, in student_edit
+    current_session = AcademicSession.objects.filter(is_active=True).first()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_active' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 11:08:32,137 basehttp 25380 19872 "GET /students/1/edit/ HTTP/1.1" 500 137889
+ERROR 2026-05-08 11:26:13,324 log 25380 29532 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 122, in student_edit
+    current_session = AcademicSession.objects.filter(is_active=True).first()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_active' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 11:26:13,327 basehttp 25380 29532 "GET /students/1/edit/ HTTP/1.1" 500 137891
+ERROR 2026-05-08 11:26:23,537 log 25380 29532 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 122, in student_edit
+    current_session = AcademicSession.objects.filter(is_active=True).first()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_active' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 11:26:23,540 basehttp 25380 29532 "GET /students/1/edit/ HTTP/1.1" 500 137891
+ERROR 2026-05-08 11:26:37,755 log 25380 29532 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 122, in student_edit
+    current_session = AcademicSession.objects.filter(is_active=True).first()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_active' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 11:26:37,758 basehttp 25380 29532 "GET /students/1/edit/ HTTP/1.1" 500 137891
+ERROR 2026-05-08 11:26:58,304 log 25380 29532 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 122, in student_edit
+    current_session = AcademicSession.objects.filter(is_active=True).first()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1438, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1456, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1466, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1548, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1579, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<6 lines>...
+        summarize=summarize,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1429, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1239, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1733, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'is_active' into field. Choices are: admissionapplication, calendar_events, created_at, fees, id, invoice, is_current, name, roomallocation, scholarship, studentfee, year_enrollments
+ERROR 2026-05-08 11:26:58,307 basehttp 25380 29532 "GET /students/1/edit/ HTTP/1.1" 500 137891
+ERROR 2026-05-08 11:28:57,305 log 14012 28864 Internal Server Error: /students/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\decorators.py", line 15, in wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\students\views.py", line 91, in student_edit
+    InvoiceItem.objects.create(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        invoice=invoice,
+        ^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        total=fee_structure.amount
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 658, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\base.py", line 567, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: InvoiceItem() got unexpected keyword arguments: 'quantity', 'unit_price', 'total'
+ERROR 2026-05-08 11:28:57,313 basehttp 14012 28864 "POST /students/1/edit/ HTTP/1.1" 500 113554
+ERROR 2026-05-08 11:31:12,526 log 29344 28380 Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\views.py", line 55, in dashboard_view
+    return render(request, 'accounts/dashboard.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'student_fee_list' not found. 'student_fee_list' is not a valid view function or pattern name.
+ERROR 2026-05-08 11:31:12,534 basehttp 29344 28380 "GET / HTTP/1.1" 500 197452
+ERROR 2026-05-08 11:31:14,812 log 29344 28380 Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\it.sm.UG-EMERGENCY\Desktop\uni\hospital_meal_system\ums\accounts\views.py", line 55, in dashboard_view
+    return render(request, 'accounts/dashboard.html', context)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\it.sm.UG-EMERGENCY\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'student_fee_list' not found. 'student_fee_list' is not a valid view function or pattern name.
+ERROR 2026-05-08 11:31:14,815 basehttp 29344 28380 "GET / HTTP/1.1" 500 197060

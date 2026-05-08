@@ -1,4 +1,5 @@
 from django.contrib import admin
+from ums_core.admin import admin_site
 from accounts.admin import BaseAdmin
 from .models import (
     Campus, Faculty, Department, Programme, AcademicSession,

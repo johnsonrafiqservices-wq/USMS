@@ -232,7 +232,6 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 JET_DEFAULT_THEME = 'default'
 JET_SIDE_MENU_COMPACT = True
 JET_CHANGE_FORM_SIBLING_LINKS = False
-JET_CUSTOM_CSS = 'admin/custom_admin.css'
 
 JET_THEMES = [
     {'theme': 'default', 'color': '#1e3a5f', 'title': 'Indigo (Default)'},

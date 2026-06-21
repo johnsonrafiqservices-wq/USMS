@@ -20,24 +20,87 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text">UGX</span>
-                        <input type="number" name="amount" class="form-control form-control-lg"
-                               step="1" min="1" max="{{ invoice.balance }}"
-                               placeholder="0" required>
-                    </div>
-                    <div class="form-text">Maximum: UGX {{ invoice.balance|floatformat:0 }}</div>
+                <label class="form-label">Fee Items to Pay <span class="text-danger">*</span></label>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0 border">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="25px">
+                                    <input type="checkbox" id="selectAllItems" class="form-check-input">
+                                </th>
+                                <th>Fee Description</th>
+                                <th class="text-end" width="100px">Total (UGX)</th>
+                                <th class="text-end" width="120px">Pay Amount (UGX)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="selected_items" value="{{ item.pk }}" 
+                                           class="form-check-input item-checkbox" data-amount="{{ item.amount }}"
+                                           onchange="togglePayAmount(this)">
+                                </td>
+                                <td class="small">{{ item.description }}</td>
+                                <td class="text-end small">{{ item.amount|floatformat:0 }}</td>
+                                <td class="text-end p-1">
+                                    <input type="number" 
+                                           name="pay_amount_{{ item.pk }}" 
+                                           id="pay_amount_{{ item.pk }}"
+                                           class="form-control form-control-sm text-end pay-amount-input" 
+                                           style="height: 28px; font-size: 12px; padding: 2px 6px;"
+                                           placeholder="0"
+                                           min="0"
+                                           max="{{ item.amount|floatformat:0 }}"
+                                           step="1"
+                                           onchange="updateTotalPayment()">
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-2 small">No fee items found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="3" class="text-end">Total Payment:</th>
+                                <th class="text-end">
+                                    <input type="number" 
+                                           name="amount" 
+                                           id="paymentAmount" 
+                                           class="form-control form-control-sm text-end fw-bold" 
+                                           placeholder="0"
+                                           min="0"
+                                           max="{{ invoice.balance }}"
+                                           step="1"
+                                           readonly>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Payment Method <span class="text-danger">*</span></label>
-                    <select name="payment_method" class="form-select" required>
-                        <option value="">— Select Method —</option>
-                        {% for val, label in methods %}
-                        <option value="{{ val }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <div class="form-text small">Select fee items and enter amounts to pay for each item.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Currency <span class="text-danger">*</span></label>
+                <select name="currency" class="form-select" required>
+                    {% for currency in currencies %}
+                    <option value="{{ currency.pk }}" {% if currency == student_currency %}selected{% endif %}>
+                        {{ currency.code }} - {{ currency.name }} ({{ currency.symbol }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Payment Method <span class="text-danger">*</span></label>
+                <select name="payment_method" class="form-select" required>
+                    <option value="">— Select Method —</option>
+                    {% for val, label in methods %}
+                    <option value="{{ val }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
                 <div class="mb-3">
                     <label class="form-label">Reference / Transaction Number</label>
                     <input type="text" name="reference_number" class="form-control" placeholder="Bank ref, mobile money ID, cheque no…">
@@ -90,4 +153,113 @@
         </div>
     </div>
 </div>
+
+<script>
+// Toggle pay amount input when checkbox is changed
+function togglePayAmount(checkbox) {
+    const payAmountInput = document.getElementById('pay_amount_' + checkbox.value);
+    const maxAmount = parseFloat(checkbox.dataset.amount);
+    
+    if (checkbox.checked) {
+        payAmountInput.disabled = false;
+        payAmountInput.value = maxAmount; // Default to full amount
+        payAmountInput.style.backgroundColor = '#fff';
+        payAmountInput.style.borderColor = '#198754';
+        payAmountInput.focus();
+    } else {
+        payAmountInput.disabled = true;
+        payAmountInput.value = '';
+        payAmountInput.style.backgroundColor = '#f8f9fa';
+        payAmountInput.style.borderColor = '#dee2e6';
+    }
+    updateTotalPayment();
+}
+
+// Update total payment amount
+function updateTotalPayment() {
+    const payAmountInputs = document.querySelectorAll('.pay-amount-input:not(:disabled)');
+    const paymentAmountInput = document.getElementById('paymentAmount');
+    
+    let total = 0;
+    payAmountInputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        total += value;
+    });
+    
+    paymentAmountInput.value = total;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAllCheckbox = document.getElementById('selectAllItems');
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    
+    // Select all functionality
+    selectAllCheckbox.addEventListener('change', function() {
+        itemCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+            togglePayAmount(checkbox);
+        });
+        
+        // Update select all checkbox state
+        const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
+        const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+        selectAllCheckbox.checked = allChecked;
+        selectAllCheckbox.indeterminate = someChecked && !allChecked;
+    });
+    
+    // Individual checkbox functionality
+    itemCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Update select all checkbox state
+            const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
+            const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+        });
+    });
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const selectedItems = document.querySelectorAll('input[name="selected_items"]:checked');
+        if (selectedItems.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one fee item to pay for.');
+            return false;
+        }
+        
+        const totalAmount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+        if (totalAmount <= 0) {
+            e.preventDefault();
+            alert('Please enter payment amounts greater than 0.');
+            return false;
+        }
+        
+        // Validate individual payment amounts
+        let hasValidAmounts = false;
+        selectedItems.forEach(checkbox => {
+            const payAmountInput = document.getElementById('pay_amount_' + checkbox.value);
+            const amount = parseFloat(payAmountInput.value) || 0;
+            const maxAmount = parseFloat(checkbox.dataset.amount);
+            
+            if (amount > 0) {
+                hasValidAmounts = true;
+                if (amount > maxAmount) {
+                    e.preventDefault();
+                    alert(`Payment amount for ${checkbox.closest('tr').querySelector('td:nth-child(2)').textContent} cannot exceed UGX ${maxAmount.toLocaleString()}.`);
+                    payAmountInput.focus();
+                    return false;
+                }
+            }
+        });
+        
+        if (!hasValidAmounts) {
+            e.preventDefault();
+            alert('Please enter payment amounts for at least one selected item.');
+            return false;
+        }
+    });
+});
+</script>
+
 {% endblock %}

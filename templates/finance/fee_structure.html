@@ -10,7 +10,7 @@
   }
   .modal-overlay.show { display: flex; }
   .modal-content {
-    background: #fff; border-radius: 12px; max-width: 600px; width: 95%;
+    background: #fff; border-radius: 12px; max-width: 80vw; width: 80%;
     max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   }
   .modal-header { padding: 20px 24px; border-bottom: 1px solid #e9ecef; }
@@ -32,41 +32,67 @@
 
 <div class="card mb-3">
     <div class="card-body py-3">
-        <form method="get" class="row g-2 align-items-end">
-            <div class="col-md-3">
+        <form method="get" class="row g-2 align-items-end" id="filterForm">
+            <div class="col-md-2">
                 <label class="form-label mb-1" style="font-size:.8rem;">Session</label>
-                <select name="session" class="form-select form-select-sm">
+                <select name="session" class="form-select form-select-sm auto-filter">
                     <option value="">All Sessions</option>
                     {% for s in sessions %}
                     <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label class="form-label mb-1" style="font-size:.8rem;">Faculty</label>
+                <select name="faculty" class="form-select form-select-sm auto-filter">
+                    <option value="">All Faculties</option>
+                    {% for f in faculties %}
+                    <option value="{{ f.pk }}" {% if faculty_filter == f.pk|stringformat:"s" %}selected{% endif %}>{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
                 <label class="form-label mb-1" style="font-size:.8rem;">Programme</label>
-                <select name="programme" class="form-select form-select-sm">
+                <select name="programme" class="form-select form-select-sm auto-filter">
                     <option value="">All Programmes</option>
                     {% for p in programmes %}
                     <option value="{{ p.pk }}" {% if programme_filter == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label class="form-label mb-1" style="font-size:.8rem;">Schedule</label>
+                <select name="schedule" class="form-select form-select-sm auto-filter">
+                    <option value="">All Schedules</option>
+                    {% for val, label in schedules %}
+                    <option value="{{ val }}" {% if schedule_filter == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
                 <label class="form-label mb-1" style="font-size:.8rem;">Fee Type</label>
-                <select name="type" class="form-select form-select-sm">
+                <select name="type" class="form-select form-select-sm auto-filter">
                     <option value="">All Types</option>
                     {% for val, label in fee_types %}
                     <option value="{{ val }}" {% if type_filter == val %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3 d-flex gap-1">
-                <button type="submit" class="btn btn-primary btn-sm flex-grow-1">Filter</button>
+            <div class="col-md-2 d-flex gap-1">
                 <a href="{% url 'finance:fee_structure' %}" class="btn btn-outline-secondary btn-sm">Clear</a>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    // Auto-submit form when any filter dropdown changes
+    document.querySelectorAll('.auto-filter').forEach(function(select) {
+        select.addEventListener('change', function() {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
 
 <div class="card">
     <div class="table-responsive">
@@ -75,13 +101,11 @@
                 <tr>
                     <th>Fee Name</th>
                     <th>Type</th>
-                    <th>Frequency</th>
+                    <th>Faculty</th>
                     <th>Programme</th>
-                    <th>Year Level</th>
-                    <th class="text-end">Amount (UGX)</th>
+                    <th>Schedule</th>
+                    <th>Amount (UGX)</th>
                     <th>Session</th>
-                    <th class="text-center">Mandatory</th>
-                    <th>Description</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -89,34 +113,51 @@
                 {% for fee in fees %}
                 <tr>
                     <td class="fw-medium">{{ fee.name }}</td>
+                    <td>{{ fee.get_fee_type_display }}</td>
                     <td>
-                        <span class="badge bg-light text-dark border">{{ fee.get_fee_type_display }}</span>
-                    </td>
-                    <td style="font-size:.83rem;">{{ fee.get_frequency_display }}</td>
-                    <td style="font-size:.83rem;">{{ fee.programme.name|default:"All Programmes" }}</td>
-                    <td style="font-size:.83rem;">{% if fee.level %}Year {{ fee.level }}{% else %}All Years{% endif %}</td>
-                    <td class="text-end fw-bold">{{ fee.amount|floatformat:0 }}</td>
-                    <td style="font-size:.83rem;">{{ fee.session.name }}</td>
-                    <td class="text-center">
-                        {% if fee.is_mandatory %}
-                        <i class="bi bi-check-circle-fill text-success"></i>
+                        {% if fee.faculties.exists %}
+                            {% for f in fee.faculties.all %}
+                                <span class="badge bg-light text-dark border">{{ f.code }}</span>{% if not forloop.last %} {% endif %}
+                            {% endfor %}
                         {% else %}
-                        <i class="bi bi-dash-circle text-muted"></i>
+                            <span class="text-muted">All</span>
                         {% endif %}
                     </td>
-                    <td class="text-muted" style="font-size:.82rem;">{{ fee.description|default:"—" }}</td>
+                    <td>
+                        {% if fee.programmes.exists %}
+                            {% for p in fee.programmes.all %}
+                                <span class="badge bg-light text-dark border">{{ p.code }}</span>{% if not forloop.last %} {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">All</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if fee.schedules %}
+                            {% for s in fee.schedules %}
+                                <span class="badge bg-info text-white">{{ s|title }}</span>{% if not forloop.last %} {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">All</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end fw-bold">{{ fee.amount|floatformat:0 }}</td>
+                    <td>{{ fee.session.name }}</td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-xs btn-outline-primary" onclick="openModal({{ fee.pk }})" style="padding:2px 6px;font-size:.75rem;">
+                        <a href="{% url 'finance:fee_structure_detail' fee.pk %}" class="btn btn-sm btn-outline-info" title="View Details">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="openModal({{ fee.pk }})" title="Edit">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <a href="{% url 'finance:fee_structure_delete' fee.pk %}" class="btn btn-xs btn-outline-danger" style="padding:2px 6px;font-size:.75rem;">
+                        <a href="{% url 'finance:fee_structure_delete' fee.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
                             <i class="bi bi-trash"></i>
                         </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="10" class="text-center text-muted py-5">
+                    <td colspan="8" class="text-center text-muted py-5">
                         <i class="bi bi-gear" style="font-size:2rem;"></i>
                         <p class="mt-2 mb-0">No fee structure defined.</p>
                     </td>
@@ -127,7 +168,7 @@
     </div>
 </div>
 
-{# Modal Dialog #}
+<!-- Add/Edit Modal -->
 <div class="modal-overlay" id="feeModal">
     <div class="modal-content">
         <div class="modal-header d-flex justify-content-between align-items-center">
@@ -166,6 +207,23 @@ function openModal(feeId = null) {
         .then(response => response.text())
         .then(html => {
             modalBody.innerHTML = html;
+
+            // Re-execute inline scripts loaded via AJAX and preserve non-JS script types like application/json
+            modalBody.querySelectorAll('script').forEach(oldScript => {
+                const newScript = document.createElement('script');
+                for (let i = 0; i < oldScript.attributes.length; i++) {
+                    const attr = oldScript.attributes[i];
+                    newScript.setAttribute(attr.name, attr.value);
+                }
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                    newScript.async = false;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+
             currentForm = modalBody.querySelector('form');
             if (currentForm) {
                 currentForm.addEventListener('submit', function(e) {

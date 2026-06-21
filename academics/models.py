@@ -40,6 +40,7 @@ class StudySemester(models.Model):
     code = models.CharField(max_length=10, unique=True, help_text="e.g. S1, S2")
     name = models.CharField(max_length=50, help_text="e.g. Semester 1, Semester 2")
     number = models.IntegerField(unique=True, help_text="e.g. 1 for Semester 1, 2 for Semester 2")
+    is_current = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -47,6 +48,11 @@ class StudySemester(models.Model):
 
     def __str__(self):
         return f"{self.code} — {self.name}"
+
+    def save(self, *args, **kwargs):
+        if self.is_current:
+            StudySemester.objects.filter(is_current=True).exclude(pk=self.pk).update(is_current=False)
+        super().save(*args, **kwargs)
 
 
 class Campus(models.Model):
@@ -121,6 +127,10 @@ class Programme(models.Model):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=20, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='programmes')
+    coordinator = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='programmes_coordinated'
+    )
     level = models.ForeignKey(StudyLevel, on_delete=models.PROTECT, related_name='programmes')
     schedule = models.CharField(max_length=10, choices=Schedule.choices, default=Schedule.FULLTIME)
     duration_years = models.IntegerField(default=4)

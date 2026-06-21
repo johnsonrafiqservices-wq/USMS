@@ -67,9 +67,14 @@
                 <strong>Highlighted courses</strong> are previously failed courses. Check the <strong>Retake</strong> box to register them as retakes.
             </div>
             {% endif %}
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-circle me-1"></i> Register Selected Courses
-            </button>
+            <div class="d-flex justify-content-between">
+                <button type="submit" name="action" value="register_selected" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i> Register Selected Courses
+                </button>
+                <button type="submit" name="action" value="enroll_semester" class="btn btn-outline-secondary">
+                    <i class="bi bi-journal-bookmark me-1"></i> Enroll All Semester Courses
+                </button>
+            </div>
         </form>
     </div>
 </div>

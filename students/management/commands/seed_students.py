@@ -1,123 +1,100 @@
+import random
+from datetime import timedelta
+
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from students.models import Student
-from academics.models import Programme, StudyYear, StudySemester, Intake
 from django.utils import timezone
-from datetime import timedelta
+
+from academics.models import Programme, StudyYear, StudySemester, Intake
+from students.models import Student
 
 User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = 'Seed 5 sample students'
+    help = 'Seed 300 sample students with user accounts'
 
     def handle(self, *args, **options):
-        self.stdout.write('Seeding students...')
+        self.stdout.write('Seeding 300 students...')
 
-        # Get existing academic data
-        bsc_cs = Programme.objects.get(code='BSC-CS')
-        bsc_it = Programme.objects.get(code='BSC-IT')
-        bba = Programme.objects.get(code='BBA')
-        
-        year1 = StudyYear.objects.get(code='Y1')
-        year2 = StudyYear.objects.get(code='Y2')
-        year3 = StudyYear.objects.get(code='Y3')
-        
-        sem1 = StudySemester.objects.get(code='SEM1')
-        sem2 = StudySemester.objects.get(code='SEM2')
-        
-        jan2024 = Intake.objects.get(code='JAN2024')
-        aug2024 = Intake.objects.get(code='AUG2024')
+        programmes = list(Programme.objects.filter(code__in=[
+            'BSC-CS', 'BSC-IT', 'BBA', 'BSC-ENG',
+            'DIP-CS', 'DIP-BUS', 'MSC-CS', 'MBA'
+        ]).order_by('code'))
+        years = list(StudyYear.objects.order_by('level'))
+        semesters = list(StudySemester.objects.order_by('number'))
+        intakes = list(Intake.objects.order_by('code'))
 
-        students_data = [
-            {
-                'student_id': 'STU001',
-                'first_name': 'John',
-                'last_name': 'Doe',
-                'email': 'john.doe@ums.edu',
-                'programme': bsc_cs,
-                'year': year2,
-                'semester': sem1,
-                'intake': jan2024,
-            },
-            {
-                'student_id': 'STU002',
-                'first_name': 'Jane',
-                'last_name': 'Smith',
-                'email': 'jane.smith@ums.edu',
-                'programme': bsc_it,
-                'year': year1,
-                'semester': sem2,
-                'intake': aug2024,
-            },
-            {
-                'student_id': 'STU003',
-                'first_name': 'Michael',
-                'last_name': 'Johnson',
-                'email': 'michael.johnson@ums.edu',
-                'programme': bba,
-                'year': year3,
-                'semester': sem1,
-                'intake': jan2024,
-            },
-            {
-                'student_id': 'STU004',
-                'first_name': 'Emily',
-                'last_name': 'Williams',
-                'email': 'emily.williams@ums.edu',
-                'programme': bsc_cs,
-                'year': year1,
-                'semester': sem1,
-                'intake': aug2024,
-            },
-            {
-                'student_id': 'STU005',
-                'first_name': 'David',
-                'last_name': 'Brown',
-                'email': 'david.brown@ums.edu',
-                'programme': bsc_it,
-                'year': year2,
-                'semester': sem2,
-                'intake': jan2024,
-            },
+        if not programmes or not years or not semesters or not intakes:
+            self.stdout.write(self.style.ERROR(
+                'Academic data is missing. Run seed_academic_data first.'
+            ))
+            return
+
+        first_names = [
+            'Alex', 'Brian', 'Clara', 'Diana', 'Edward', 'Faith', 'George', 'Hannah',
+            'Ibrahim', 'Joy', 'Kevin', 'Lydia', 'Michael', 'Nadia', 'Oscar', 'Patience',
+            'Queen', 'Richard', 'Susan', 'Thomas', 'Umar', 'Victoria', 'William', 'Yasmine',
+            'Zainab', 'Aaron', 'Bella', 'Charles', 'Dorothy', 'Elias',
         ]
+        last_names = [
+            'Akello', 'Baluku', 'Carter', 'Ddamulira', 'Ekwaro', 'Francis', 'Gonzalez',
+            'Hassan', 'Ibrahim', 'Jackson', 'Kato', 'Lule', 'Mugisha', 'Nansubuga',
+            'Okello', 'Patterson', 'Quinto', 'Rwabwogo', 'Ssemanda', 'Tumusiime',
+            'Umaru', 'Vanguard', 'Waiswa', 'Yiga', 'Zziwa',
+        ]
+        nationality_choices = ['Ugandan', 'Kenyan', 'Tanzanian', 'Rwandan', 'South Sudanese']
+        state_choices = ['Central', 'Eastern', 'Northern', 'Western']
 
-        for student_data in students_data:
-            # Create or get user
-            user, created = User.objects.get_or_create(
-                email=student_data['email'],
+        random.seed(42)
+        created_count = 0
+
+        for idx in range(1, 301):
+            first_name = random.choice(first_names)
+            last_name = random.choice(last_names)
+            email = f'student{idx:03}@ums.edu'
+            username = f'student{idx:03}'
+            student_id = f'STU{idx:03}'
+
+            user, user_created = User.objects.get_or_create(
+                email=email,
                 defaults={
-                    'first_name': student_data['first_name'],
-                    'last_name': student_data['last_name'],
-                    'username': student_data['email'].split('@')[0],
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'username': username,
                     'is_active': True,
+                    'role': User.Role.STUDENT if hasattr(User, 'Role') else 'student',
                 }
             )
-            if created:
-                user.set_password('password123')
+            if user_created:
+                user.set_password('Password123!')
                 user.save()
-                self.stdout.write(f'Created user: {user.email}')
-            else:
-                self.stdout.write(f'User already exists: {user.email}')
 
-            # Create or get student
-            student, created = Student.objects.get_or_create(
-                student_id=student_data['student_id'],
-                defaults={
-                    'user': user,
-                    'programme': student_data['programme'],
-                    'current_year': student_data['year'],
-                    'current_semester_number': student_data['semester'],
-                    'intake': student_data['intake'],
-                    'status': 'active',
-                    'admission_date': timezone.now() - timedelta(days=365),
-                    'nationality': 'Ugandan',
-                    'state_of_origin': 'Central',
-                }
+            programme = programmes[(idx - 1) % len(programmes)]
+            year = years[(idx - 1) % len(years)]
+            semester = semesters[(idx - 1) % len(semesters)]
+            intake = intakes[(idx - 1) % len(intakes)]
+
+            admission_date = timezone.now() - timedelta(days=120 + (idx % 900))
+            student_defaults = {
+                'user': user,
+                'programme': programme,
+                'current_year': year,
+                'current_semester_number': semester,
+                'intake': intake,
+                'status': Student.Status.ACTIVE,
+                'admission_date': admission_date,
+                'nationality': random.choice(nationality_choices),
+                'state_of_origin': random.choice(state_choices),
+            }
+
+            student, student_created = Student.objects.get_or_create(
+                student_id=student_id,
+                defaults=student_defaults
             )
-            if created:
-                self.stdout.write(self.style.SUCCESS(f'Created student: {student.student_id}'))
-            else:
-                self.stdout.write(f'Student already exists: {student.student_id}')
 
+            if student_created:
+                created_count += 1
+
+        self.stdout.write(self.style.SUCCESS(f'Created {created_count} students'))
         self.stdout.write(self.style.SUCCESS('Students seeded successfully!'))

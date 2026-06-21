@@ -3,6 +3,15 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
+from django.utils import timezone
+from django.apps import apps
+from django.http import JsonResponse, FileResponse
+from django.views.decorators.http import require_http_methods
+from django.core import serializers as dj_serializers
+from datetime import timedelta, datetime
+import json
+import os
 from .forms import CustomLoginForm, UserRegistrationForm, UserProfileForm
 from .models import User
 from .decorators import role_required
@@ -37,6 +46,20 @@ def dashboard_view(request):
     user = request.user
     context = {'user': user}
 
+    # Always include a lightweight finance summary so the homepage can show overview data
+    try:
+        from finance.models import Payment, Invoice
+        finance_summary = {
+            'total_revenue': Payment.objects.filter(status='completed').aggregate(total=Sum('amount'))['total'] or 0,
+            'pending_invoices': Invoice.objects.filter(status='pending').count(),
+            'overdue_invoices': Invoice.objects.filter(status='overdue').count(),
+            'total_outstanding': Invoice.objects.filter(status__in=['pending', 'partial', 'overdue']).aggregate(total=Sum('balance'))['total'] or 0,
+        }
+        context.update(finance_summary)
+    except Exception:
+        # silently ignore if finance app not available
+        pass
+
     if user.is_admin or user.is_superuser:
         context.update(_get_admin_dashboard_context())
     elif user.is_student:
@@ -47,12 +70,114 @@ def dashboard_view(request):
         context.update(_get_finance_dashboard_context())
     elif user.is_registrar:
         context.update(_get_registrar_dashboard_context())
+    elif user.is_faculty_dean:
+        context.update(_get_faculty_dean_dashboard_context(user))
+    elif user.is_department_head:
+        context.update(_get_department_head_dashboard_context(user))
+    elif user.is_programme_coordinator:
+        context.update(_get_programme_coordinator_dashboard_context(user))
     elif user.is_librarian:
         context.update(_get_librarian_dashboard_context())
     elif user.role == 'hostel_manager':
         context.update(_get_hostel_dashboard_context())
 
     return render(request, 'accounts/dashboard.html', context)
+
+
+def _get_faculty_dean_dashboard_context(user):
+    from students.models import Student
+    from academics.models import Faculty, Department, Programme, Course
+
+    faculty = Faculty.objects.filter(dean=user).first()
+    if not faculty:
+        return {
+            'dashboard_type': 'faculty_dean',
+            'faculty': None,
+            'faculty_departments_count': 0,
+            'faculty_programmes_count': 0,
+            'faculty_students_count': 0,
+            'faculty_courses_count': 0,
+            'faculty_url': None,
+            'faculty_programmes_list': [],
+            'faculty_students_list': [],
+            'faculty_courses_list': [],
+        }
+
+    departments = Department.objects.filter(faculty=faculty)
+    programmes = Programme.objects.filter(department__faculty=faculty).select_related('department')
+    faculty_students = Student.objects.filter(programme__department__faculty=faculty).select_related('user', 'programme')
+    faculty_courses = Course.objects.filter(department__faculty=faculty).select_related('department')
+
+    return {
+        'dashboard_type': 'faculty_dean',
+        'faculty': faculty,
+        'faculty_departments_count': departments.count(),
+        'faculty_programmes_count': programmes.count(),
+        'faculty_students_count': faculty_students.count(),
+        'faculty_courses_count': faculty_courses.count(),
+        'faculty_url': faculty.pk,
+        'faculty_programmes_list': programmes[:10],
+        'faculty_students_list': faculty_students[:10],
+        'faculty_courses_list': faculty_courses[:10],
+    }
+
+
+def _get_department_head_dashboard_context(user):
+    from students.models import Student
+    from academics.models import Department, Programme, Course
+
+    department = Department.objects.filter(head_of_department=user).first()
+    if not department:
+        return {
+            'dashboard_type': 'department_head',
+            'department': None,
+            'department_programmes_count': 0,
+            'department_students_count': 0,
+            'department_courses_count': 0,
+            'department_url': None,
+            'department_programmes_list': [],
+            'department_students_list': [],
+            'department_courses_list': [],
+        }
+
+    programmes = Programme.objects.filter(department=department).select_related('department')
+    department_students = Student.objects.filter(programme__department=department).select_related('user', 'programme')
+    department_courses = Course.objects.filter(department=department).select_related('department')
+
+    return {
+        'dashboard_type': 'department_head',
+        'department': department,
+        'department_programmes_count': programmes.count(),
+        'department_students_count': department_students.count(),
+        'department_courses_count': department_courses.count(),
+        'department_url': department.pk,
+        'department_programmes_list': programmes[:10],
+        'department_students_list': department_students[:10],
+        'department_courses_list': department_courses[:10],
+    }
+
+
+def _get_programme_coordinator_dashboard_context(user):
+    from students.models import Student
+    from academics.models import Programme, Course
+
+    programmes = Programme.objects.filter(coordinator=user).select_related('department__faculty')
+    programme_count = programmes.count()
+    programme_students = Student.objects.filter(programme__in=programmes).select_related('user', 'programme')
+    programme_courses = Course.objects.filter(programme__in=programmes).select_related('programme', 'department')
+    primary_programme = programmes.first()
+
+    return {
+        'dashboard_type': 'programme_coordinator',
+        'coordinator_programmes': programmes,
+        'programme_count': programme_count,
+        'programme_students_count': programme_students.count(),
+        'programme_courses_count': programme_courses.distinct().count(),
+        'primary_programme': primary_programme,
+        'coordinator_programmes_list': programmes[:10],
+        'programme_students_list': programme_students[:10],
+        'programme_courses_list': programme_courses.distinct()[:10],
+    }
 
 
 def _get_admin_dashboard_context():
@@ -71,7 +196,7 @@ def _get_admin_dashboard_context():
         total_revenue = Payment.objects.filter(status='completed').aggregate(
             total=Sum('amount'))['total'] or 0
         pending_invoices = Invoice.objects.filter(status='pending').count()
-        recent_students = Student.objects.select_related('user', 'programme').order_by('-id')[:5]
+        recent_students = Student.objects.filter(pk__isnull=False).select_related('user', 'programme').order_by('-id')[:5]
     except Exception:
         total_students = total_courses = total_departments = total_staff = 0
         total_faculties = pending_admissions = pending_invoices = 0
@@ -174,14 +299,53 @@ def _get_finance_dashboard_context():
 def _get_registrar_dashboard_context():
     try:
         from students.models import Student, AdmissionApplication, AcademicYearEnrollment
-        from academics.models import AcademicSession, Programme
+        from academics.models import AcademicSession, Programme, Faculty, Department
         total_students = Student.objects.filter(status='active').count()
         pending_admissions = AdmissionApplication.objects.filter(status='pending').count()
         total_applications = AdmissionApplication.objects.count()
         current_session = AcademicSession.objects.filter(is_current=True).first()
         total_programmes = Programme.objects.count()
+        total_faculties = Faculty.objects.count()
+        total_departments = Department.objects.count()
         recent_applications = AdmissionApplication.objects.order_by('-created_at')[:5]
-        new_students = Student.objects.select_related('user', 'programme').order_by('-id')[:5]
+        new_students = Student.objects.filter(pk__isnull=False).select_related('user', 'programme').order_by('-id')[:5]
+        # Monthly admissions (last 12 months)
+        now = timezone.now()
+        start = (now.replace(day=1) - timedelta(days=365)).replace(day=1)
+        admissions_qs = (
+            AdmissionApplication.objects.filter(created_at__gte=start)
+            .annotate(month=TruncMonth('created_at'))
+            .values('month')
+            .annotate(count=Count('id'))
+            .order_by('month')
+        )
+        adm_map = {item['month'].strftime('%Y-%m'): item['count'] for item in admissions_qs}
+        labels = []
+        adm_data = []
+        cur = start
+        while cur <= now:
+            key = cur.strftime('%Y-%m')
+            labels.append(cur.strftime('%b %Y'))
+            adm_data.append(adm_map.get(key, 0))
+            if cur.month == 12:
+                cur = cur.replace(year=cur.year + 1, month=1)
+            else:
+                cur = cur.replace(month=cur.month + 1)
+
+        # Programme distribution (current students per programme)
+        prog_qs = (
+            Student.objects.values('programme__name')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:8]
+        )
+        prog_labels = [p['programme__name'] or 'Unknown' for p in prog_qs]
+        prog_data = [p['count'] for p in prog_qs]
+
+        # JSON for template-safe insertion
+        labels_json = json.dumps(labels)
+        adm_json = json.dumps(adm_data)
+        prog_labels_json = json.dumps(prog_labels)
+        prog_data_json = json.dumps(prog_data)
         return {
             'dashboard_type': 'registrar',
             'total_students': total_students,
@@ -189,6 +353,16 @@ def _get_registrar_dashboard_context():
             'total_applications': total_applications,
             'current_session': current_session,
             'total_programmes': total_programmes,
+            'total_faculties': total_faculties,
+            'total_departments': total_departments,
+            'registrar_month_labels': labels,
+            'registrar_admissions': adm_data,
+            'registrar_programmes_labels': prog_labels,
+            'registrar_programmes_data': prog_data,
+            'registrar_month_labels_json': labels_json,
+            'registrar_admissions_json': adm_json,
+            'registrar_programmes_labels_json': prog_labels_json,
+            'registrar_programmes_data_json': prog_data_json,
             'recent_applications': recent_applications,
             'new_students': new_students,
         }
@@ -792,3 +966,91 @@ def _qcp_register_course(request):
             created += 1
     return {'success': True, 'message': f'{created} course(s) registered successfully.',
             'redirect': '/students/my-courses/'}
+
+
+# ───────────────────────────────────────── DATABASE EXPORT/IMPORT ─────────────────────────────────────
+
+@login_required
+def db_management_view(request):
+    """Database export/import management page."""
+    if not (request.user.is_superuser or request.user.is_admin):
+        return redirect('accounts:dashboard')
+    return render(request, 'accounts/db_management.html')
+def export_database_api(request):
+    """Export database to JSON and return for download."""
+    if not (request.user.is_superuser or request.user.is_admin):
+        return JsonResponse({'success': False, 'message': 'Permission denied'}, status=403)
+    
+    try:
+        # Serialize all app data
+        all_data = []
+        for model in apps.get_models():
+            if model._meta.app_label in ['contenttypes', 'auth', 'sessions']:
+                continue
+            queryset = model.objects.all()
+            if queryset.exists():
+                serialized = dj_serializers.serialize('json', queryset)
+                all_data.extend(json.loads(serialized))
+        
+        # Create backup directory if not exists
+        backups_dir = 'media/backups'
+        if not os.path.exists(backups_dir):
+            os.makedirs(backups_dir)
+        
+        # Write to file
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'db_export_{timestamp}.json'
+        filepath = os.path.join(backups_dir, filename)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(all_data, f, indent=2, default=str)
+        
+        return FileResponse(
+            open(filepath, 'rb'),
+            as_attachment=True,
+            filename=filename,
+            content_type='application/json'
+        )
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': f'Export failed: {str(e)}'}, status=500)
+
+
+@login_required
+@require_http_methods(['POST'])
+def import_database_api(request):
+    """Import database from uploaded JSON file."""
+    if not (request.user.is_superuser or request.user.is_admin):
+        return JsonResponse({'success': False, 'message': 'Permission denied'}, status=403)
+    
+    try:
+        uploaded_file = request.FILES.get('file')
+        if not uploaded_file:
+            return JsonResponse({'success': False, 'message': 'No file provided'}, status=400)
+        
+        # Read and parse JSON
+        file_content = uploaded_file.read().decode('utf-8')
+        data = json.loads(file_content)
+        
+        if not isinstance(data, list):
+            return JsonResponse({'success': False, 'message': 'Invalid JSON format'}, status=400)
+        
+        # Deserialize and save data
+        imported_count = 0
+        errors = []
+        for item in data:
+            try:
+                for obj in dj_serializers.deserialize('json', json.dumps([item])):
+                    obj.save()
+                    imported_count += 1
+            except Exception as e:
+                errors.append(str(e))
+        
+        message = f'Imported {imported_count} records'
+        if errors:
+            message += f' ({len(errors)} errors)'
+        
+        return JsonResponse({'success': True, 'message': message, 'imported': imported_count, 'errors': errors[:5]})
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'message': 'Invalid JSON file'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': f'Import failed: {str(e)}'}, status=500)

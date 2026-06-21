@@ -91,6 +91,14 @@
                 </select>
             </div>
             <div class="col-md-3">
+                <select class="form-select" id="deanFilter">
+                    <option value="">All Deans</option>
+                    {% for dean in deans %}
+                    <option value="{{ dean.id }}">{{ dean.get_full_name|default:dean.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
                 <select class="form-select" id="campusFilter">
                     <option value="">All Campuses</option>
                     {% for campus in campuses %}
@@ -110,7 +118,7 @@
 <!-- Faculties Grid -->
 <div class="row g-4" id="facultiesGrid">
     {% for faculty in faculties %}
-    <div class="col-md-6 col-lg-4 faculty-card" data-status="{% if faculty.is_active %}active{% else %}inactive{% endif %}" data-campus="{{ faculty.campus.id|default:'' }}" data-name="{{ faculty.name|lower }}" data-code="{{ faculty.code|lower }}">
+    <div class="col-md-6 col-lg-4 faculty-card" data-status="{% if faculty.is_active %}active{% else %}inactive{% endif %}" data-campus="{{ faculty.campus.id|default:'' }}" data-dean="{{ faculty.dean.id|default:'' }}" data-name="{{ faculty.name|lower }}" data-code="{{ faculty.code|lower }}">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                 <div class="d-flex justify-content-between align-items-start">
@@ -197,6 +205,7 @@ document.getElementById('campusFilter').addEventListener('change', filterFaculti
 function filterFaculties() {
     const searchTerm = document.getElementById('facultySearch').value.toLowerCase();
     const statusFilter = document.getElementById('statusFilter').value;
+    const deanFilter = document.getElementById('deanFilter').value;
     const campusFilter = document.getElementById('campusFilter').value;
     
     const cards = document.querySelectorAll('.faculty-card');
@@ -205,13 +214,15 @@ function filterFaculties() {
         const name = card.getAttribute('data-name');
         const code = card.getAttribute('data-code');
         const status = card.getAttribute('data-status');
+        const dean = card.getAttribute('data-dean');
         const campus = card.getAttribute('data-campus');
         
         const matchesSearch = name.includes(searchTerm) || code.includes(searchTerm);
         const matchesStatus = !statusFilter || status === statusFilter;
+        const matchesDean = !deanFilter || dean === deanFilter;
         const matchesCampus = !campusFilter || campus === campusFilter;
         
-        if (matchesSearch && matchesStatus && matchesCampus) {
+        if (matchesSearch && matchesStatus && matchesDean && matchesCampus) {
             card.style.display = '';
         } else {
             card.style.display = 'none';
@@ -222,6 +233,7 @@ function filterFaculties() {
 function resetFilters() {
     document.getElementById('facultySearch').value = '';
     document.getElementById('statusFilter').value = '';
+    document.getElementById('deanFilter').value = '';
     document.getElementById('campusFilter').value = '';
     filterFaculties();
 }

@@ -48,6 +48,40 @@
 
 <div class="card">
     <div class="card-body">
+        <div class="row mb-3 g-2">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="programmeSearch" placeholder="Search programmes...">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="facultyFilter">
+                    <option value="">All Faculties</option>
+                    {% for faculty in faculties %}
+                    <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    {% for department in departments %}
+                    <option value="{{ department.id }}">{{ department.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" id="coordinatorFilter">
+                    <option value="">All Coordinators</option>
+                    {% for coordinator in coordinators %}
+                    <option value="{{ coordinator.id }}">{{ coordinator.get_full_name|default:coordinator.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 text-end">
+                <button class="btn btn-outline-secondary btn-sm" onclick="resetProgrammeFilters()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset Filters
+                </button>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="table-light">
@@ -55,6 +89,7 @@
                         <th>Programme Code</th>
                         <th>Programme Name</th>
                         <th>Department</th>
+                        <th>Coordinator</th>
                         <th>Faculty</th>
                         <th>Level</th>
                         <th>Duration</th>
@@ -65,7 +100,7 @@
                 </thead>
                 <tbody>
                     {% for programme in programmes %}
-                    <tr>
+                    <tr data-name="{{ programme.name|lower }}" data-department="{{ programme.department.id }}" data-faculty="{{ programme.department.faculty.id }}" data-coordinator="{{ programme.coordinator.id|default:'' }}">
                         <td><span class="text-primary fw-bold">{{ programme.code }}</span></td>
                         <td>
                             <a href="{% url 'academics:programme_detail' programme.pk %}" class="text-decoration-none">
@@ -73,6 +108,7 @@
                             </a>
                         </td>
                         <td>{{ programme.department.name }}</td>
+                        <td>{{ programme.coordinator.get_full_name|default:"Not assigned" }}</td>
                         <td>{{ programme.department.faculty.name }}</td>
                         <td><span class="text-secondary">{{ programme.level.name }}</span></td>
                         <td>{{ programme.duration_years }} years</td>
@@ -114,7 +150,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="9" class="text-center py-4">
+                        <td colspan="10" class="text-center py-4">
                             <i class="bi bi-journal-bookmark" style="font-size: 2.5rem;"></i>
                             <p class="mt-2">No programmes found.</p>
                         </td>
@@ -127,6 +163,45 @@
 </div>
 
 <script>
+const programmeSearch = document.getElementById('programmeSearch');
+const programmeFacultyFilter = document.getElementById('facultyFilter');
+const programmeDepartmentFilter = document.getElementById('departmentFilter');
+const programmeCoordinatorFilter = document.getElementById('coordinatorFilter');
+
+programmeSearch?.addEventListener('input', filterProgrammes);
+programmeFacultyFilter?.addEventListener('change', filterProgrammes);
+programmeDepartmentFilter?.addEventListener('change', filterProgrammes);
+programmeCoordinatorFilter?.addEventListener('change', filterProgrammes);
+
+function filterProgrammes() {
+    const searchTerm = programmeSearch.value.toLowerCase();
+    const facultyValue = programmeFacultyFilter.value;
+    const departmentValue = programmeDepartmentFilter.value;
+    const coordinatorValue = programmeCoordinatorFilter.value;
+
+    document.querySelectorAll('table tbody tr[data-name]').forEach(row => {
+        const name = row.dataset.name;
+        const faculty = row.dataset.faculty;
+        const department = row.dataset.department;
+        const coordinator = row.dataset.coordinator;
+
+        const matchesSearch = !searchTerm || name.includes(searchTerm);
+        const matchesFaculty = !facultyValue || faculty === facultyValue;
+        const matchesDepartment = !departmentValue || department === departmentValue;
+        const matchesCoordinator = !coordinatorValue || coordinator === coordinatorValue;
+
+        row.style.display = matchesSearch && matchesFaculty && matchesDepartment && matchesCoordinator ? '' : 'none';
+    });
+}
+
+function resetProgrammeFilters() {
+    programmeSearch.value = '';
+    programmeFacultyFilter.value = '';
+    programmeDepartmentFilter.value = '';
+    programmeCoordinatorFilter.value = '';
+    filterProgrammes();
+}
+
 /* {% if request.user.role in 'admin,registrar' or request.user.is_superuser %} */
 // Edit Programme Modal Handler
 let currentEditUrl = '';

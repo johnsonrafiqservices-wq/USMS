@@ -51,8 +51,8 @@ class StaffProfile(models.Model):
     @property
     def current_workload(self):
         """Calculate current semester workload in credit units."""
-        from academics.models import CourseAllocation, Semester
-        current_sem = Semester.objects.filter(is_current=True).first()
+        from academics.models import CourseAllocation, StudySemester
+        current_sem = StudySemester.objects.filter(is_current=True).first()
         if not current_sem:
             return 0
         allocations = CourseAllocation.objects.filter(

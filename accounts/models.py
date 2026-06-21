@@ -14,8 +14,11 @@ class User(AbstractUser):
         FINANCE = 'finance', 'Finance Staff'
         LIBRARIAN = 'librarian', 'Librarian'
         HOSTEL_MANAGER = 'hostel_manager', 'Hostel Manager'
+        FACULTY_DEAN = 'faculty_dean', 'Faculty Dean'
+        DEPARTMENT_HEAD = 'department_head', 'Department Head'
+        PROGRAMME_COORDINATOR = 'programme_coordinator', 'Programme Coordinator'
 
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
+    role = models.CharField(max_length=25, choices=Role.choices, default=Role.STUDENT)
     phone_number = models.CharField(max_length=20, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(
@@ -58,6 +61,18 @@ class User(AbstractUser):
     @property
     def is_librarian(self):
         return self.role == self.Role.LIBRARIAN
+
+    @property
+    def is_faculty_dean(self):
+        return self.role == self.Role.FACULTY_DEAN
+
+    @property
+    def is_department_head(self):
+        return self.role == self.Role.DEPARTMENT_HEAD
+
+    @property
+    def is_programme_coordinator(self):
+        return self.role == self.Role.PROGRAMME_COORDINATOR
 
 
 class AuditLog(models.Model):

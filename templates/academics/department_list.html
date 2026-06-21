@@ -28,6 +28,35 @@
         {% endif %}
     </div>
     <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" id="departmentSearch" placeholder="Search departments...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="facultyFilter">
+                    <option value="">All Faculties</option>
+                    {% for faculty in faculties %}
+                    <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="headFilter">
+                    <option value="">All HODs</option>
+                    {% for head in heads %}
+                    <option value="{{ head.id }}">{{ head.get_full_name|default:head.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 text-end">
+                <button class="btn btn-outline-secondary btn-sm" onclick="resetDepartmentFilters()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                </button>
+            </div>
+        </div>
         <div class="row">
             {% for faculty in faculties %}
             <div class="col-md-4 col-lg-3 mb-3">
@@ -81,7 +110,7 @@
                 </thead>
                 <tbody>
                     {% for department in departments %}
-                    <tr>
+                    <tr data-name="{{ department.name|lower }}" data-faculty="{{ department.faculty.id }}" data-head="{{ department.head_of_department.id|default:'' }}">
                         <td><span class="badge bg-primary">{{ department.code }}</span></td>
                         <td>{{ department.name }}</td>
                         <td>
@@ -111,7 +140,7 @@
                             </a>
                             {% endif %}
                         </td>
-                    </tr>
+                        </tr>
                     {% empty %}
                     <tr>
                         <td colspan="7" class="text-center py-4">
@@ -125,4 +154,39 @@
         </div>
     </div>
 </div>
+
+<script>
+const departmentSearch = document.getElementById('departmentSearch');
+const facultyFilter = document.getElementById('facultyFilter');
+const headFilter = document.getElementById('headFilter');
+
+departmentSearch?.addEventListener('input', filterDepartments);
+facultyFilter?.addEventListener('change', filterDepartments);
+headFilter?.addEventListener('change', filterDepartments);
+
+function filterDepartments() {
+    const searchTerm = departmentSearch.value.toLowerCase();
+    const facultyValue = facultyFilter.value;
+    const headValue = headFilter.value;
+
+    document.querySelectorAll('table tbody tr[data-name]').forEach(row => {
+        const name = row.dataset.name;
+        const faculty = row.dataset.faculty;
+        const head = row.dataset.head;
+
+        const matchesSearch = !searchTerm || name.includes(searchTerm);
+        const matchesFaculty = !facultyValue || faculty === facultyValue;
+        const matchesHead = !headValue || head === headValue;
+
+        row.style.display = matchesSearch && matchesFaculty && matchesHead ? '' : 'none';
+    });
+}
+
+function resetDepartmentFilters() {
+    departmentSearch.value = '';
+    facultyFilter.value = '';
+    headFilter.value = '';
+    filterDepartments();
+}
+</script>
 {% endblock %}

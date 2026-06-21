@@ -2,151 +2,80 @@
 {% block title %}Invoices{% endblock %}
 
 {% block content %}
-<div class="page-header d-flex justify-content-between align-items-center">
-    <div>
-        <h1 class="page-title"><i class="bi bi-receipt"></i> Invoices</h1>
-        <p class="text-muted mb-0">All student billing invoices</p>
-    </div>
-    <button onclick="loadModalForm('/finance/invoices/create/', '<i class=&quot;bi bi-plus-circle me-2&quot;></i>Create Invoice', 'Create Invoice')" class="btn btn-primary btn-sm">
-        <i class="bi bi-plus-circle me-1"></i>New Invoice
-    </button>
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-receipt"></i> Invoice Management</h1>
 </div>
 
-{# ── Summary chips ──────────────────────────────────────────── #}
-<div class="row g-3 mb-3">
-    <div class="col-6 col-md-3">
-        <div class="card p-3 text-center">
-            <div style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Total Billed</div>
-            <div class="fw-bold" style="font-size:1.2rem;color:#1e3a5f;">{{ total_amount|floatformat:0 }}</div>
-            <div style="font-size:.75rem;color:#aaa;">UGX</div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card p-3 text-center">
-            <div style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Outstanding</div>
-            <div class="fw-bold text-danger" style="font-size:1.2rem;">{{ total_balance|floatformat:0 }}</div>
-            <div style="font-size:.75rem;color:#aaa;">UGX</div>
-        </div>
-    </div>
-    <div class="col-6 col-md-3">
-        <div class="card p-3 text-center">
-            <div style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px;">Results</div>
-            <div class="fw-bold" style="font-size:1.2rem;color:#1e3a5f;">{{ invoices|length }}</div>
-            <div style="font-size:.75rem;color:#aaa;">invoices</div>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form class="d-flex gap-2" method="get">
+        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search invoices..." value="{{ search }}">
+        <select name="status" class="form-select form-select-sm" style="width:auto;">
+            <option value="">All Status</option>
+            {% for val, label in statuses %}
+            <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+    </form>
+    <div class="d-flex gap-2">
+        <a href="{% url 'finance:invoice_list' %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Clear
+        </a>
+        <button onclick="loadModalForm('/finance/invoices/create/', '<i class=&quot;bi bi-plus-circle me-2&quot;></i>Create Invoice', 'Create Invoice')" class="btn btn-sm btn-success">
+            <i class="bi bi-plus-circle me-1"></i> New Invoice
+        </button>
     </div>
 </div>
 
-{# ── Filters ────────────────────────────────────────────────── #}
-<div class="card mb-3">
-    <div class="card-body py-3">
-        <form method="get" class="row g-2 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label mb-1" style="font-size:.8rem;">Search</label>
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Invoice #, student name or ID…">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label mb-1" style="font-size:.8rem;">Status</label>
-                <select name="status" class="form-select form-select-sm">
-                    <option value="">All Statuses</option>
-                    {% for val, label in statuses %}
-                    <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label mb-1" style="font-size:.8rem;">Session</label>
-                <select name="session" class="form-select form-select-sm">
-                    <option value="">All Sessions</option>
-                    {% for s in sessions %}
-                    <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-2 d-flex gap-1">
-                <button type="submit" class="btn btn-primary btn-sm flex-grow-1">Filter</button>
-                <a href="{% url 'finance:invoice_list' %}" class="btn btn-outline-secondary btn-sm">Clear</a>
-            </div>
-        </form>
-    </div>
-</div>
-
-{# ── Table ──────────────────────────────────────────────────── #}
 <div class="card">
     <div class="table-responsive">
         <table class="table table-hover mb-0">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>Invoice #</th>
                     <th>Student</th>
+                    <th>Programme</th>
                     <th>Session</th>
                     <th>Issued</th>
                     <th class="text-end">Total (UGX)</th>
-                    <th class="text-end">Paid (UGX)</th>
                     <th class="text-end">Balance (UGX)</th>
-                    <th>Due</th>
                     <th>Status</th>
-                    <th></th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for inv in invoices %}
                 <tr>
-                    <td><code class="fw-bold">{{ inv.invoice_number }}</code></td>
-                    <td>
-                        <div class="fw-medium">{{ inv.student.user.get_full_name }}</div>
-                        <small class="text-muted">{{ inv.student.student_id }}</small>
-                    </td>
-                    <td style="font-size:.83rem;">{{ inv.session.name }}</td>
-                    <td style="font-size:.83rem;">{{ inv.issued_date|date:"M d, Y" }}</td>
-                    <td class="text-end fw-medium">{{ inv.total_amount|floatformat:0 }}</td>
-                    <td class="text-end text-success">{{ inv.amount_paid|floatformat:0 }}</td>
+                    <td class="fw-medium">{{ inv.invoice_number }}</td>
+                    <td>{{ inv.student.user.get_full_name }}</td>
+                    <td><small>{{ inv.student.programme|default:"-" }}</small></td>
+                    <td>{{ inv.session.name }}</td>
+                    <td>{{ inv.issued_date|date:"M d, Y" }}</td>
+                    <td class="text-end">{{ inv.total_amount|floatformat:0 }}</td>
                     <td class="text-end {% if inv.balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
                         {{ inv.balance|floatformat:0 }}
                     </td>
-                    <td style="font-size:.83rem;">
-                        {% if inv.due_date %}
-                            <span class="{% if inv.status == 'overdue' %}text-danger fw-bold{% endif %}">
-                                {{ inv.due_date|date:"M d, Y" }}
-                            </span>
-                        {% else %}—{% endif %}
-                    </td>
                     <td>
                         {% if inv.status == 'paid' %}
-                            <span class="badge bg-success badge-role">Paid</span>
+                        <span class="badge bg-success badge-role">Paid</span>
                         {% elif inv.status == 'partial' %}
-                            <span class="badge bg-info badge-role">Partial</span>
+                        <span class="badge bg-info badge-role">Partial</span>
                         {% elif inv.status == 'overdue' %}
-                            <span class="badge bg-danger badge-role">Overdue</span>
+                        <span class="badge bg-danger badge-role">Overdue</span>
                         {% elif inv.status == 'cancelled' %}
-                            <span class="badge bg-secondary badge-role">Cancelled</span>
+                        <span class="badge bg-secondary badge-role">Cancelled</span>
                         {% else %}
-                            <span class="badge bg-warning text-dark badge-role">Pending</span>
+                        <span class="badge bg-warning text-dark badge-role">Pending</span>
                         {% endif %}
                     </td>
                     <td>
-                        <div class="d-flex gap-1">
-                            <a href="{% url 'finance:invoice_detail' inv.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            {% if inv.status != 'paid' and inv.status != 'cancelled' %}
-                            <button onclick="loadModalForm('/finance/payments/record/{{ inv.pk }}/', '<i class=&quot;bi bi-cash me-2&quot;></i>Record Payment', 'Confirm Payment')" class="btn btn-xs btn-success" style="padding:2px 8px;font-size:.78rem;">
-                                <i class="bi bi-cash"></i>
-                            </button>
-                            {% endif %}
-                        </div>
+                        <a href="{% url 'finance:invoice_detail' inv.pk %}" class="btn btn-sm btn-outline-primary" title="View Details">
+                            <i class="bi bi-eye"></i>
+                        </a>
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="10" class="text-center text-muted py-5">
-                        <i class="bi bi-receipt" style="font-size:2rem;"></i>
-                        <p class="mt-2 mb-0">No invoices found.</p>
-                    </td>
-                </tr>
+                <tr><td colspan="9" class="text-center text-muted py-4">No invoices found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

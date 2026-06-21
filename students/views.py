@@ -3,12 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.utils import timezone
-from accounts.decorators import role_required
+from accounts.decorators import role_required, academic_read_required
 from .models import Student, Enrollment, AdmissionApplication
 from .forms import StudentEditForm
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from finance.models import FeeStructure
+from academics.models import AcademicSession, Course, StudyYear, StudySemester, Department, Programme
+from students.models import AcademicYearEnrollment
 
 
 @login_required
@@ -107,7 +109,7 @@ def student_edit(request, pk):
     # Filter fee structures by student's programme or show all if no programme
     if student.programme:
         fee_structures = FeeStructure.objects.filter(
-            Q(programme=student.programme) | Q(programme__isnull=True)
+            Q(programmes=student.programme) | Q(programmes__isnull=True)
         )
     else:
         fee_structures = FeeStructure.objects.all()
@@ -134,9 +136,23 @@ def student_edit(request, pk):
 
 
 @login_required
-@role_required(['admin', 'registrar'])
+@academic_read_required
 def student_list(request):
     students = Student.objects.select_related('user', 'programme').all()
+    if request.user.is_department_head:
+        dept = Department.objects.filter(head_of_department=request.user).first()
+        students = students.filter(programme__department=dept) if dept else students.none()
+    elif request.user.is_programme_coordinator:
+        programmes = Programme.objects.filter(coordinator=request.user)
+        students = students.filter(programme__in=programmes)
+    elif request.user.is_faculty_dean:
+        students = students.filter(programme__department__faculty__dean=request.user)
+    elif request.user.is_student:
+        try:
+            own_student = Student.objects.get(user=request.user)
+            students = students.filter(pk=own_student.pk)
+        except Student.DoesNotExist:
+            students = students.none()
     search = request.GET.get('search')
     status_filter = request.GET.get('status')
     level_filter = request.GET.get('level')
@@ -165,15 +181,32 @@ def student_detail(request, pk):
         pk=pk
     )
 
-    # Only admin/registrar can view any student; students can only view themselves
-    if request.user.role not in ('admin', 'registrar') and not request.user.is_superuser:
-        try:
-            own = Student.objects.get(user=request.user)
-            if own.pk != student.pk:
+    # Only admin/registrar/finance can view any student; students can only view themselves
+    if request.user.role not in ('admin', 'registrar', 'finance') and not request.user.is_superuser:
+        if request.user.is_student:
+            try:
+                own = Student.objects.get(user=request.user)
+                if own.pk != student.pk:
+                    messages.error(request, 'You do not have permission to view this profile.')
+                    return redirect('accounts:dashboard')
+            except Student.DoesNotExist:
+                messages.error(request, 'Student profile not found.')
+                return redirect('accounts:dashboard')
+        elif request.user.is_department_head:
+            dept = Department.objects.filter(head_of_department=request.user).first()
+            if not dept or student.programme.department != dept:
                 messages.error(request, 'You do not have permission to view this profile.')
                 return redirect('accounts:dashboard')
-        except Student.DoesNotExist:
-            messages.error(request, 'Student profile not found.')
+        elif request.user.is_programme_coordinator:
+            if not Programme.objects.filter(coordinator=request.user, pk=student.programme_id).exists():
+                messages.error(request, 'You do not have permission to view this profile.')
+                return redirect('accounts:dashboard')
+        elif request.user.is_faculty_dean:
+            if student.programme.department.faculty.dean != request.user:
+                messages.error(request, 'You do not have permission to view this profile.')
+                return redirect('accounts:dashboard')
+        else:
+            messages.error(request, 'You do not have permission to view this profile.')
             return redirect('accounts:dashboard')
 
     from academics.models import StudentResult, Attendance
@@ -240,6 +273,182 @@ def student_detail(request, pk):
         'cgpa': cgpa,
         'graduation': graduation,
         'active_tab': request.GET.get('tab', 'overview'),
+    })
+
+
+@login_required
+@role_required(['admin', 'registrar'])
+def student_enroll_semester(request, pk):
+    student = get_object_or_404(Student.objects.select_related('programme'), pk=pk)
+
+    if request.method == 'POST':
+        session_id = request.POST.get('academic_session')
+        year_id = request.POST.get('year_of_study')
+        semester_id = request.POST.get('semester_number')
+
+        if not session_id or not year_id or not semester_id:
+            return JsonResponse({'success': False, 'message': 'Please select session, year and semester.'})
+
+        academic_session = get_object_or_404(AcademicSession, pk=session_id)
+        year_of_study = get_object_or_404(StudyYear, pk=year_id)
+        semester_number = get_object_or_404(StudySemester, pk=semester_id)
+
+        if not student.programme:
+            return JsonResponse({'success': False, 'message': 'Student does not have an assigned programme.'})
+
+        course_level = year_of_study.level * 100
+        courses = Course.objects.filter(
+            programme=student.programme,
+            semester=semester_number,
+            level=course_level,
+            is_active=True
+        ).distinct()
+
+        if not courses.exists():
+            # Fallback to all courses for the programme and semester if level-specific courses are unavailable
+            courses = Course.objects.filter(
+                programme=student.programme,
+                semester=semester_number,
+                is_active=True
+            ).distinct()
+
+        year_enrollment, created = AcademicYearEnrollment.objects.get_or_create(
+            student=student,
+            academic_session=academic_session,
+            year_of_study=year_of_study,
+            semester_number=semester_number,
+            defaults={
+                'status': AcademicYearEnrollment.EnrollmentStatus.ACTIVE,
+                'enrolled_by': request.user
+            }
+        )
+
+        if not created and year_enrollment.status != AcademicYearEnrollment.EnrollmentStatus.ACTIVE:
+            year_enrollment.status = AcademicYearEnrollment.EnrollmentStatus.ACTIVE
+            year_enrollment.enrolled_by = request.user
+            year_enrollment.save()
+        else:
+            year_enrollment.save()
+
+        AcademicYearEnrollment.objects.filter(
+            student=student,
+            status=AcademicYearEnrollment.EnrollmentStatus.ACTIVE
+        ).exclude(pk=year_enrollment.pk).update(status=AcademicYearEnrollment.EnrollmentStatus.COMPLETED)
+
+        if student.current_year_id != year_of_study.id or student.current_semester_number_id != semester_number.id:
+            student.current_year = year_of_study
+            student.current_semester_number = semester_number
+            student.save(update_fields=['current_year', 'current_semester_number'])
+
+        created_count = 0
+        for course in courses:
+            enrollment, new = Enrollment.objects.get_or_create(
+                student=student,
+                course=course,
+                semester=semester_number,
+                defaults={
+                    'academic_year_enrollment': year_enrollment,
+                    'is_retake': False
+                }
+            )
+            if new:
+                created_count += 1
+
+        # Assign and invoice all mandatory semester-payable fees for this session and semester.
+        from finance.models import FeeStructure, Invoice, InvoiceItem, StudentFee
+
+        applicable_fees = FeeStructure.objects.filter(
+            session=academic_session,
+            is_mandatory=True
+        )
+
+        fee_items = []
+        for fee in applicable_fees:
+            if not fee.applies_to_student(student):
+                continue
+
+            if fee.frequency == FeeStructure.Frequency.PER_SEMESTER:
+                fee_items.append(fee)
+            elif fee.frequency == FeeStructure.Frequency.PER_YEAR:
+                if semester_number.name.lower() in ['semester 1', 'sem 1', '1']:
+                    fee_items.append(fee)
+            elif fee.frequency == FeeStructure.Frequency.MONTHLY:
+                fee_items.append(fee)
+            elif fee.frequency == FeeStructure.Frequency.ONCE:
+                already_billed = InvoiceItem.objects.filter(
+                    fee_structure=fee,
+                    invoice__student=student
+                ).exists()
+                if not already_billed:
+                    fee_items.append(fee)
+            elif fee.frequency == FeeStructure.Frequency.GRADUATION:
+                if year_of_study.name.lower() in ['year 4', 'year 5', 'final', '4', '5']:
+                    fee_items.append(fee)
+
+        # Create fee assignments and invoice line items.
+        if fee_items:
+            for fee in fee_items:
+                StudentFee.objects.get_or_create(
+                    student=student,
+                    fee_structure=fee,
+                    session=academic_session,
+                    defaults={'is_active': True}
+                )
+
+            total_fee_amount = sum(fee.amount for fee in fee_items)
+
+            existing_invoice = Invoice.objects.filter(
+                student=student,
+                session=academic_session,
+                semester=semester_number,
+                status__in=[Invoice.Status.PENDING, Invoice.Status.PARTIALLY_PAID]
+            ).first()
+
+            if existing_invoice:
+                existing_invoice.items.all().delete()
+                for fee in fee_items:
+                    InvoiceItem.objects.create(
+                        invoice=existing_invoice,
+                        fee_structure=fee,
+                        description=f'{fee.name} ({fee.get_frequency_display()})',
+                        amount=fee.amount
+                    )
+                existing_invoice.total_amount = total_fee_amount
+                existing_invoice.balance = total_fee_amount - existing_invoice.amount_paid
+                existing_invoice.save()
+            else:
+                invoice = Invoice.objects.create(
+                    student=student,
+                    session=academic_session,
+                    semester=semester_number,
+                    total_amount=total_fee_amount,
+                    balance=total_fee_amount,
+                    due_date=timezone.now() + timezone.timedelta(days=30),
+                    created_by=request.user
+                )
+                for fee in fee_items:
+                    InvoiceItem.objects.create(
+                        invoice=invoice,
+                        fee_structure=fee,
+                        description=f'{fee.name} ({fee.get_frequency_display()})',
+                        amount=fee.amount
+                    )
+
+        return JsonResponse({
+            'success': True,
+            'message': f'{created_count} course(s) enrolled successfully.',
+            'refresh': True
+        })
+
+    sessions = AcademicSession.objects.all()
+    years = StudyYear.objects.all()
+    semesters = StudySemester.objects.all()
+
+    return render(request, 'students/student_enroll_semester_fragment.html', {
+        'student': student,
+        'sessions': sessions,
+        'years': years,
+        'semesters': semesters,
     })
 
 
@@ -318,6 +527,7 @@ def course_registration(request):
     ).values_list('course_allocation__course_id', flat=True)
 
     if request.method == 'POST':
+        action = request.POST.get('action')
         course_ids = request.POST.getlist('courses')
         retake_ids = request.POST.getlist('retakes')
         sem_id = request.POST.get('semester')
@@ -327,21 +537,48 @@ def course_registration(request):
             messages.error(request, 'Please select a semester.')
         else:
             sem = get_object_or_404(StudySemester, pk=sem_id)
-            for course_id in course_ids:
-                is_retake = str(course_id) in retake_ids
-                Enrollment.objects.get_or_create(
-                    student=student,
-                    course_id=course_id,
-                    semester=sem,
-                    defaults={'is_retake': is_retake}
-                )
+            if action == 'enroll_semester':
+                semester_courses = Course.objects.filter(
+                    programme=student.programme,
+                    is_active=True,
+                    semester=sem
+                ) if student.programme else Course.objects.none()
+                created = 0
+                for course in semester_courses:
+                    _, new = Enrollment.objects.get_or_create(
+                        student=student,
+                        course=course,
+                        semester=sem,
+                        defaults={'is_retake': course.id in failed_course_ids}
+                    )
+                    if new:
+                        created += 1
+                message = f'{created} semester course(s) enrolled successfully.'
+            else:
+                if not course_ids:
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'message': 'Select at least one course.'})
+                    messages.error(request, 'Select at least one course.')
+                    return redirect('students:course_registration')
+                created = 0
+                for course_id in course_ids:
+                    is_retake = str(course_id) in retake_ids
+                    _, new = Enrollment.objects.get_or_create(
+                        student=student,
+                        course_id=course_id,
+                        semester=sem,
+                        defaults={'is_retake': is_retake}
+                    )
+                    if new:
+                        created += 1
+                message = f'{created} course(s) registered successfully.'
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
                     'success': True,
-                    'message': f'{len(course_ids)} course(s) registered successfully.',
+                    'message': message,
                     'redirect': '/students/my-courses/'
                 })
-            messages.success(request, f'{len(course_ids)} course(s) registered successfully.')
+            messages.success(request, message)
             return redirect('students:my_courses')
 
     semesters = StudySemester.objects.all()

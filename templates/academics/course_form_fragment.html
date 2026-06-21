@@ -1,18 +1,131 @@
 {% csrf_token %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="row g-3">
-                    {% for field in form %}
-                    <div class="col-md-6">
-                        <label class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}<small class="text-danger">{{ field.errors.0 }}</small>{% endif %}
+<div class="row g-3">
+    <div class="col-12">
+        <div class="border rounded p-3 bg-light">
+            <h6 class="mb-3 text-uppercase text-dark">Programme assignments</h6>
+            {% if faculties %}
+                {% for faculty in faculties %}
+                <div class="faculty-section mb-3 border rounded bg-white">
+                    <div class="faculty-header d-flex align-items-center justify-content-between p-3">
+                        <div class="form-check">
+                            <input class="form-check-input faculty-checkbox" type="checkbox"
+                                   id="faculty_{{ faculty.pk }}" data-faculty-id="{{ faculty.pk }}">
+                            <label class="form-check-label fw-semibold ms-2" for="faculty_{{ faculty.pk }}">
+                                {{ faculty.name }} <small class="text-muted">({{ faculty.code }})</small>
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-link faculty-collapse-toggle" data-target="#faculty_programmes_{{ faculty.pk }}">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
                     </div>
-                    {% endfor %}
+                            <div class="faculty-body collapse show" id="faculty_programmes_{{ faculty.pk }}">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 50px;">Use</th>
+                                        <th>Programme</th>
+                                        <th style="width: 160px;">Year of Study</th>
+                                        <th style="width: 160px;">Semester</th>
+                                        <th style="width: 180px;">Course Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for department in faculty.departments.all %}
+                                        {% for programme in department.programmes.all %}
+                                        <tr class="programme-row" data-faculty-id="{{ faculty.pk }}" data-programme-id="{{ programme.pk }}">
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input programme-checkbox" type="checkbox"
+                                                           name="programmes" value="{{ programme.pk }}"
+                                                           id="prog_{{ programme.pk }}" {% if programme.pk in selected_programme_ids %}checked{% endif %}>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <label class="form-check-label mb-0" for="prog_{{ programme.pk }}">
+                                                    {{ programme.name }} <small class="text-muted">({{ programme.code }})</small>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <select class="form-select form-select-sm programme-year" name="programme_year_{{ programme.pk }}" {% if not programme.pk in selected_programme_ids %}disabled{% endif %}>
+                                                    <option value="">-- Select Year --</option>
+                                                    {% for year in study_years %}
+                                                    <option value="{{ year.pk }}" {% if programme.pk in selected_programme_ids and default_year_pk == year.pk %}selected{% endif %}>{{ year.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select form-select-sm programme-semester" name="programme_semester_{{ programme.pk }}" {% if not programme.pk in selected_programme_ids %}disabled{% endif %}>
+                                                    <option value="">-- Select Semester --</option>
+                                                    {% for sem in study_semesters %}
+                                                    <option value="{{ sem.pk }}" {% if programme.pk in selected_programme_ids and default_semester_pk == sem.pk %}selected{% endif %}>{{ sem.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-select form-select-sm programme-course-type" name="programme_course_type_{{ programme.pk }}" {% if not programme.pk in selected_programme_ids %}disabled{% endif %}>
+                                                    <option value="">-- Type --</option>
+                                                    <option value="core" {% if programme.pk in selected_programme_ids and default_course_type == 'core' %}selected{% endif %}>Core</option>
+                                                    <option value="elective" {% if programme.pk in selected_programme_ids and default_course_type == 'elective' %}selected{% endif %}>Elective</option>
+                                                    <option value="general" {% if programme.pk in selected_programme_ids and default_course_type == 'general' %}selected{% endif %}>General Education</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-muted">No faculties or programmes available.</div>
+            {% endif %}
+            <small class="text-muted d-block mt-2">Select a faculty to toggle all programmes, then choose year, semester and type per programme.</small>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Course Code</label>
+        {{ form.code }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Course Title</label>
+        {{ form.title }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Department</label>
+        {{ form.department }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Credit Units</label>
+        {{ form.credit_units }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Course Type</label>
+        {{ form.course_type }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Level</label>
+        {{ form.level }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Semester</label>
+        {{ form.semester }}
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Max Students</label>
+        {{ form.max_students }}
+    </div>
+    <div class="col-12">
+        <label class="form-label">Description</label>
+        {{ form.description }}
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            {{ form.is_active }}
+            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active</label>
         </div>
     </div>
 </div>

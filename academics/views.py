@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from accounts.decorators import role_required
+from django import forms
+from django.apps import apps
+from accounts.decorators import role_required, academic_read_required
 from .models import (
     Faculty, Department, Programme, Course, AcademicSession,
     CourseAllocation, Timetable, Attendance, StudentResult, GradeScale, Intake, Campus,
@@ -258,6 +260,8 @@ def faculty_list(request):
     """List all faculties with statistics."""
     faculties = Faculty.objects.prefetch_related('departments', 'departments__programmes').all()
     campuses = Campus.objects.all()
+    User = apps.get_model('accounts', 'User')
+    deans = User.objects.filter(role=User.Role.FACULTY_DEAN)
     
     # Calculate stats for each faculty
     for faculty in faculties:
@@ -273,6 +277,7 @@ def faculty_list(request):
     context = {
         'faculties': faculties,
         'campuses': campuses,
+        'deans': deans,
         'total_faculties': total_faculties,
         'active_faculties': active_faculties,
         'total_departments': total_departments,
@@ -491,31 +496,8 @@ def course_create(request):
                 'errors': form.errors.as_json()
             })
     
-    form = CourseForm()
-    programme_id = request.GET.get('programme_id')
-    # If programme_id is provided, pre-select that programme
-    if programme_id:
-        try:
-            programme = Programme.objects.get(pk=programme_id)
-            form.fields['programmes'].initial = [programme.pk]
-        except Programme.DoesNotExist:
-            pass
-    
-    # Check if this is an AJAX request (simplified check)
-    is_ajax = request.GET.get('ajax') == '1' or 'application/json' in request.headers.get('Accept', '')
-    
-    if is_ajax:
-        html = render_to_string('academics/course_create_modal_form.html', {
-            'form': form, 
-            'programme_id': programme_id
-        }, request=request)
-        return JsonResponse({'html': html})
-    
-    # For non-AJAX requests, render the full page
-    return render(request, 'academics/course_create_form.html', {
-        'form': form, 
-        'programme_id': programme_id
-    })
+    # For non-POST requests, redirect to course list where the modal is available
+    return redirect('academics:course_list')
 
 
 @login_required
@@ -670,24 +652,50 @@ def study_level_delete(request, pk):
 @login_required
 def programme_list(request):
     programmes = Programme.objects.select_related('department__faculty').all()
+    if request.user.is_department_head:
+        dept = Department.objects.filter(head_of_department=request.user).first()
+        programmes = programmes.filter(department=dept) if dept else programmes.none()
+    elif request.user.is_faculty_dean:
+        programmes = programmes.filter(department__faculty__dean=request.user)
+    faculties = Faculty.objects.filter(is_active=True).prefetch_related('departments')
+    departments = Department.objects.select_related('faculty').all()
+    User = apps.get_model('accounts', 'User')
+    coordinators = User.objects.filter(role=User.Role.PROGRAMME_COORDINATOR)
     return render(request, 'academics/programme_list.html', {
         'programmes': programmes,
+        'faculties': faculties,
+        'departments': departments,
+        'coordinators': coordinators,
     })
 
 
 @login_required
 def department_list(request):
     departments = Department.objects.select_related('faculty').all()
+    if request.user.is_department_head:
+        dept = Department.objects.filter(head_of_department=request.user).first()
+        departments = departments.filter(pk=dept.pk) if dept else departments.none()
+    elif request.user.is_faculty_dean:
+        departments = departments.filter(faculty__dean=request.user)
     faculties = Faculty.objects.all()
+    User = apps.get_model('accounts', 'User')
+    heads = User.objects.filter(role=User.Role.DEPARTMENT_HEAD)
     return render(request, 'academics/department_list.html', {
         'departments': departments,
         'faculties': faculties,
+        'heads': heads,
     })
 
 
 @login_required
 def department_detail(request, pk):
     department = get_object_or_404(Department, pk=pk)
+    if request.user.is_department_head and department.head_of_department != request.user:
+        messages.error(request, 'You do not have permission to view this department.')
+        return redirect('accounts:dashboard')
+    if request.user.is_faculty_dean and department.faculty.dean != request.user:
+        messages.error(request, 'You do not have permission to view this department.')
+        return redirect('accounts:dashboard')
     courses = Course.objects.filter(department=department)
     programmes = Programme.objects.filter(department=department)
     return render(request, 'academics/department_detail.html', {
@@ -700,6 +708,11 @@ def department_detail(request, pk):
 @login_required
 def course_list(request):
     courses = Course.objects.select_related('department').all()
+    if request.user.is_department_head:
+        dept = Department.objects.filter(head_of_department=request.user).first()
+        courses = courses.filter(department=dept) if dept else courses.none()
+    elif request.user.is_faculty_dean:
+        courses = courses.filter(department__faculty__dean=request.user)
     department_filter = request.GET.get('department')
     level_filter = request.GET.get('level')
     if department_filter:
@@ -727,93 +740,142 @@ def course_list(request):
 
 @login_required
 def course_detail(request, pk):
-    course = get_object_or_404(Course, pk=pk)
+    course = get_object_or_404(
+        Course.objects.select_related('department').prefetch_related('programme', 'programme__department'),
+        pk=pk
+    )
+    if request.user.is_department_head and course.department.head_of_department != request.user:
+        messages.error(request, 'You do not have permission to view this course.')
+        return redirect('accounts:dashboard')
+    if request.user.is_faculty_dean and course.department.faculty.dean != request.user:
+        messages.error(request, 'You do not have permission to view this course.')
+        return redirect('accounts:dashboard')
     allocations = CourseAllocation.objects.filter(course=course).select_related('lecturer', 'semester')
+    total_allocations = allocations.count()
+    active_allocations = allocations.filter(is_active=True).count()
+    past_allocations = total_allocations - active_allocations
+    programmes = course.programme.all()
+    total_programmes = programmes.count()
+
     return render(request, 'academics/course_detail.html', {
         'course': course,
         'allocations': allocations,
+        'programmes': programmes,
+        'total_programmes': total_programmes,
+        'total_allocations': total_allocations,
+        'active_allocations': active_allocations,
+        'past_allocations': past_allocations,
     })
 
 
 @login_required
 @role_required(['admin', 'registrar'])
-def course_create(request):
-    from django.http import JsonResponse
+def course_allocation_popup(request, pk):
+    course = get_object_or_404(Course.objects.select_related('department'), pk=pk)
+    allocations = CourseAllocation.objects.filter(course=course).select_related('lecturer', 'semester')
+
     if request.method == 'POST':
-        from .forms import CourseForm
-        form = CourseForm(request.POST)
-        
-        # Check if this is an edit request
-        is_edit = 'edit' in request.path
-        course_id = None
-        
-        if is_edit:
-            # Extract course ID from URL
-            path_parts = request.path.strip('/').split('/')
-            if 'edit' in path_parts:
-                edit_index = path_parts.index('edit')
-                if edit_index > 0:
-                    course_id = path_parts[edit_index - 1]
-            
-            if course_id:
-                try:
-                    course = Course.objects.get(pk=course_id)
-                    form = CourseForm(request.POST, instance=course)
-                except Course.DoesNotExist:
-                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return JsonResponse({'success': False, 'message': 'Course not found.'})
-                    messages.error(request, 'Course not found.')
-                    return redirect('academics:course_list')
-        
+        action = request.POST.get('action')
+
+        if action == 'delete':
+            allocation_id = request.POST.get('allocation_id')
+            allocation = get_object_or_404(CourseAllocation, pk=allocation_id, course=course)
+            allocation.delete()
+            return JsonResponse({'success': True, 'message': 'Allocation removed successfully.'})
+
+        data = request.POST.copy()
+        data['course'] = course.pk
+        form = CourseAllocationForm(data)
+        if form.is_valid():
+            allocation = form.save(commit=False)
+            allocation.course = course
+            allocation.is_active = True
+            allocation.save()
+            return JsonResponse({'success': True, 'message': 'Allocation saved successfully.'})
+        return JsonResponse({'success': False, 'errors': form.errors})
+
+    form = CourseAllocationForm(initial={'course': course})
+    form.fields['course'].queryset = Course.objects.filter(pk=course.pk)
+    form.fields['course'].widget = forms.HiddenInput()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'academics/course_allocation_fragment.html', {
+            'course': course,
+            'allocations': allocations,
+            'form': form,
+        })
+
+    return redirect('academics:course_detail', pk=course.pk)
+
+
+@login_required
+@role_required(['admin', 'registrar'])
+def course_create(request, pk=None):
+    from django.http import JsonResponse
+    from .forms import CourseForm
+
+    is_edit = pk is not None
+    course = None
+
+    if is_edit:
+        try:
+            course = Course.objects.get(pk=pk)
+        except Course.DoesNotExist:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'message': 'Course not found.'})
+            messages.error(request, 'Course not found.')
+            return redirect('academics:course_list')
+
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course if is_edit else None)
+
         # Extract programme information
         programmes = request.POST.getlist('programmes')
         programme_years = {}
         programme_semesters = {}
         programme_course_types = {}
-        
+
         for prog_id in programmes:
             programme_years[prog_id] = request.POST.get(f'programme_year_{prog_id}')
             programme_semesters[prog_id] = request.POST.get(f'programme_semester_{prog_id}')
             programme_course_types[prog_id] = request.POST.get(f'programme_course_type_{prog_id}')
-        
+
         # Check if at least one programme is selected with complete information
         valid_programmes = []
         for prog_id in programmes:
             if programme_years.get(prog_id) and programme_semesters.get(prog_id) and programme_course_types.get(prog_id):
                 valid_programmes.append(prog_id)
-        
+
         if not valid_programmes:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
-                    'success': False, 
+                    'success': False,
                     'message': 'Please select at least one programme with complete year, semester, and course type information.'
                 })
-            else:
-                messages.error(request, 'Please select at least one programme with complete information.')
-                return redirect('academics:course_list')
-        
+            messages.error(request, 'Please select at least one programme with complete information.')
+            return redirect('academics:course_list')
+
         # Get first programme for department and level info
         first_programme = Programme.objects.get(pk=valid_programmes[0])
         first_study_year = StudyYear.objects.get(pk=programme_years[valid_programmes[0]])
-        
+
         # Set derived fields
         form.data = form.data.copy()
         form.data['department'] = first_programme.department.pk
         form.data['level'] = first_study_year.level * 100  # Convert to course level (100, 200, 300, etc.)
         form.data['course_type'] = programme_course_types[valid_programmes[0]]
-        
+
         if form.is_valid():
             course = form.save()
-            
-            # Clear existing programmes and add new ones for edit
-            if course_id and is_edit:
+
+            if is_edit:
                 course.programme.clear()
-            
-            # Assign course to selected programmes with year/semester info
+
+            # Assign course to selected programmes
             for prog_id in valid_programmes:
                 programme = Programme.objects.get(pk=prog_id)
                 course.programme.add(programme)
-            
+
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
                     'success': True,
@@ -825,34 +887,35 @@ def course_create(request):
         else:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
-                    'success': False, 
+                    'success': False,
                     'errors': str(form.errors)
                 })
     else:
-        from .forms import CourseForm
-        form = CourseForm()
-        
-        # Check if this is an edit request and populate form
-        if 'edit' in request.path:
-            path_parts = request.path.strip('/').split('/')
-            if 'edit' in path_parts:
-                edit_index = path_parts.index('edit')
-                if edit_index > 0:
-                    course_id = path_parts[edit_index - 1]
-                    try:
-                        course = Course.objects.get(pk=course_id)
-                        form = CourseForm(instance=course)
-                        # Pre-populate department field
-                        if course.programme.exists():
-                            first_programme = course.programme.first()
-                            form.initial['department'] = first_programme.department
-                    except Course.DoesNotExist:
-                        pass
+        form = CourseForm(instance=course if is_edit else None)
+        if is_edit and course and course.programme.exists():
+            first_programme = course.programme.first()
+            form.initial['department'] = first_programme.department
+
+    study_years = StudyYear.objects.all()
+    study_semesters = StudySemester.objects.all()
+    faculties = Faculty.objects.filter(is_active=True).prefetch_related('departments__programmes')
+    selected_programme_ids = []
+    if is_edit and course:
+        selected_programme_ids = list(course.programme.values_list('pk', flat=True))
+
+    title_text = 'Edit Course' if is_edit else 'Create Course'
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render(request, 'academics/course_form_fragment.html', {'form': form, 'title': 'Create Course'})
+        return render(request, 'academics/course_form_fragment.html', {
+            'form': form,
+            'title': title_text,
+            'study_years': study_years,
+            'study_semesters': study_semesters,
+            'faculties': faculties,
+            'selected_programme_ids': selected_programme_ids,
+        })
 
-    return render(request, 'academics/course_form.html', {'form': form, 'title': 'Create Course'})
+    return render(request, 'academics/course_form.html', {'form': form, 'title': title_text})
 
 
 @login_required

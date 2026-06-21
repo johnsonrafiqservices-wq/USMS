@@ -45,19 +45,54 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label">Programmes</label>
-                    <div class="border rounded p-3 bg-light">
-                        {% if form.programmes.help_text %}
-                        <small class="text-muted d-block mb-2">{{ form.programmes.help_text }}</small>
-                        {% endif %}
-                        {% for programme in form.programmes %}
-                        <div class="form-check mb-2">
-                            {{ programme.tag }}
-                            <label class="form-check-label" for="{{ programme.id_for_label }}">
-                                {{ programme.choice_label }}
-                            </label>
-                        </div>
-                        {% endfor %}
+                    <div class="table-responsive border rounded p-3 bg-light">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 50px;">Select</th>
+                                    <th>Programme</th>
+                                    <th style="width: 150px;">Year</th>
+                                    <th style="width: 150px;">Semester</th>
+                                </tr>
+                            </thead>
+                            <tbody id="programmesTable">
+                                {% for programme in form.programmes %}
+                                <tr data-programme-id="{{ programme.data }}">
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input programme-checkbox" type="checkbox" 
+                                                   value="{{ programme.data }}" id="prog_{{ programme.data }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label class="form-check-label mb-0" for="prog_{{ programme.data }}" style="cursor: pointer;">
+                                            {{ programme.choice_label }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm programme-year" disabled>
+                                            <option value="">-- Select Year --</option>
+                                            <option value="100">Year 1 (100)</option>
+                                            <option value="200">Year 2 (200)</option>
+                                            <option value="300">Year 3 (300)</option>
+                                            <option value="400">Year 4 (400)</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-select form-select-sm programme-semester" disabled>
+                                            <option value="">-- Select Semester --</option>
+                                            <option value="1">Semester 1</option>
+                                            <option value="2">Semester 2</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
+                    {% if form.programmes.help_text %}
+                    <small class="text-muted d-block mt-2">{{ form.programmes.help_text }}</small>
+                    {% endif %}
                 </div>
                 <div class="col-12">
                     <label class="form-label">Description</label>
@@ -88,6 +123,25 @@
 </div>
 
 <script>
+// Handle programme selection and enable/disable year/semester dropdowns
+document.querySelectorAll('.programme-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const row = this.closest('tr');
+        const yearSelect = row.querySelector('.programme-year');
+        const semesterSelect = row.querySelector('.programme-semester');
+        
+        if (this.checked) {
+            yearSelect.disabled = false;
+            semesterSelect.disabled = false;
+        } else {
+            yearSelect.disabled = true;
+            semesterSelect.disabled = true;
+            yearSelect.value = '';
+            semesterSelect.value = '';
+        }
+    });
+});
+
 document.getElementById('addCourseForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button[type="submit"]');
@@ -96,6 +150,34 @@ document.getElementById('addCourseForm').addEventListener('submit', function(e) 
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
     
     const formData = new FormData(e.target);
+    
+    // Collect selected programmes from the table
+    const selectedProgrammes = [];
+    document.querySelectorAll('.programme-checkbox:checked').forEach(checkbox => {
+        const row = checkbox.closest('tr');
+        const programmeId = checkbox.value;
+        const year = row.querySelector('.programme-year').value;
+        const semester = row.querySelector('.programme-semester').value;
+        
+        if (year && semester) {
+            selectedProgrammes.push({
+                id: programmeId,
+                year: year,
+                semester: semester
+            });
+        }
+    });
+    
+    if (selectedProgrammes.length > 0) {
+        // Add selected programmes to FormData
+        selectedProgrammes.forEach((prog, index) => {
+            formData.append(`programmes`, prog.id);
+        });
+    } else {
+        // If no programmes selected, remove any existing programmes field
+        formData.delete('programmes');
+    }
+    
     fetch(e.target.action, {
         method: 'POST',
         body: formData,

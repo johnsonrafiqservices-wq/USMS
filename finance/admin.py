@@ -5,8 +5,23 @@ from .models import FeeStructure, Invoice, InvoiceItem, Payment, Scholarship
 
 @admin.register(FeeStructure)
 class FeeStructureAdmin(BaseAdmin):
-    list_display = ['name', 'fee_type', 'programme', 'amount', 'session', 'is_mandatory']
-    list_filter = ['fee_type', 'session', 'is_mandatory']
+    list_display = ['name', 'fee_type', 'get_programmes', 'get_faculties', 'amount', 'session', 'is_mandatory']
+    list_filter = ['fee_type', 'session', 'is_mandatory', 'faculties']
+    filter_horizontal = ['programmes', 'faculties', 'departments', 'courses']
+
+    def get_programmes(self, obj):
+        """Display linked programmes or 'All'."""
+        if obj.programmes.exists():
+            return ", ".join([p.code for p in obj.programmes.all()[:3]])
+        return "All Programmes"
+    get_programmes.short_description = 'Programmes'
+
+    def get_faculties(self, obj):
+        """Display linked faculties or 'All'."""
+        if obj.faculties.exists():
+            return ", ".join([f.code for f in obj.faculties.all()[:3]])
+        return "All Faculties"
+    get_faculties.short_description = 'Faculties'
 
 
 class InvoiceItemInline(admin.TabularInline):

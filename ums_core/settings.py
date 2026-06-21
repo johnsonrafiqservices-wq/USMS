@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-ums-dev-key-change-in-production')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['*', '13.49.66.19', '192.168.100.179', '172.16.61.71', '172.16.61.102']
+ALLOWED_HOSTS = ['*', '13.49.66.19', '192.168.100.179', '172.16.61.27', '172.16.61.102']
 
 # Application definition
 INSTALLED_APPS = [
@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'hostel.apps.HostelConfig',
     'communications.apps.CommunicationsConfig',
     'reports.apps.ReportsConfig',
+    # Core app (provides admin DB tools, app config, and management commands)
+    'ums_core.apps.UmsCoreConfig',
 ]
 
 MIDDLEWARE = [

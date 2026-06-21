@@ -85,6 +85,74 @@ def _get_nav_items(user):
             {'label': 'Attendance', 'url': 'academics:attendance_list', 'icon': 'bi-clipboard-check'},
             {'label': 'Communications', 'url': 'communications:announcements', 'icon': 'bi-megaphone'},
         ])
+    elif user.is_department_head:
+        # Department head: include departmental quick links, and link to own department if assigned
+        try:
+            from academics.models import Department
+            from django.urls import reverse
+            dept = Department.objects.filter(head_of_department=user).first()
+            dept_path = reverse('academics:department_detail', args=[dept.pk]) if dept else None
+        except Exception:
+            dept_path = None
+
+        items.extend([
+            {'label': 'Department', 'url': 'academics:department_list', 'icon': 'bi-building'},
+            {'label': 'Programmes', 'url': 'academics:programme_list', 'icon': 'bi-journal-bookmark'},
+            {'label': 'Courses', 'url': 'academics:course_list', 'icon': 'bi-book'},
+            {'label': 'Students', 'url': 'students:student_list', 'icon': 'bi-people'},
+            {'label': 'Grades', 'url': 'academics:grade_management', 'icon': 'bi-card-checklist'},
+            {'label': 'Attendance', 'url': 'academics:attendance_list', 'icon': 'bi-clipboard-check'},
+            {'label': 'Timetable', 'url': 'academics:my_timetable', 'icon': 'bi-calendar-week'},
+            {'label': 'Staff', 'url': 'staff:staff_list', 'icon': 'bi-person-badge'},
+            {'label': 'Reports', 'url': 'reports:dashboard', 'icon': 'bi-graph-up'},
+        ])
+
+        if dept_path:
+            # put a direct quick link to the specific department detail page
+            items.insert(1, {'label': 'My Department', 'path': dept_path, 'icon': 'bi-building'})
+    elif user.is_programme_coordinator:
+        try:
+            from academics.models import Programme
+            from django.urls import reverse
+            programme = Programme.objects.filter(coordinator=user).first()
+            programme_path = reverse('academics:programme_detail', args=[programme.pk]) if programme else None
+        except Exception:
+            programme_path = None
+
+        items.extend([
+            {'label': 'Programmes', 'url': 'academics:programme_list', 'icon': 'bi-journal-bookmark'},
+            {'label': 'Courses', 'url': 'academics:course_list', 'icon': 'bi-book'},
+            {'label': 'Students', 'url': 'students:student_list', 'icon': 'bi-people'},
+            {'label': 'Grades', 'url': 'academics:grade_management', 'icon': 'bi-card-checklist'},
+            {'label': 'Attendance', 'url': 'academics:attendance_list', 'icon': 'bi-clipboard-check'},
+            {'label': 'Timetable', 'url': 'academics:my_timetable', 'icon': 'bi-calendar-week'},
+            {'label': 'Staff', 'url': 'staff:staff_list', 'icon': 'bi-person-badge'},
+            {'label': 'Reports', 'url': 'reports:dashboard', 'icon': 'bi-graph-up'},
+        ])
+
+        if programme_path:
+            items.insert(1, {'label': 'My Programme', 'path': programme_path, 'icon': 'bi-journal-bookmark'})
+    elif getattr(user, 'is_faculty_dean', False):
+        try:
+            from academics.models import Faculty
+            from django.urls import reverse
+            faculty = Faculty.objects.filter(dean=user).first()
+            faculty_path = reverse('academics:faculty_detail', args=[faculty.pk]) if faculty else None
+        except Exception:
+            faculty_path = None
+
+        items.extend([
+            {'label': 'Faculty', 'url': 'academics:faculty_list', 'icon': 'bi-building'},
+            {'label': 'Departments', 'url': 'academics:department_list', 'icon': 'bi-building'},
+            {'label': 'Programmes', 'url': 'academics:programme_list', 'icon': 'bi-journal-bookmark'},
+            {'label': 'Courses', 'url': 'academics:course_list', 'icon': 'bi-book'},
+            {'label': 'Students', 'url': 'students:student_list', 'icon': 'bi-people'},
+            {'label': 'Staff', 'url': 'staff:staff_list', 'icon': 'bi-person-badge'},
+            {'label': 'Reports', 'url': 'reports:dashboard', 'icon': 'bi-graph-up'},
+        ])
+
+        if faculty_path:
+            items.insert(1, {'label': 'My Faculty', 'path': faculty_path, 'icon': 'bi-building'})
     elif user.is_student:
         items.extend([
             {'label': 'My Courses', 'url': 'students:my_courses', 'icon': 'bi-book'},
@@ -100,6 +168,7 @@ def _get_nav_items(user):
             {'label': 'Students', 'url': 'finance:students', 'icon': 'bi-mortarboard'},
             {'label': 'Invoices', 'url': 'finance:invoice_list', 'icon': 'bi-receipt'},
             {'label': 'Payments', 'url': 'finance:payment_list', 'icon': 'bi-credit-card'},
+            {'label': 'Fee Structure', 'url': 'finance:fee_structure', 'icon': 'bi-gear'},
             {'label': 'Reports', 'url': 'reports:financial', 'icon': 'bi-graph-up'},
         ])
     elif user.is_librarian:
@@ -114,9 +183,15 @@ def _get_nav_items(user):
         items.extend([
             {'label': 'Hostel', 'url': 'hostel:dashboard', 'icon': 'bi-building'},
             {'label': 'Rooms', 'url': 'hostel:room_list', 'icon': 'bi-house-door'},
-            {'label': 'Allocations', 'url': 'hostel:dashboard', 'icon': 'bi-person-check'},
+            {'label': 'Allocations', 'url': 'hostel:allocate_room', 'icon': 'bi-person-check'},
             {'label': 'Maintenance', 'url': 'hostel:maintenance_list', 'icon': 'bi-tools'},
             {'label': 'Communications', 'url': 'communications:announcements', 'icon': 'bi-megaphone'},
         ])
 
-    return items
+    # Filter out any nav items that don't provide either a concrete `path`
+    # or a non-empty named `url` to avoid template reverse errors.
+    filtered = [
+        i for i in items
+        if i.get('path') or (i.get('url') and str(i.get('url')).strip())
+    ]
+    return filtered

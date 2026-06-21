@@ -101,6 +101,10 @@
                                 <span class="fw-semibold">{{ programme.department.name }}</span>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <small class="text-muted text-uppercase d-block mb-1">Programme Coordinator</small>
+                                <span class="fw-semibold">{{ programme.coordinator.get_full_name|default:"Not assigned" }}</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <small class="text-muted text-uppercase d-block mb-1">Faculty</small>
                                 <span class="fw-semibold">{{ programme.department.faculty.name }}</span>
                             </div>
@@ -111,7 +115,7 @@
                             <div class="col-md-6 mb-3">
                                 <small class="text-muted text-uppercase d-block mb-1">Status</small>
                                 <span class="badge {% if programme.is_active %}bg-success{% else %}bg-secondary{% endif %}">
-                                    {{ programme.get_status_display }}
+                                    {% if programme.is_active %}Active{% else %}Inactive{% endif %}
                                 </span>
                             </div>
                         </div>

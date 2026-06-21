@@ -3,151 +3,199 @@
 
 {% block extra_css %}
 <style>
-  .profile-header {
-    background: #fff;
-    border-bottom: 1px solid #e9ecef;
-    padding: 28px 32px 0;
-    margin-bottom: 0;
+  /* Active tab blue underline - no background */
+  #financeTabs .nav-link {
+    border-bottom: 2px solid transparent;
+    color: #0d6efd;
+    background: transparent;
   }
-  .profile-avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: #1e3a5f;
-    color: #fff;
-    font-size: 1.6rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+
+  #financeTabs .nav-link.active {
+    border-bottom: 2px solid #0d6efd;
+    color: #212529;
+    font-weight: 500;
+    background: transparent;
   }
-  .profile-id-badge {
-    background: #1e3a5f;
-    color: #fff;
-    font-size: .78rem;
-    font-weight: 600;
-    padding: 4px 14px;
-    border-radius: 20px;
-    letter-spacing: .5px;
-  }
-  .profile-tabs .nav-link {
-    color: #555; font-size: .88rem; padding: 10px 18px;
-    border: none; border-bottom: 2px solid transparent;
-    border-radius: 0;
-  }
-  .profile-tabs .nav-link.active {
-    color: #1e3a5f; border-bottom-color: #1e3a5f;
-    font-weight: 600; background: none;
-  }
-  .profile-tabs .nav-link i { margin-right: 5px; }
-  .section-card {
-    background: #fff; border: 1px solid #e9ecef;
-    border-radius: 8px; padding: 22px 26px; margin-bottom: 18px;
-  }
-  .section-card h6 {
-    font-size: .78rem; font-weight: 700; letter-spacing: .8px;
-    color: #1e3a5f; text-transform: uppercase;
-    border-bottom: 2px solid #1e3a5f; display: inline-block;
-    padding-bottom: 4px; margin-bottom: 16px;
-  }
-  .info-label { font-size: .78rem; color: #888; text-transform: uppercase; letter-spacing: .5px; }
-  .info-value { font-size: .93rem; color: #222; font-weight: 500; }
-  .stat-chip {
-    background: #f0f4ff; border-radius: 8px; padding: 14px 20px; text-align: center;
-  }
-  .stat-chip .chip-val { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; }
-  .stat-chip .chip-lbl { font-size: .75rem; color: #777; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  
+  .balance-positive { color: #dc3545; }
+  .balance-zero { color: #198754; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid px-0">
-{# ── Profile header ─────────────────────────────────────────── #}
-<div class="profile-header">
-  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+<div class="container-fluid px-0" style="background: none;">
 
-    {# Left: avatar + name #}
-    <div class="d-flex gap-3 align-items-center">
-      <div class="profile-avatar">
-        {{ student.user.first_name.0 }}{{ student.user.last_name.0 }}
+{# ── Modern Profile Header ─────────────────────────────────── #}
+<div style="background: #fff; padding: 24px; margin: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+  <div class="d-flex gap-4 align-items-start">
+    {# Avatar #}
+    <div style="width: 80px; height: 80px; background: #1e3a5f; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 600; flex-shrink: 0;">
+      {{ student.user.first_name.0 }}{{ student.user.last_name.0 }}
+    </div>
+    
+    {# Info #}
+    <div style="flex: 1;">
+      <h1 style="font-size: 32px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">{{ student.user.get_full_name }}</h1>
+      <div class="d-flex align-items-center gap-3 mb-3" style="font-size: 14px; color: #6c757d;">
+        <span><i class="bi bi-person-badge me-1"></i>{{ student.student_id }}</span>
+        <span style="color: #dee2e6;">|</span>
+        <span><i class="bi bi-mortarboard me-1"></i>{{ student.programme.name|default:"No Programme" }}</span>
       </div>
-      <div>
-        <h4 class="mb-0 fw-bold text-uppercase">{{ student.user.get_full_name }} <span class="info-value text-primary mb-0" style="font-size: .82rem; text-transform: lowercase;">{{ student.user.email }}</span></h4>
-        <div class="text-muted mt-1" style="font-size:.88rem;">
-          <i class="bi bi-mortarboard me-1"></i>{{ student.programme.name|default:"No Programme" }}
-          <span class="mx-2">•</span>
-          <i class="bi bi-building me-1"></i>{{ student.current_year.name|default:"—" }} / {{ student.current_semester_number.name|default:"—" }}
-        </div>
-        <div class="mt-2">
-          <span class="badge {% if student.status == 'active' %}bg-success{% elif student.status == 'graduated' %}bg-primary{% elif student.status == 'suspended' %}bg-danger{% else %}bg-secondary{% endif %} me-2">
-            {{ student.get_status_display }}
-          </span>
-          <span class="badge bg-light text-dark border">{{ student.intake.name|default:"—" }}</span>
-        </div>
+      <div class="d-flex gap-2">
+        <span class="badge {% if student.status == 'active' %}bg-success{% elif student.status == 'graduated' %}bg-primary{% elif student.status == 'suspended' %}bg-danger{% else %}bg-secondary{% endif %}" style="font-size: 11px; padding: 5px 12px; border-radius: 4px; text-transform: uppercase;">
+          {{ student.get_status_display }}
+        </span>
+        <span class="badge" style="background: #0d6efd; font-size: 11px; padding: 5px 12px; border-radius: 4px; text-transform: uppercase;">{{ student.intake.name|default:"—" }}</span>
       </div>
     </div>
-
-    {# Right: ID badge + actions #}
-    <div class="text-end">
-      <div class="mb-2">
-        <span class="profile-id-badge"><i class="bi bi-person-badge me-1"></i>{{ student.student_id }}</span>
-      </div>
-      <div class="text-muted mb-3" style="font-size:.8rem;">
-        <i class="bi bi-calendar-check"></i> Admitted: {{ student.admission_date|date:"M d, Y" }}
-      </div>
-      <div class="d-flex gap-2 flex-wrap justify-content-end">
-        <a href="{% url 'finance:students' %}" class="btn btn-sm btn-outline-primary">
-          <i class="bi bi-arrow-left me-1"></i>Back to Students
-        </a>
-        <a href="{% url 'students:student_detail' student.pk %}?tab=finance" class="btn btn-sm btn-outline-success">
-          <i class="bi bi-person me-1"></i>Full Profile
-        </a>
-      </div>
+    
+    {# Actions #}
+    <div class="d-flex gap-2" style="flex-shrink: 0;">
+      <a href="{% url 'finance:students' %}" class="btn btn-outline-primary btn-sm" style="font-size: 13px;">
+        <i class="bi bi-arrow-left me-1"></i>Back
+      </a>
+      <a href="{% url 'students:student_detail' student.pk %}?tab=finance" class="btn btn-outline-success btn-sm" style="font-size: 13px;">
+        <i class="bi bi-person me-1"></i>Profile
+      </a>
     </div>
   </div>
 </div>
 
-{# ── Tab nav ──────────────────────────────────────────────── #}
-<div class="profile-header" style="padding: 0 32px 0;">
-  <ul class="nav profile-tabs mt-4" id="financeTabs">
-    <li class="nav-item">
-      <a class="nav-link active" href="#" data-tab="overview"><i class="bi bi-grid"></i>Overview</a>
+<ul class="nav nav-tabs border-0 mb-4" id="financeTabs" role="tablist" style="padding: 0 20px;">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-selected="true">
+        <i class="bi bi-grid me-2"></i>Overview
+      </button>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#" data-tab="invoices"><i class="bi bi-receipt"></i>Invoices</a>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-receipt me-2"></i>Invoices
+      </button>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#" data-tab="payments"><i class="bi bi-credit-card"></i>Payments</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="invoiced-fees-tab" data-bs-toggle="tab" data-bs-target="#invoiced-fees" type="button" role="tab" aria-selected="false">
+          <i class="bi bi-receipt-cutoff me-2"></i>Invoiced Fees
+        </button>
+      </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="payments-tab" data-bs-toggle="tab" data-bs-target="#payments" type="button" role="tab" aria-selected="false">
+        <i class="bi bi-cash me-2"></i>Payments
+      </button>
     </li>
   </ul>
 </div>
 
 {# ── Tab content ────────────────────────────────────────────── #}
-<div class="p-2" style="padding-left: 2px !important; padding-right: 2px !important;">
-
-{# ── Overview Tab ────────────────────────────────────────────── #}
-<div class="tab-content active" id="tab-overview">
-  {# Summary Stats #}
-  <div class="row g-3 mb-4">
-    <div class="col-sm-4">
-      <div class="stat-chip">
-        <div class="chip-val">{{ total_billed|floatformat:0 }}</div>
-        <div class="chip-lbl">Total Billed (UGX)</div>
+<div class="tab-content" id="financeTabsContent" style="background: #f5f6f8; min-height: calc(100vh - 280px); padding: 24px;">
+  
+  {# Overview Tab #}
+  <div id="overview" class="tab-pane fade show active" role="tabpanel">
+    <div class="row g-4">
+      {# Left Column: Student Information #}
+      <div class="col-lg-8">
+        <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Student Information</h6>
+          </div>
+          <div class="card-body" style="padding: 24px;">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Email</div>
+                <div style="font-size: 14px; font-weight: 500; color: #0d6efd;">{{ student.user.email }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Phone</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ student.user.phone_number|default:"—" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Programme</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ student.programme.name|default:"No Programme" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Current Year</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ student.current_year.name|default:"—" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Admission Date</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ student.admission_date|date:"M d, Y" }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Expected Graduation</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ student.expected_graduation|date:"M Y"|default:"—" }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {# Recent Activity #}
+        <div class="card mt-4" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Recent Activity</h6>
+          </div>
+          <div class="card-body" style="padding: 24px;">
+            <div class="table-responsive">
+              <table class="table table-sm mb-0">
+                <thead class="table-light">
+                  <tr><th>Type</th><th>Reference</th><th>Date</th><th>Amount</th></tr>
+                </thead>
+                <tbody>
+                  {% for invoice in invoices|slice:":3" %}
+                  <tr>
+                    <td><span class="badge bg-info">Invoice</span></td>
+                    <td><code>{{ invoice.invoice_number }}</code></td>
+                    <td>{{ invoice.issued_date|date:"M d, Y" }}</td>
+                    <td class="text-end">{{ invoice.total_amount|floatformat:0 }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% for payment in payments|slice:":2" %}
+                  <tr>
+                    <td><span class="badge bg-success">Payment</span></td>
+                    <td><code>{{ payment.receipt_number }}</code></td>
+                    <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                    <td class="text-end text-success">{{ payment.amount|floatformat:0 }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% if not invoices and not payments %}
+                  <tr><td colspan="4" class="text-muted text-center py-3">No recent activity.</td></tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {# Right Column: Quick Stats #}
+      <div class="col-lg-4">
+        <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Financial Summary</h6>
+          </div>
+          <div class="card-body" style="padding: 20px;">
+            <div class="row g-3">
+              <div class="col-12">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #1e3a5f;">{{ total_billed|floatformat:0 }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Total Billed (UGX)</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #198754;">{{ total_paid|floatformat:0 }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Total Paid (UGX)</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700;" class="{% if total_balance > 0 %}balance-positive{% else %}balance-zero{% endif %}">{{ total_balance|floatformat:0 }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Balance (UGX)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-sm-4">
-      <div class="stat-chip">
-        <div class="chip-val text-success">{{ total_paid|floatformat:0 }}</div>
-        <div class="chip-lbl">Total Paid (UGX)</div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="stat-chip">
-        <div class="chip-val {% if total_balance > 0 %}text-danger{% else %}text-success{% endif %}">{{ total_balance|floatformat:0 }}</div>
-        <div class="chip-lbl">Balance (UGX)</div>
-      </div>
-    </div>
-  </div>
 
   {# Student Info Card #}
   <!-- <div class="section-card mb-4 py-3">
@@ -223,212 +271,512 @@
 </div>
 
 {# ── Invoices Tab ────────────────────────────────────────────── #}
-<div class="tab-content" id="tab-invoices">
-  {# Filters #}
-  <div class="section-card mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h6 class="mb-0">Filter by Period</h6>
+<div class="tab-pane fade" id="invoices" role="tabpanel">
+    {# Filters #}
+    <div class="card mb-3" style="background: #fff; border: none; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
+      <!-- <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 12px 16px;">
+        <h6 style="font-size: 11px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Filter by Period</h6>
+      </div> -->
+      <div class="card-body" style="padding: 16px;">
+        <form id="invoices-filter-form" class="row g-2 align-items-center">
+          <input type="hidden" name="tab" value="invoices">
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Year</label>
+            <select name="year" class="form-select form-select-sm" id="invoices-year-filter">
+              <option value="">All Years</option>
+              {% for year in years %}
+              <option value="{{ year.pk }}" {% if year_filter == year.pk|stringformat:"s" %}selected{% endif %}>{{ year.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Semester</label>
+            <select name="semester" class="form-select form-select-sm" id="invoices-semester-filter">
+              <option value="">All Semesters</option>
+              {% for s in semesters %}
+              <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">From Date</label>
+            <input type="date" name="date_from" class="form-control form-control-sm" id="invoices-date-from-filter" value="{{ date_from|default:"" }}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">To Date</label>
+            <input type="date" name="date_to" class="form-control form-control-sm" id="invoices-date-to-filter" value="{{ date_to|default:"" }}">
+          </div>
+        </form>
+      </div>
     </div>
-    <form method="get" class="row g-2 align-items-center">
-      <input type="hidden" name="tab" value="invoices">
-      <div class="col-md-5">
-        <select name="session" class="form-select form-select-sm" onchange="this.form.submit()">
-          <option value="">All Sessions</option>
-          {% for s in sessions %}
-          <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-md-5">
-        <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
-          <option value="">All Semesters</option>
-          {% for s in semesters %}
-          <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-md-2">
-        <a href="{% url 'finance:student_payment_history' student.pk %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
-      </div>
-    </form>
-  </div>
 
-{# Invoices Table #}
-  <div class="section-card">
-    <h6>Invoices</h6>
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Invoice #</th>
-            <th>Session</th>
-            <th>Semester</th>
-            <th>Issued</th>
-            <th>Due Date</th>
-            <th class="text-end">Total</th>
-            <th class="text-end">Paid</th>
-            <th class="text-end">Balance</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for invoice in invoices %}
-          <tr>
-            <td><code class="fw-bold">{{ invoice.invoice_number }}</code></td>
-            <td>{{ invoice.session.name }}</td>
-            <td>{{ invoice.semester.name|default:"—" }}</td>
-            <td>{{ invoice.issued_date|date:"M d, Y" }}</td>
-            <td>{{ invoice.due_date|date:"M d, Y"|default:"—" }}</td>
-            <td class="text-end">{{ invoice.total_amount|floatformat:0 }}</td>
-            <td class="text-end text-success">{{ invoice.amount_paid|floatformat:0 }}</td>
-            <td class="text-end {% if invoice.balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
-              {{ invoice.balance|floatformat:0 }}
-            </td>
-            <td>
-              {% if invoice.status == 'paid' %}
-                <span class="badge bg-success badge-role">Paid</span>
-              {% elif invoice.status == 'partial' %}
-                <span class="badge bg-info badge-role">Partial</span>
-              {% elif invoice.status == 'overdue' %}
-                <span class="badge bg-danger badge-role">Overdue</span>
-              {% elif invoice.status == 'cancelled' %}
-                <span class="badge bg-secondary badge-role">Cancelled</span>
-              {% else %}
-                <span class="badge bg-warning text-dark badge-role">Pending</span>
-              {% endif %}
-            </td>
-            <td>
-              <a href="{% url 'finance:invoice_detail' invoice.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;">
-                <i class="bi bi-eye"></i>
-              </a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="10" class="text-center text-muted py-4">No invoices found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    {# Invoices Table #}
+    <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+        <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Invoices</h6>
+      </div>
+      <div class="card-body" style="padding: 24px;" id="invoices-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Invoice #</th>
+                <th>Session</th>
+                <th>Semester</th>
+                <th>Issued</th>
+                <th>Due Date</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Paid</th>
+                <th class="text-end">Balance</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for invoice in invoices %}
+              <tr>
+                <td><code class="fw-bold">{{ invoice.invoice_number }}</code></td>
+                <td>{{ invoice.session.name }}</td>
+                <td>{{ invoice.semester.name|default:"—" }}</td>
+                <td>{{ invoice.issued_date|date:"M d, Y" }}</td>
+                <td>{{ invoice.due_date|date:"M d, Y"|default:"—" }}</td>
+                <td class="text-end">{{ invoice.total_amount|floatformat:0 }}</td>
+                <td class="text-end text-success">{{ invoice.amount_paid|floatformat:0 }}</td>
+                <td class="text-end {% if invoice.balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
+                  {{ invoice.balance|floatformat:0 }}
+                </td>
+                <td>
+                  {% if invoice.status == 'paid' %}
+                    <span class="badge bg-success">Paid</span>
+                  {% elif invoice.status == 'partial' %}
+                    <span class="badge bg-info">Partial</span>
+                  {% elif invoice.status == 'overdue' %}
+                    <span class="badge bg-danger">Overdue</span>
+                  {% elif invoice.status == 'cancelled' %}
+                    <span class="badge bg-secondary">Cancelled</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'finance:invoice_detail' invoice.pk %}" class="btn btn-xs btn-outline-primary" style="padding:2px 8px;font-size:.78rem;">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="10" class="text-center text-muted py-4">No invoices found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
+</div>
+
+{# ── Invoiced Fees Tab ────────────────────────────────────────────── #}
+<div class="tab-pane fade" id="invoiced-fees" role="tabpanel">
+    {# Filters #}
+    <div class="card mb-3" style="background: #fff; border: none; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
+      <div class="card-body" style="padding: 16px;">
+        <form id="invoiced-fees-filter-form" class="row g-2 align-items-center">
+          <input type="hidden" name="tab" value="invoiced-fees">
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Fee Type</label>
+            <select name="fee_type" class="form-select form-select-sm" id="invoiced-fees-fee-type-filter">
+              <option value="">All Fee Types</option>
+              <option value="tuition">Tuition</option>
+              <option value="registration">Registration</option>
+              <option value="accommodation">Accommodation</option>
+              <option value="library">Library</option>
+              <option value="sports">Sports</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Payment Status</label>
+            <select name="status" class="form-select form-select-sm" id="invoiced-fees-status-filter">
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="partial">Partially Paid</option>
+              <option value="paid">Fully Paid</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Frequency</label>
+            <select name="frequency" class="form-select form-select-sm" id="invoiced-fees-frequency-filter">
+              <option value="">All Frequencies</option>
+              <option value="per_semester">Per Semester</option>
+              <option value="per_year">Per Year</option>
+              <option value="once">Once</option>
+              <option value="graduation">Graduation</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">&nbsp;</label>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearInvoicedFeesFilters()" style="width: 100%;">
+              <i class="bi bi-x-circle me-1"></i>Clear
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {# Invoiced Fees Summary #}
+    <div class="card mb-4" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+        <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Invoiced Fees Summary</h6>
+      </div>
+      <div class="card-body" style="padding: 24px;" id="invoiced-fees-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Fee Type</th>
+                <th>Description</th>
+                <th>Frequency</th>
+                <th class="text-end">Amount</th>
+                <th>Paid Amount</th>
+                <th class="text-end">Balance</th>
+                <th>Invoice #</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fee in invoiced_fees %}
+              <tr>
+                <td><span style="color: darkblue; font-weight: 600;">{{ fee.fee_type }}</span></td>
+                <td>{{ fee.description }}</td>
+                <td>{{ fee.frequency }}</td>
+                <td class="text-end">{{ fee.amount|floatformat:0 }}</td>
+                <td class="text-end text-success">{{ fee.paid_amount|floatformat:0|default:"0" }}</td>
+                <td class="text-end {% if fee.balance > 0 %}text-danger fw-bold{% else %}text-success{% endif %}">
+                  {{ fee.balance|floatformat:0 }}
+                </td>
+                <td><code>{{ fee.invoice_number|default:"—" }}</code></td>
+                <td>
+                  {% if fee.balance <= 0 %}
+                    <span class="badge bg-success">Paid</span>
+                  {% elif fee.paid_amount > 0 %}
+                    <span class="badge bg-info">Partial</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="9" class="text-center text-muted py-4">No invoiced fees found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 </div>
 
 {# ── Payments Tab ────────────────────────────────────────────── #}
-<div class="tab-content" id="tab-payments">
-  {# Filters #}
-  <div class="section-card mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h6 class="mb-0">Filter by Period</h6>
+<div class="tab-pane fade" id="payments" role="tabpanel">
+    {# Filters #}
+    <div class="card mb-3" style="background: #fff; border: none; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
+      <!-- <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 12px 16px;">
+        <h6 style="font-size: 11px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Filter by Period</h6>
+      </div> -->
+      <div class="card-body" style="padding: 16px;">
+        <form id="payments-filter-form" class="row g-2 align-items-center">
+          <input type="hidden" name="tab" value="payments">
+          <div class="col-md-2">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Year</label>
+            <select name="year" class="form-select form-select-sm" id="payments-year-filter">
+              <option value="">All Years</option>
+              {% for year in years %}
+              <option value="{{ year.pk }}" {% if year_filter == year.pk|stringformat:"s" %}selected{% endif %}>{{ year.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Semester</label>
+            <select name="semester" class="form-select form-select-sm" id="payments-semester-filter">
+              <option value="">All Semesters</option>
+              {% for s in semesters %}
+              <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Fee Type</label>
+            <select name="fee_type" class="form-select form-select-sm" id="payments-fee-type-filter">
+              <option value="">All Fee Types</option>
+              <option value="tuition">Tuition</option>
+              <option value="registration">Registration</option>
+              <option value="accommodation">Accommodation</option>
+              <option value="library">Library</option>
+              <option value="sports">Sports</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">From Date</label>
+            <input type="date" name="date_from" class="form-control form-control-sm" id="payments-date-from-filter" value="{{ date_from|default:"" }}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label" style="font-size: 10px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">To Date</label>
+            <input type="date" name="date_to" class="form-control form-control-sm" id="payments-date-to-filter" value="{{ date_to|default:"" }}">
+          </div>
+        </form>
+      </div>
     </div>
-    <form method="get" class="row g-2 align-items-center">
-      <input type="hidden" name="tab" value="payments">
-      <div class="col-md-5">
-        <select name="session" class="form-select form-select-sm" onchange="this.form.submit()">
-          <option value="">All Sessions</option>
-          {% for s in sessions %}
-          <option value="{{ s.pk }}" {% if session_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-md-5">
-        <select name="semester" class="form-select form-select-sm" onchange="this.form.submit()">
-          <option value="">All Semesters</option>
-          {% for s in semesters %}
-          <option value="{{ s.pk }}" {% if semester_filter == s.pk|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-md-2">
-        <a href="{% url 'finance:student_payment_history' student.pk %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
-      </div>
-    </form>
-  </div>
 
-  {# Payments Table #}
-  <div class="section-card">
-    <h6>Payments</h6>
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Receipt #</th>
-            <th>Invoice #</th>
-            <th>Date</th>
-            <th>Method</th>
-            <th>Reference</th>
-            <th class="text-end">Amount</th>
-            <th>Processed By</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for payment in payments %}
-          <tr>
-            <td><code class="fw-bold">{{ payment.receipt_number }}</code></td>
-            <td><code>{{ payment.invoice.invoice_number }}</code></td>
-            <td>{{ payment.payment_date|date:"M d, Y" }}</td>
-            <td>{{ payment.get_payment_method_display }}</td>
-            <td>{{ payment.reference_number|default:"—" }}</td>
-            <td class="text-end text-success fw-bold">{{ payment.amount|floatformat:0 }}</td>
-            <td>{{ payment.processed_by.get_full_name }}</td>
-            <td>
-              {% if payment.status == 'completed' %}
-                <span class="badge bg-success badge-role">Completed</span>
-              {% else %}
-                <span class="badge bg-warning text-dark badge-role">{{ payment.get_status_display }}</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="8" class="text-center text-muted py-4">No payments found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    {# Payments Table #}
+    <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+        <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Payments</h6>
+      </div>
+      <div class="card-body" style="padding: 24px;" id="payments-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Receipt #</th>
+                <th>Invoice #</th>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Reference</th>
+                <th class="text-end">Amount</th>
+                <th>Processed By</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for payment in payments %}
+              <tr>
+                <td><code class="fw-bold">{{ payment.receipt_number }}</code></td>
+                <td><code>{{ payment.invoice.invoice_number }}</code></td>
+                <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                <td>{{ payment.get_payment_method_display }}</td>
+                <td>{{ payment.reference_number|default:"—" }}</td>
+                <td class="text-end text-success fw-bold">{{ payment.amount|floatformat:0 }}</td>
+                <td>{{ payment.processed_by.get_full_name }}</td>
+                <td>
+                  {% if payment.status == 'completed' %}
+                    <span class="badge bg-success">Completed</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">{{ payment.get_status_display }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" class="text-center text-muted py-4">No payments found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  </div>
 </div>
 
 </div>{# /p-4 #}
 </div>{# /container-fluid #}
 
 <script>
-(function() {
-    const tabs = document.querySelectorAll('#financeTabs .nav-link');
-    const contents = document.querySelectorAll('.tab-content');
+// Check for tab in URL and activate it
+const urlParams = new URLSearchParams(window.location.search);
+const tabParam = urlParams.get('tab');
+if (tabParam) {
+    const targetTab = document.querySelector(`#${tabParam}-tab`);
+    if (targetTab) {
+        const tab = new bootstrap.Tab(targetTab);
+        tab.show();
+    }
+}
+
+// AJAX filter functionality
+function updateInvoicesTable() {
+    const form = document.getElementById('invoices-filter-form');
+    if (!form) {
+        console.error('Invoices filter form not found');
+        return;
+    }
     
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            const tabName = this.getAttribute('data-tab');
-            
-            // Update active tab
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Show corresponding content
-            contents.forEach(content => {
-                content.classList.remove('active');
-                if (content.id === 'tab-' + tabName) {
-                    content.classList.add('active');
-                }
-            });
-        });
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    console.log('Updating invoices with params:', params.toString());
+    
+    fetch(`{% url 'finance:student_payment_history' student.pk %}?${params.toString()}&ajax=1`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newTable = doc.querySelector('#invoices-table-container');
+        if (newTable) {
+            document.getElementById('invoices-table-container').innerHTML = newTable.innerHTML;
+        } else {
+            console.error('Could not find invoices table container in response');
+        }
+    })
+    .catch(error => console.error('Error updating invoices:', error));
+}
+
+function updatePaymentsTable() {
+    const form = document.getElementById('payments-filter-form');
+    if (!form) {
+        console.error('Payments filter form not found');
+        return;
+    }
+    
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    console.log('Updating payments with params:', params.toString());
+    
+    fetch(`{% url 'finance:student_payment_history' student.pk %}?${params.toString()}&ajax=1`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newTable = doc.querySelector('#payments-table-container');
+        if (newTable) {
+            document.getElementById('payments-table-container').innerHTML = newTable.innerHTML;
+        } else {
+            console.error('Could not find payments table container in response');
+        }
+    })
+    .catch(error => console.error('Error updating payments:', error));
+}
+
+// Initialize event listeners when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, setting up filter listeners');
+    
+    // Event listeners for automatic filters
+    const invoiceFilters = ['invoices-year-filter', 'invoices-semester-filter', 'invoices-date-from-filter', 'invoices-date-to-filter'];
+    const paymentFilters = ['payments-year-filter', 'payments-semester-filter', 'payments-fee-type-filter', 'payments-date-from-filter', 'payments-date-to-filter'];
+    const invoicedFeesFilters = ['invoiced-fees-fee-type-filter', 'invoiced-fees-status-filter', 'invoiced-fees-frequency-filter'];
+
+    // Add event listeners for all invoice filters
+    invoiceFilters.forEach(filterId => {
+        const element = document.getElementById(filterId);
+        if (element) {
+            console.log('Adding listener to:', filterId);
+            element.addEventListener('change', updateInvoicesTable);
+        } else {
+            console.warn('Element not found:', filterId);
+        }
+    });
+
+    // Add event listeners for all payment filters
+    paymentFilters.forEach(filterId => {
+        const element = document.getElementById(filterId);
+        if (element) {
+            console.log('Adding listener to:', filterId);
+            element.addEventListener('change', updatePaymentsTable);
+        } else {
+            console.warn('Element not found:', filterId);
+        }
     });
     
-    // Check for tab in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get('tab');
-    if (tabParam) {
-        const targetTab = document.querySelector(`#financeTabs .nav-link[data-tab="${tabParam}"]`);
-        if (targetTab) {
-            targetTab.click();
+    // Add event listeners for invoiced fees filters
+    invoicedFeesFilters.forEach(filterId => {
+        const element = document.getElementById(filterId);
+        if (element) {
+            console.log('Adding listener to:', filterId);
+            element.addEventListener('change', updateInvoicedFeesTable);
+        } else {
+            console.warn('Element not found:', filterId);
         }
+    });
+});
+
+function updateInvoicedFeesTable() {
+    const form = document.getElementById('invoiced-fees-filter-form');
+    if (!form) {
+        console.error('Invoiced fees filter form not found');
+        return;
     }
-})();
+    
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    console.log('Updating invoiced fees with params:', params.toString());
+    
+    fetch(`{% url 'finance:student_payment_history' student.pk %}?${params.toString()}&ajax=1`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newTable = doc.querySelector('#invoiced-fees-table-container');
+        if (newTable) {
+            document.getElementById('invoiced-fees-table-container').innerHTML = newTable.innerHTML;
+        } else {
+            console.error('Could not find invoiced fees table container in response');
+        }
+    })
+    .catch(error => console.error('Error updating invoiced fees:', error));
+}
+
+// Clear all filters function
+function clearAllFilters(type) {
+    if (type === 'invoices') {
+        const invoiceFilters = ['invoices-year-filter', 'invoices-session-filter', 'invoices-semester-filter', 'invoices-fee-type-filter', 'invoices-date-from-filter', 'invoices-date-to-filter'];
+        invoiceFilters.forEach(filterId => {
+            const element = document.getElementById(filterId);
+            if (element) element.value = '';
+        });
+        updateInvoicesTable();
+    } else if (type === 'payments') {
+        const paymentFilters = ['payments-year-filter', 'payments-session-filter', 'payments-semester-filter', 'payments-fee-type-filter', 'payments-date-from-filter', 'payments-date-to-filter'];
+        paymentFilters.forEach(filterId => {
+            const element = document.getElementById(filterId);
+            if (element) element.value = '';
+        });
+        updatePaymentsTable();
+    } else if (type === 'invoiced-fees') {
+        const invoicedFeesFilters = ['invoiced-fees-fee-type-filter', 'invoiced-fees-status-filter', 'invoiced-fees-frequency-filter'];
+        invoicedFeesFilters.forEach(filterId => {
+            const element = document.getElementById(filterId);
+            if (element) element.value = '';
+        });
+        updateInvoicedFeesTable();
+    }
+}
 </script>
 
 {% endblock %}

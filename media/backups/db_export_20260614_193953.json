@@ -1,0 +1,4313 @@
+[
+  {
+    "model": "admin.logentry",
+    "pk": 106,
+    "fields": {
+      "action_time": "2026-06-14T15:38:00.869Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Lecturer)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 105,
+    "fields": {
+      "action_time": "2026-06-14T14:44:16.967Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "8",
+      "object_repr": " (Student)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 104,
+    "fields": {
+      "action_time": "2026-06-13T20:20:35.308Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 103,
+    "fields": {
+      "action_time": "2026-06-12T19:14:40.339Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 102,
+    "fields": {
+      "action_time": "2026-05-19T15:15:27.117Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 101,
+    "fields": {
+      "action_time": "2026-05-11T20:33:01.431Z",
+      "user": 1,
+      "content_type": 38,
+      "object_id": "1",
+      "object_repr": "INV-2A026047 - STU001 - John Doe",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 100,
+    "fields": {
+      "action_time": "2026-05-11T20:32:48.324Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "11",
+      "object_repr": "RCP-8BD774BE - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 99,
+    "fields": {
+      "action_time": "2026-05-11T20:31:49.800Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 98,
+    "fields": {
+      "action_time": "2026-05-11T20:28:29.308Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 97,
+    "fields": {
+      "action_time": "2026-05-10T09:45:33.980Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 96,
+    "fields": {
+      "action_time": "2026-05-10T09:42:16.031Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 95,
+    "fields": {
+      "action_time": "2026-05-10T08:22:08.162Z",
+      "user": 1,
+      "content_type": 38,
+      "object_id": "1",
+      "object_repr": "INV-2A026047 - STU001 - John Doe",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 94,
+    "fields": {
+      "action_time": "2026-05-10T08:21:00.920Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "9",
+      "object_repr": "RCP-5C407C66 - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 93,
+    "fields": {
+      "action_time": "2026-05-10T08:21:00.897Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "10",
+      "object_repr": "RCP-C97D141C - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 92,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.224Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "1",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 91,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.210Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "9",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 90,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.198Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "17",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 89,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.183Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "25",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 88,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.169Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "33",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 87,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.155Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "41",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 86,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.143Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "49",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 85,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.133Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "57",
+      "object_repr": "Tuition Fee - 2500000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 84,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.118Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "2",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 83,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.104Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "10",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 82,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.089Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "18",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 81,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.077Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "26",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 80,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.062Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "34",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 79,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.049Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "42",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 78,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.037Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "50",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 77,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.021Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "58",
+      "object_repr": "Registration Fee - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 76,
+    "fields": {
+      "action_time": "2026-05-09T14:12:02.008Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "66",
+      "object_repr": "Student ID Card - 25000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 75,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.996Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "6",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 74,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.982Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "14",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 73,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.969Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "22",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 72,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.956Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "30",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 71,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.945Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "38",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 70,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.930Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "46",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 69,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.916Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "54",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 68,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.898Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "62",
+      "object_repr": "Medical Fee - 50000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 67,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.884Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "3",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 66,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.871Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "11",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 65,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.858Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "19",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 64,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.843Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "27",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 63,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.829Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "35",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 62,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.812Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "43",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 61,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.801Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "51",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 60,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.787Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "59",
+      "object_repr": "Library Fee - 100000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 59,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.775Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "4",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 58,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.763Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "12",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 57,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.750Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "20",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 56,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.739Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "28",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 55,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.725Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "36",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 54,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.711Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "44",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 53,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.698Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "52",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 52,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.682Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "60",
+      "object_repr": "Laboratory Fee - 200000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 51,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.669Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "5",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 50,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.655Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "13",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 49,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.639Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "21",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 48,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.627Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "29",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 47,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.612Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "37",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 46,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.598Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "45",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 45,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.583Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "53",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 44,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.570Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "61",
+      "object_repr": "ICT Fee - 80000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 43,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.558Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "7",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 42,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.545Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "15",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 41,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.530Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "23",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 40,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.515Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "31",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 39,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.503Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "39",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 38,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.490Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "47",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 37,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.476Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "55",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.464Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "63",
+      "object_repr": "Examination Fee - 120000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.449Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "8",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.436Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "16",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.419Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "24",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 32,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.405Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "32",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 31,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.391Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "40",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.375Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "48",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.361Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "56",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.347Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "64",
+      "object_repr": "Development Levy - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+      "action_time": "2026-05-09T14:12:01.333Z",
+      "user": 1,
+      "content_type": 37,
+      "object_id": "65",
+      "object_repr": "Hostel Accommodation - 800000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+      "action_time": "2026-05-09T07:35:20.428Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "6",
+      "object_repr": "RCP-873B36BB - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+      "action_time": "2026-05-09T07:35:20.418Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "7",
+      "object_repr": "RCP-08579F20 - 150000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+      "action_time": "2026-05-09T07:35:20.403Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "8",
+      "object_repr": "RCP-2ADEBC03 - 300000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+      "action_time": "2026-05-09T07:34:36.246Z",
+      "user": 1,
+      "content_type": 38,
+      "object_id": "1",
+      "object_repr": "INV-2A026047 - STU001 - John Doe",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+      "action_time": "2026-05-09T06:58:07.512Z",
+      "user": 1,
+      "content_type": 38,
+      "object_id": "1",
+      "object_repr": "INV-2A026047 - STU001 - John Doe",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+      "action_time": "2026-05-09T06:57:34.905Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "1",
+      "object_repr": "RCP-8B339DEC - 250000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+      "action_time": "2026-05-09T06:57:34.898Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "2",
+      "object_repr": "RCP-74B8EDD4 - 250000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+      "action_time": "2026-05-09T06:57:34.889Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "3",
+      "object_repr": "RCP-9396CEAC - 250000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+      "action_time": "2026-05-09T06:57:34.882Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "4",
+      "object_repr": "RCP-0308ECF9 - 1000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+      "action_time": "2026-05-09T06:57:34.872Z",
+      "user": 1,
+      "content_type": 40,
+      "object_id": "5",
+      "object_repr": "RCP-E9064656 - 250000.00",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+      "action_time": "2026-05-08T08:31:09.536Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+      "action_time": "2026-05-07T17:17:09.531Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\", \"Gender\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+      "action_time": "2026-05-07T16:25:40.178Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Student)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+      "action_time": "2026-05-07T13:59:24.450Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "1",
+      "object_repr": " (Administrator)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+      "action_time": "2026-05-07T13:18:14.791Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+      "action_time": "2026-05-07T12:13:29.875Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+      "action_time": "2026-05-06T21:57:26.297Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+      "action_time": "2026-05-06T07:26:16.145Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+      "action_time": "2026-05-05T20:15:53.841Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Librarian)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2026-05-05T19:55:36.699Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Hostel Manager)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+      "action_time": "2026-05-05T19:35:30.252Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Lecturer)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+      "action_time": "2026-05-05T19:30:48.970Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Registrar)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2026-05-05T17:27:41.088Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\", \"Last login\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2026-05-05T17:26:41.223Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "2",
+      "object_repr": " (Student)",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2026-05-05T16:51:22.788Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "1",
+      "object_repr": " (Finance Staff)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2026-05-05T16:44:57.542Z",
+      "user": 1,
+      "content_type": 8,
+      "object_id": "1",
+      "object_repr": " (Administrator)",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$IFj6gO4IDZz0TuAUdB6OG5$6ZLDTTD6eG1Ux8sWj+qFt4lsrzD2oQ0emRVernpEq8U=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "andy",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-06-14T14:44:16.447Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-06-14T14:44:16.926Z",
+      "updated_at": "2026-06-14T14:44:16.926Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$5tjXsnA66C2snnsSfnmzoc$hIsHykBdV3kKqU7yRG0Mx39MTIBQ7QmCibA1teXDgPk=",
+      "last_login": "2026-05-09T05:40:17.526Z",
+      "is_superuser": false,
+      "username": "david.brown",
+      "first_name": "David",
+      "last_name": "Brown",
+      "email": "david.brown@ums.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-06T09:56:01.494Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-06T09:56:01.495Z",
+      "updated_at": "2026-05-06T09:56:01.653Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$I8kY5JqNUWGkBLxJmItcxU$otCKki3Wxl31qhjLnHEos+0T3uHHqhZjKOcDPmnRzEg=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "emily.williams",
+      "first_name": "Emily",
+      "last_name": "Williams",
+      "email": "emily.williams@ums.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-06T09:56:01.284Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-06T09:56:01.284Z",
+      "updated_at": "2026-05-06T09:56:01.467Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$6NvqAvgMc2Ie4IueBFRTos$vymU391MaZUAqceILZOFRCdLcgOBO+In8qolfddiOiQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "michael.johnson",
+      "first_name": "Michael",
+      "last_name": "Johnson",
+      "email": "michael.johnson@ums.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-06T09:56:01.082Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-06T09:56:01.082Z",
+      "updated_at": "2026-05-06T09:56:01.251Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$XHkRzdHLxvpY8j4W5BVfOS$ISsttGWH+rsAh/UHuTBzwxA+ZBRZFbAuxmoxRj54X64=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jane.smith",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane.smith@ums.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-06T09:56:00.899Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-06T09:56:00.899Z",
+      "updated_at": "2026-05-06T09:56:01.054Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$o7MrFzBwm04Y5Jt11sIOHE$9IMYpzy3rRbn6F7JUtPLH/iKtry3hYL7tvg+pdCrOgo=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "john.doe",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe@ums.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-06T09:56:00.684Z",
+      "role": "student",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "M",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-06T09:56:00.684Z",
+      "updated_at": "2026-05-11T20:30:56.694Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$HAYALeoE51WU0cBSEdAHeJ$272fkN601qmiTGeuzGhsU78rIJB4oWGKcifBpkYXXnU=",
+      "last_login": "2026-06-12T19:15:57Z",
+      "is_superuser": false,
+      "username": "sam",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-05T17:26:40Z",
+      "role": "lecturer",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "M",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-05T17:26:41.206Z",
+      "updated_at": "2026-06-14T15:38:00.851Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$c61EcgAAWYBpRjHKtqFsuS$hp8dwpSF1+wC5UvzOd7VggArOjIzEpLTlCLSZYKaidA=",
+      "last_login": "2026-06-13T20:19:44.451Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-05-05T16:23:00Z",
+      "role": "admin",
+      "phone_number": "",
+      "date_of_birth": null,
+      "gender": "",
+      "address": "",
+      "profile_picture": "",
+      "is_active_member": true,
+      "created_at": "2026-05-05T16:23:01.145Z",
+      "updated_at": "2026-05-07T13:59:24.446Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 136,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:29:38.468Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 135,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:29:22.175Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 134,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:09:02.804Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 133,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:07:55.758Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 132,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:06:08.045Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 131,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:06:06.023Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 130,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:05:32.317Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 129,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:05:05.355Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 128,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/db-tools/",
+      "model_name": "db-tools",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T16:04:59.680Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 127,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T15:38:00.891Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 126,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/add/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T14:44:16.979Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 125,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/sessions/1/set-current/",
+      "model_name": "sessions",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T14:42:02.171Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 124,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/study-levels/",
+      "model_name": "study-levels",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-14T12:50:11.799Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 123,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-13T20:20:35.385Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 122,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-13T20:19:44.561Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 121,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:28:21.213Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 120,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:28:17.000Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 119,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:15:57.041Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 118,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/password/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:14:40.393Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 117,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:13:34.113Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 116,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-06-12T19:12:11.540Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 115,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-21T15:50:42.031Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 114,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-21T15:42:27.800Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 113,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-21T15:32:32.607Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 112,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-21T15:30:20.355Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 111,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-19T15:15:35.495Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 110,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/password/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-19T15:15:27.175Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 109,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-19T15:13:10.515Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 108,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:47:52.946Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 107,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:33:28.613Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 106,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/invoice/1/change/",
+      "model_name": "finance",
+      "object_id": "invoice",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:33:01.445Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 105,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:32:48.352Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 104,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:32:46.846Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 103,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:31:49.810Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 102,
+    "fields": {
+      "user": 2,
+      "action": "POST /students/1/edit/",
+      "model_name": "1",
+      "object_id": "edit",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:30:56.812Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 101,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T20:28:29.321Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 100,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:05:22.208Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 99,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/2/delete/",
+      "model_name": "fee-structure",
+      "object_id": "2",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:05:08.377Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 98,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/3/delete/",
+      "model_name": "fee-structure",
+      "object_id": "3",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:05:04.491Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 97,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:03:45.735Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 96,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:03:17.155Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 95,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:02:57.163Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 94,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:02:54.761Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 93,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T16:02:35.848Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 92,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/create/",
+      "model_name": "fee-structure",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:53:49.891Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 91,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:45:25.480Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 90,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:42:45.064Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 89,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:42:22.660Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 88,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:40:04.863Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 87,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:39:25.520Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 86,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:38:02.266Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 85,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-11T15:37:59.184Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 84,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T09:47:29.088Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 83,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T09:47:25.975Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 82,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T09:45:33.997Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 81,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T09:42:16.049Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 80,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T08:50:05.737Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 79,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/invoice/1/change/",
+      "model_name": "finance",
+      "object_id": "invoice",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T08:22:08.181Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 78,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T08:21:00.967Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 77,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T08:20:58.348Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 76,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-10T07:25:12.626Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 75,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/fee-structure/",
+      "model_name": "fee-structure",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T14:26:09.106Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 74,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/feestructure/",
+      "model_name": "finance",
+      "object_id": "feestructure",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T14:12:02.272Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 73,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/feestructure/",
+      "model_name": "finance",
+      "object_id": "feestructure",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T14:11:58.263Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 72,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:11:50.723Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 71,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:10:28.949Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 70,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:10:25.258Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 69,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:09:43.848Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 68,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:04:28.510Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 67,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:04:18.507Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 66,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:03:24.283Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 65,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T08:02:35.167Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 64,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:42:54.081Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 63,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:41:48.215Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 62,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "127.0.0.1",
+      "timestamp": "2026-05-09T07:41:30.984Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 61,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:41:21.893Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 60,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:39:45.927Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 59,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:39:26.947Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 58,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/invoices/1/",
+      "model_name": "invoices",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:35:44.802Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 57,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:35:20.449Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 56,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:35:19.081Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 55,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/invoice/1/change/",
+      "model_name": "finance",
+      "object_id": "invoice",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:34:36.253Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 54,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/invoice/1/change/",
+      "model_name": "finance",
+      "object_id": "invoice",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:34:31.392Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 53,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "127.0.0.1",
+      "timestamp": "2026-05-09T07:02:03.323Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 52,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T07:01:51.235Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 51,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/invoice/1/change/",
+      "model_name": "finance",
+      "object_id": "invoice",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T06:58:07.523Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 50,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T06:57:34.923Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 49,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/finance/payment/",
+      "model_name": "finance",
+      "object_id": "payment",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T06:57:33.778Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 48,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-09T06:46:30.849Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 47,
+    "fields": {
+      "user": 2,
+      "action": "POST /finance/payments/record/1/",
+      "model_name": "payments",
+      "object_id": "record",
+      "details": {},
+      "ip_address": "127.0.0.1",
+      "timestamp": "2026-05-09T06:46:26.128Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 46,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-08T08:31:09.544Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 45,
+    "fields": {
+      "user": 2,
+      "action": "POST /students/1/edit/",
+      "model_name": "1",
+      "object_id": "edit",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-08T08:29:41.379Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 44,
+    "fields": {
+      "user": 2,
+      "action": "POST /students/1/edit/",
+      "model_name": "1",
+      "object_id": "edit",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-08T07:59:05.869Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 43,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/faculties/3/edit/",
+      "model_name": "faculties",
+      "object_id": "3",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-08T07:35:49.473Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 42,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/campuses/create/",
+      "model_name": "campuses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-08T07:32:17.904Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 41,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T17:17:09.555Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 40,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T16:25:40.198Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 39,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/1/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T13:59:24.459Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 38,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T13:18:14.806Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 37,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T13:17:38.682Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 36,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T12:13:29.887Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 35,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/add-existing-course/",
+      "model_name": "add-existing-course",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:57:13.303Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 34,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/1/",
+      "model_name": "courses",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:39:09.230Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 33,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/1/",
+      "model_name": "courses",
+      "object_id": "1",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:37:55.034Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 32,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:27:20.766Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 31,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:23:28.149Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 30,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:21:54.492Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 29,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:18:23.826Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 28,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:14:24.615Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 27,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:14:20.695Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 26,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T08:02:38.137Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 25,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/courses/create/",
+      "model_name": "courses",
+      "object_id": "create",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T07:59:08.019Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 24,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T05:33:47.461Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 23,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/login/",
+      "model_name": "login",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.77",
+      "timestamp": "2026-05-07T05:28:35.618Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 22,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-06T21:57:26.306Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 21,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-06T21:18:48.378Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 20,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/login/",
+      "model_name": "login",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-06T21:15:55.422Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 19,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-06T16:55:07.080Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 18,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "192.168.100.179",
+      "timestamp": "2026-05-06T16:38:14.710Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 17,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.102",
+      "timestamp": "2026-05-06T10:05:41.013Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 16,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.102",
+      "timestamp": "2026-05-06T09:08:39.393Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 15,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.102",
+      "timestamp": "2026-05-06T09:03:09.006Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 14,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-06T07:26:16.155Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 13,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T20:15:53.860Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 12,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T19:55:36.716Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 11,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T19:35:30.267Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 10,
+    "fields": {
+      "user": 2,
+      "action": "POST /academics/sessions/",
+      "model_name": "sessions",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T19:34:35.770Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T19:30:48.985Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/2/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T17:27:41.111Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 7,
+    "fields": {
+      "user": 2,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T17:27:02.329Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/add/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T17:26:41.245Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/add/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T17:26:23.645Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/add/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T17:26:05.559Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/1/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T16:51:22.818Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "action": "POST /admin/accounts/user/1/change/",
+      "model_name": "accounts",
+      "object_id": "user",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T16:44:57.563Z"
+    }
+  },
+  {
+    "model": "accounts.auditlog",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "action": "POST /login/",
+      "model_name": "",
+      "object_id": "",
+      "details": {},
+      "ip_address": "172.16.61.71",
+      "timestamp": "2026-05-05T16:23:09.404Z"
+    }
+  },
+  {
+    "model": "students.student",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "student_id": "STU001",
+      "programme": 1,
+      "current_year": 2,
+      "current_semester_number": 3,
+      "intake": 1,
+      "admission_date": "2025-05-06",
+      "expected_graduation": null,
+      "status": "active",
+      "nationality": "Ugandan",
+      "state_of_origin": "Central",
+      "lga": "",
+      "guardian_name": "",
+      "guardian_phone": "",
+      "guardian_email": "",
+      "guardian_relationship": "",
+      "blood_group": "",
+      "medical_conditions": "",
+      "created_at": "2026-05-06T09:56:00.885Z",
+      "updated_at": "2026-05-11T20:30:56.707Z"
+    }
+  },
+  {
+    "model": "students.student",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "student_id": "STU002",
+      "programme": 2,
+      "current_year": 1,
+      "current_semester_number": 4,
+      "intake": 2,
+      "admission_date": "2025-05-06",
+      "expected_graduation": null,
+      "status": "active",
+      "nationality": "Ugandan",
+      "state_of_origin": "Central",
+      "lga": "",
+      "guardian_name": "",
+      "guardian_phone": "",
+      "guardian_email": "",
+      "guardian_relationship": "",
+      "blood_group": "",
+      "medical_conditions": "",
+      "created_at": "2026-05-06T09:56:01.069Z",
+      "updated_at": "2026-05-06T09:56:01.069Z"
+    }
+  },
+  {
+    "model": "students.student",
+    "pk": 3,
+    "fields": {
+      "user": 5,
+      "student_id": "STU003",
+      "programme": 3,
+      "current_year": 3,
+      "current_semester_number": 3,
+      "intake": 1,
+      "admission_date": "2025-05-06",
+      "expected_graduation": null,
+      "status": "active",
+      "nationality": "Ugandan",
+      "state_of_origin": "Central",
+      "lga": "",
+      "guardian_name": "",
+      "guardian_phone": "",
+      "guardian_email": "",
+      "guardian_relationship": "",
+      "blood_group": "",
+      "medical_conditions": "",
+      "created_at": "2026-05-06T09:56:01.270Z",
+      "updated_at": "2026-05-06T09:56:01.270Z"
+    }
+  },
+  {
+    "model": "students.student",
+    "pk": 4,
+    "fields": {
+      "user": 6,
+      "student_id": "STU004",
+      "programme": 1,
+      "current_year": 1,
+      "current_semester_number": 3,
+      "intake": 2,
+      "admission_date": "2025-05-06",
+      "expected_graduation": null,
+      "status": "active",
+      "nationality": "Ugandan",
+      "state_of_origin": "Central",
+      "lga": "",
+      "guardian_name": "",
+      "guardian_phone": "",
+      "guardian_email": "",
+      "guardian_relationship": "",
+      "blood_group": "",
+      "medical_conditions": "",
+      "created_at": "2026-05-06T09:56:01.482Z",
+      "updated_at": "2026-05-06T09:56:01.482Z"
+    }
+  },
+  {
+    "model": "students.student",
+    "pk": 5,
+    "fields": {
+      "user": 7,
+      "student_id": "STU005",
+      "programme": 2,
+      "current_year": 2,
+      "current_semester_number": 4,
+      "intake": 1,
+      "admission_date": "2025-05-06",
+      "expected_graduation": null,
+      "status": "active",
+      "nationality": "Ugandan",
+      "state_of_origin": "Central",
+      "lga": "",
+      "guardian_name": "",
+      "guardian_phone": "",
+      "guardian_email": "",
+      "guardian_relationship": "",
+      "blood_group": "",
+      "medical_conditions": "",
+      "created_at": "2026-05-06T09:56:01.665Z",
+      "updated_at": "2026-05-06T09:56:01.665Z"
+    }
+  },
+  {
+    "model": "academics.studylevel",
+    "pk": 1,
+    "fields": {
+      "name": "Certificate",
+      "code": "CERT",
+      "level_number": 1,
+      "description": "Certificate programme",
+      "is_active": true,
+      "created_at": "2026-05-07T06:22:45.712Z"
+    }
+  },
+  {
+    "model": "academics.studylevel",
+    "pk": 2,
+    "fields": {
+      "name": "Diploma",
+      "code": "DIP",
+      "level_number": 2,
+      "description": "Diploma programme",
+      "is_active": true,
+      "created_at": "2026-05-07T06:22:45.713Z"
+    }
+  },
+  {
+    "model": "academics.studylevel",
+    "pk": 3,
+    "fields": {
+      "name": "Bachelor's Degree",
+      "code": "BSC",
+      "level_number": 3,
+      "description": "Undergraduate bachelor degree",
+      "is_active": true,
+      "created_at": "2026-05-07T06:22:45.714Z"
+    }
+  },
+  {
+    "model": "academics.studylevel",
+    "pk": 4,
+    "fields": {
+      "name": "Master's Degree",
+      "code": "MSC",
+      "level_number": 4,
+      "description": "Postgraduate master degree",
+      "is_active": true,
+      "created_at": "2026-05-07T06:22:45.715Z"
+    }
+  },
+  {
+    "model": "academics.studylevel",
+    "pk": 5,
+    "fields": {
+      "name": "PhD",
+      "code": "PHD",
+      "level_number": 5,
+      "description": "Doctor of Philosophy",
+      "is_active": true,
+      "created_at": "2026-05-07T06:22:45.716Z"
+    }
+  },
+  {
+    "model": "academics.studyyear",
+    "pk": 1,
+    "fields": {
+      "code": "Y1",
+      "name": "Year 1",
+      "level": 1,
+      "created_at": "2026-05-05T16:21:56.417Z"
+    }
+  },
+  {
+    "model": "academics.studyyear",
+    "pk": 2,
+    "fields": {
+      "code": "Y2",
+      "name": "Year 2",
+      "level": 2,
+      "created_at": "2026-05-05T16:21:56.428Z"
+    }
+  },
+  {
+    "model": "academics.studyyear",
+    "pk": 3,
+    "fields": {
+      "code": "Y3",
+      "name": "Year 3",
+      "level": 3,
+      "created_at": "2026-05-05T16:21:56.437Z"
+    }
+  },
+  {
+    "model": "academics.studyyear",
+    "pk": 4,
+    "fields": {
+      "code": "Y4",
+      "name": "Year 4",
+      "level": 4,
+      "created_at": "2026-05-05T16:21:56.445Z"
+    }
+  },
+  {
+    "model": "academics.studyyear",
+    "pk": 5,
+    "fields": {
+      "code": "Y5",
+      "name": "Year 5",
+      "level": 5,
+      "created_at": "2026-05-05T16:21:56.454Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 3,
+    "fields": {
+      "code": "SEM1",
+      "name": "Semester 1",
+      "number": 1,
+      "created_at": "2026-05-06T09:41:08.701Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 4,
+    "fields": {
+      "code": "SEM2",
+      "name": "Semester 2",
+      "number": 2,
+      "created_at": "2026-05-06T09:41:08.721Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 5,
+    "fields": {
+      "code": "SEM3",
+      "name": "Semester 3",
+      "number": 3,
+      "created_at": "2026-05-06T09:41:08.736Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 6,
+    "fields": {
+      "code": "SEM4",
+      "name": "Semester 4",
+      "number": 4,
+      "created_at": "2026-05-06T09:41:08.750Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 7,
+    "fields": {
+      "code": "SEM5",
+      "name": "Semester 5",
+      "number": 5,
+      "created_at": "2026-05-06T09:41:08.763Z"
+    }
+  },
+  {
+    "model": "academics.studysemester",
+    "pk": 8,
+    "fields": {
+      "code": "SEM6",
+      "name": "Semester 6",
+      "number": 6,
+      "created_at": "2026-05-06T09:41:08.777Z"
+    }
+  },
+  {
+    "model": "academics.campus",
+    "pk": 1,
+    "fields": {
+      "name": "MIU KISORO",
+      "code": "KSR",
+      "location": "KISORO",
+      "address": "",
+      "phone": "0702261966",
+      "email": "mwondhamail@gmail.com",
+      "is_active": true,
+      "created_at": "2026-05-08T07:32:17.879Z"
+    }
+  },
+  {
+    "model": "academics.faculty",
+    "pk": 4,
+    "fields": {
+      "name": "Faculty of Arts",
+      "code": "ARTS",
+      "campus": null,
+      "dean": null,
+      "description": "",
+      "established_date": null,
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.763Z"
+    }
+  },
+  {
+    "model": "academics.faculty",
+    "pk": 3,
+    "fields": {
+      "name": "Faculty of Business",
+      "code": "BUS",
+      "campus": 1,
+      "dean": 2,
+      "description": "",
+      "established_date": "2026-05-08",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.749Z"
+    }
+  },
+  {
+    "model": "academics.faculty",
+    "pk": 2,
+    "fields": {
+      "name": "Faculty of Engineering",
+      "code": "ENG",
+      "campus": null,
+      "dean": null,
+      "description": "",
+      "established_date": null,
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.735Z"
+    }
+  },
+  {
+    "model": "academics.faculty",
+    "pk": 1,
+    "fields": {
+      "name": "Faculty of Science",
+      "code": "SCI",
+      "campus": null,
+      "dean": null,
+      "description": "",
+      "established_date": null,
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.719Z"
+    }
+  },
+  {
+    "model": "academics.department",
+    "pk": 5,
+    "fields": {
+      "name": "Accounting",
+      "code": "ACC",
+      "faculty": 3,
+      "head_of_department": null,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.832Z"
+    }
+  },
+  {
+    "model": "academics.department",
+    "pk": 4,
+    "fields": {
+      "name": "Business Administration",
+      "code": "BUS",
+      "faculty": 3,
+      "head_of_department": null,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.819Z"
+    }
+  },
+  {
+    "model": "academics.department",
+    "pk": 1,
+    "fields": {
+      "name": "Computer Science",
+      "code": "CS",
+      "faculty": 1,
+      "head_of_department": null,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.778Z"
+    }
+  },
+  {
+    "model": "academics.department",
+    "pk": 3,
+    "fields": {
+      "name": "Engineering",
+      "code": "ENG",
+      "faculty": 2,
+      "head_of_department": null,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.806Z"
+    }
+  },
+  {
+    "model": "academics.department",
+    "pk": 2,
+    "fields": {
+      "name": "Information Technology",
+      "code": "IT",
+      "faculty": 1,
+      "head_of_department": null,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.791Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 3,
+    "fields": {
+      "name": "Bachelor of Business Administration",
+      "code": "BBA",
+      "department": 4,
+      "level": 3,
+      "schedule": "fulltime",
+      "duration_years": 4,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.872Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 1,
+    "fields": {
+      "name": "Bachelor of Science in Computer Science",
+      "code": "BSC-CS",
+      "department": 1,
+      "level": 3,
+      "schedule": "fulltime",
+      "duration_years": 4,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.847Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 4,
+    "fields": {
+      "name": "Bachelor of Science in Engineering",
+      "code": "BSC-ENG",
+      "department": 3,
+      "level": 3,
+      "schedule": "fulltime",
+      "duration_years": 5,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.888Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 2,
+    "fields": {
+      "name": "Bachelor of Science in Information Technology",
+      "code": "BSC-IT",
+      "department": 2,
+      "level": 3,
+      "schedule": "fulltime",
+      "duration_years": 4,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.859Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 6,
+    "fields": {
+      "name": "Diploma in Business Studies",
+      "code": "DIP-BUS",
+      "department": 4,
+      "level": 2,
+      "schedule": "fulltime",
+      "duration_years": 2,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.916Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 5,
+    "fields": {
+      "name": "Diploma in Computer Science",
+      "code": "DIP-CS",
+      "department": 1,
+      "level": 2,
+      "schedule": "fulltime",
+      "duration_years": 2,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.902Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 8,
+    "fields": {
+      "name": "Master of Business Administration",
+      "code": "MBA",
+      "department": 4,
+      "level": 4,
+      "schedule": "fulltime",
+      "duration_years": 2,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.943Z"
+    }
+  },
+  {
+    "model": "academics.programme",
+    "pk": 7,
+    "fields": {
+      "name": "Master of Science in Computer Science",
+      "code": "MSC-CS",
+      "department": 1,
+      "level": 4,
+      "schedule": "fulltime",
+      "duration_years": 2,
+      "total_credits": 120,
+      "description": "",
+      "is_active": true,
+      "created_at": "2026-05-06T09:37:35.929Z"
+    }
+  },
+  {
+    "model": "academics.academicsession",
+    "pk": 1,
+    "fields": {
+      "name": "2026/2027",
+      "is_current": true,
+      "created_at": "2026-05-05T19:34:35.745Z"
+    }
+  },
+  {
+    "model": "academics.academicsession",
+    "pk": 2,
+    "fields": {
+      "name": "2024-2025",
+      "is_current": false,
+      "created_at": "2026-05-06T13:04:50.587Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 6,
+    "fields": {
+      "code": "AUG2026",
+      "name": "August 2026 Intake",
+      "created_at": "2026-05-06T09:37:36.023Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 5,
+    "fields": {
+      "code": "JAN2026",
+      "name": "January 2026 Intake",
+      "created_at": "2026-05-06T09:37:36.010Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 4,
+    "fields": {
+      "code": "AUG2025",
+      "name": "August 2025 Intake",
+      "created_at": "2026-05-06T09:37:35.997Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 3,
+    "fields": {
+      "code": "JAN2025",
+      "name": "January 2025 Intake",
+      "created_at": "2026-05-06T09:37:35.983Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 2,
+    "fields": {
+      "code": "AUG2024",
+      "name": "August 2024 Intake",
+      "created_at": "2026-05-06T09:37:35.971Z"
+    }
+  },
+  {
+    "model": "academics.intake",
+    "pk": 1,
+    "fields": {
+      "code": "JAN2024",
+      "name": "January 2024 Intake",
+      "created_at": "2026-05-06T09:37:35.958Z"
+    }
+  },
+  {
+    "model": "academics.course",
+    "pk": 1,
+    "fields": {
+      "code": "BUS1001",
+      "title": "MARKETING FUNDAMENTALS",
+      "department": 4,
+      "credit_units": 3,
+      "course_type": "core",
+      "level": 100,
+      "semester": null,
+      "description": "",
+      "max_students": 1000,
+      "is_active": true,
+      "created_at": "2026-05-07T08:20:54.916Z",
+      "programme": [
+        3
+      ],
+      "prerequisites": []
+    }
+  },
+  {
+    "model": "academics.course",
+    "pk": 2,
+    "fields": {
+      "code": "BUS1002",
+      "title": "FUNDAMENTALS OF ACCOUNTING",
+      "department": 4,
+      "credit_units": 3,
+      "course_type": "core",
+      "level": 100,
+      "semester": null,
+      "description": "",
+      "max_students": 100,
+      "is_active": true,
+      "created_at": "2026-05-07T08:27:20.736Z",
+      "programme": [
+        3,
+        6
+      ],
+      "prerequisites": []
+    }
+  },
+  {
+    "model": "finance.feestructure",
+    "pk": 5,
+    "fields": {
+      "name": "Registration",
+      "fee_type": "library",
+      "schedules": [],
+      "level": null,
+      "session": 1,
+      "amount": "50000.00",
+      "frequency": "once",
+      "is_mandatory": true,
+      "description": "sgsakhgdusagfiuaf",
+      "created_at": "2026-05-21T15:30:20.307Z",
+      "programmes": [],
+      "faculties": [
+        4
+      ],
+      "departments": [],
+      "courses": []
+    }
+  },
+  {
+    "model": "finance.feestructure",
+    "pk": 6,
+    "fields": {
+      "name": "hedhehriuewgiew",
+      "fee_type": "library",
+      "schedules": [],
+      "level": 1,
+      "session": 1,
+      "amount": "59999.00",
+      "frequency": "per_semester",
+      "is_mandatory": true,
+      "description": "",
+      "created_at": "2026-05-21T15:32:32.568Z",
+      "programmes": [],
+      "faculties": [
+        4
+      ],
+      "departments": [],
+      "courses": []
+    }
+  },
+  {
+    "model": "finance.feestructure",
+    "pk": 4,
+    "fields": {
+      "name": "Registration",
+      "fee_type": "registration",
+      "schedules": [
+        "fulltime"
+      ],
+      "level": null,
+      "session": 1,
+      "amount": "50000.00",
+      "frequency": "per_semester",
+      "is_mandatory": true,
+      "description": "",
+      "created_at": "2026-05-11T16:05:22.157Z",
+      "programmes": [],
+      "faculties": [],
+      "departments": [],
+      "courses": []
+    }
+  },
+  {
+    "model": "finance.feestructure",
+    "pk": 1,
+    "fields": {
+      "name": "TUTION",
+      "fee_type": "tuition",
+      "schedules": [],
+      "level": null,
+      "session": 1,
+      "amount": "6000000.00",
+      "frequency": "per_semester",
+      "is_mandatory": true,
+      "description": "",
+      "created_at": "2026-05-11T15:53:49.866Z",
+      "programmes": [],
+      "faculties": [],
+      "departments": [],
+      "courses": []
+    }
+  },
+  {
+    "model": "finance.studentfee",
+    "pk": 20,
+    "fields": {
+      "student": 1,
+      "fee_structure": 1,
+      "session": 2,
+      "is_active": true,
+      "assigned_date": "2026-05-11T20:30:56.743Z",
+      "notes": ""
+    }
+  },
+  {
+    "model": "finance.studentfee",
+    "pk": 19,
+    "fields": {
+      "student": 1,
+      "fee_structure": 4,
+      "session": 2,
+      "is_active": true,
+      "assigned_date": "2026-05-11T20:30:56.725Z",
+      "notes": ""
+    }
+  },
+  {
+    "model": "finance.invoice",
+    "pk": 1,
+    "fields": {
+      "invoice_number": "INV-2A026047",
+      "student": 1,
+      "session": 2,
+      "semester": 3,
+      "total_amount": "6050000.00",
+      "amount_paid": "11050000.00",
+      "balance": "-5000000.00",
+      "status": "paid",
+      "due_date": "2026-06-07",
+      "issued_date": "2026-05-08",
+      "notes": "",
+      "created_by": 2,
+      "created_at": "2026-05-08T08:28:57.242Z"
+    }
+  },
+  {
+    "model": "finance.invoiceitem",
+    "pk": 10,
+    "fields": {
+      "invoice": 1,
+      "fee_structure": 4,
+      "description": "Registration",
+      "amount": "50000.00"
+    }
+  },
+  {
+    "model": "finance.invoiceitem",
+    "pk": 11,
+    "fields": {
+      "invoice": 1,
+      "fee_structure": 1,
+      "description": "TUTION",
+      "amount": "6000000.00"
+    }
+  },
+  {
+    "model": "finance.currency",
+    "pk": 3,
+    "fields": {
+      "code": "EUR",
+      "name": "Euro",
+      "symbol": "\u20ac",
+      "is_default": false,
+      "exchange_rate_to_default": "0.0002",
+      "is_active": true,
+      "created_at": "2026-05-09T08:48:03.927Z",
+      "updated_at": "2026-05-09T08:48:03.927Z"
+    }
+  },
+  {
+    "model": "finance.currency",
+    "pk": 4,
+    "fields": {
+      "code": "GBP",
+      "name": "British Pound",
+      "symbol": "\u00a3",
+      "is_default": false,
+      "exchange_rate_to_default": "0.0002",
+      "is_active": true,
+      "created_at": "2026-05-09T08:48:03.927Z",
+      "updated_at": "2026-05-09T08:48:03.927Z"
+    }
+  },
+  {
+    "model": "finance.currency",
+    "pk": 1,
+    "fields": {
+      "code": "UGX",
+      "name": "Ugandan Shilling",
+      "symbol": "UGX",
+      "is_default": true,
+      "exchange_rate_to_default": "1.0000",
+      "is_active": true,
+      "created_at": "2026-05-09T08:48:03.924Z",
+      "updated_at": "2026-05-09T08:48:03.924Z"
+    }
+  },
+  {
+    "model": "finance.currency",
+    "pk": 2,
+    "fields": {
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$",
+      "is_default": false,
+      "exchange_rate_to_default": "0.0003",
+      "is_active": true,
+      "created_at": "2026-05-09T08:48:03.927Z",
+      "updated_at": "2026-05-09T08:48:03.927Z"
+    }
+  },
+  {
+    "model": "finance.payment",
+    "pk": 13,
+    "fields": {
+      "receipt_number": "RCP-8C924A22",
+      "invoice": 1,
+      "student": 1,
+      "amount": "6000000.00",
+      "currency": 1,
+      "payment_method": "cash",
+      "reference_number": "",
+      "status": "completed",
+      "payment_date": "2026-05-11T20:47:52.904Z",
+      "notes": "Fee items paid: TUTION: UGX 6,000,000",
+      "processed_by": 2,
+      "created_at": "2026-05-11T20:47:52.904Z"
+    }
+  },
+  {
+    "model": "finance.payment",
+    "pk": 12,
+    "fields": {
+      "receipt_number": "RCP-243EAD68",
+      "invoice": 1,
+      "student": 1,
+      "amount": "5050000.00",
+      "currency": 1,
+      "payment_method": "cash",
+      "reference_number": "",
+      "status": "completed",
+      "payment_date": "2026-05-11T20:33:28.558Z",
+      "notes": "Fee items paid: Registration: UGX 50,000, TUTION: UGX 5,000,000",
+      "processed_by": 2,
+      "created_at": "2026-05-11T20:33:28.558Z"
+    }
+  },
+  {
+    "model": "finance.paymentitem",
+    "pk": 6,
+    "fields": {
+      "payment": 12,
+      "invoice_item": 10,
+      "amount": "50000.00",
+      "created_at": "2026-05-11T20:33:28.587Z"
+    }
+  },
+  {
+    "model": "finance.paymentitem",
+    "pk": 7,
+    "fields": {
+      "payment": 12,
+      "invoice_item": 11,
+      "amount": "5000000.00",
+      "created_at": "2026-05-11T20:33:28.600Z"
+    }
+  },
+  {
+    "model": "finance.paymentitem",
+    "pk": 8,
+    "fields": {
+      "payment": 13,
+      "invoice_item": 11,
+      "amount": "6000000.00",
+      "created_at": "2026-05-11T20:47:52.935Z"
+    }
+  }
+]

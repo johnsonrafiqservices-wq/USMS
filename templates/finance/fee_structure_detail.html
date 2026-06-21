@@ -1,0 +1,1243 @@
+{% extends "base.html" %}
+{% block title %}{{ fee.name }} - Fee Details{% endblock %}
+
+{% block extra_css %}
+<style>
+  .student-row:hover {
+    background-color: #f8f9fa !important;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e3a5f;
+  }
+
+  .stat-label {
+    font-size: .85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .programme-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Active tab blue underline - no background */
+  #feeTabs .nav-link {
+    border-bottom: 2px solid transparent;
+    color: #0d6efd;
+    background: transparent;
+  }
+
+  #feeTabs .nav-link.active {
+    border-bottom: 2px solid #0d6efd;
+    color: #212529;
+    font-weight: 500;
+    background: transparent;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0" style="background: none; min-height: 100vh;">
+
+{# ── Modern Profile Header ─────────────────────────────────── #}
+<div style="background: #fff; padding: 24px; margin: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+  <div class="d-flex gap-4 align-items-start">
+    {# Avatar #}
+    <div style="width: 80px; height: 80px; background: #1e3a5f; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 600; flex-shrink: 0;">
+      {{ fee.name|slice:':2'|upper }}
+    </div>
+    
+    {# Info #}
+    <div style="flex: 1;">
+      <h1 style="font-size: 32px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">{{ fee.name }}</h1>
+      <div class="d-flex align-items-center gap-3 mb-3" style="font-size: 14px; color: #6c757d;">
+        <span><i class="bi bi-building me-1"></i>{{ fee.get_fee_type_display }}</span>
+        <span style="color: #dee2e6;">|</span>
+        <span><i class="bi bi-clock me-1"></i>{{ fee.get_frequency_display }}</span>
+      </div>
+      <div class="d-flex gap-2">
+        {% if fee.is_mandatory %}
+        <span class="badge" style="background: #198754; font-size: 11px; padding: 5px 12px; border-radius: 4px; text-transform: uppercase;">Active</span>
+        {% else %}
+        <span class="badge" style="background: #6c757d; font-size: 11px; padding: 5px 12px; border-radius: 4px; text-transform: uppercase;">Optional</span>
+        {% endif %}
+        <span class="badge" style="background: #0d6efd; font-size: 11px; padding: 5px 12px; border-radius: 4px; text-transform: uppercase;">{{ fee.session.name }}</span>
+      </div>
+    </div>
+    
+    {# Actions #}
+    <div class="d-flex gap-2" style="flex-shrink: 0;">
+      <button type="button" class="btn btn-outline-primary btn-sm" onclick="openModal({{ fee.pk }})" style="font-size: 13px;">
+        <i class="bi bi-pencil-square me-1"></i>Edit
+      </button>
+    </div>
+  </div>
+
+  {# ── Tab nav ──────────────────────────────────────────────── #}
+  
+</div>
+
+<ul class="nav nav-tabs border-0 mb-4" id="feeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-selected="true">
+        <i class="bi bi-grid me-2"></i>Overview
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-journal-bookmark me-2"></i>Courses
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="faculties-tab" data-bs-toggle="tab" data-bs-target="#faculties" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-building me-2"></i>Faculties
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-people me-2"></i>Students
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-hourglass-split me-2"></i>Pending
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="paid-tab" data-bs-toggle="tab" data-bs-target="#paid" type="button" role="tab" aria-selected="false" tabindex="-1">
+        <i class="bi bi-check-circle me-2"></i>Paid
+      </button>
+    </li>
+  </ul>
+
+{# ── Tab content ────────────────────────────────────────────── #}
+<div class="tab-content" id="feeTabsContent" style="background: #f5f6f8; min-height: calc(100vh - 280px); padding: 24px;">
+  
+  {# Overview Tab #}
+  <div id="overview" class="tab-pane fade show active" role="tabpanel">
+    <div class="row g-4">
+      {# Left Column: Fee Information #}
+      <div class="col-lg-8">
+        <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Fee Information</h6>
+          </div>
+          <div class="card-body" style="padding: 24px;">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Fee Type</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ fee.get_fee_type_display }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount</div>
+                <div style="font-size: 14px; font-weight: 600; color: #198754;">UGX {{ fee.amount|floatformat:0 }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Frequency</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ fee.get_frequency_display }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Academic Session</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{{ fee.session.name }}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Year Level</div>
+                <div style="font-size: 14px; font-weight: 500; color: #1a1a1a;">{% if fee.level %}Year {{ fee.level }}{% else %}All Years{% endif %}</div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Mandatory Status</div>
+                <div>
+                  {% if fee.is_mandatory %}
+                    <span style="font-size: 12px; color: #198754; font-weight: 500;"><i class="bi bi-check-circle me-1"></i>Required</span>
+                  {% else %}
+                    <span style="font-size: 12px; color: #6c757d; font-weight: 500;"><i class="bi bi-circle me-1"></i>Optional</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {% if fee.description %}
+        <div class="card mt-4" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Description</h6>
+          </div>
+          <div class="card-body" style="padding: 24px;">
+            <div style="font-size: 14px; color: #495057; line-height: 1.7;">{{ fee.description|linebreaks }}</div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      
+      {# Right Column: Quick Stats #}
+      <div class="col-lg-4">
+        <div class="card" style="background: #fff; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-header" style="background: transparent; border-bottom: 1px solid #f0f0f0; padding: 20px 24px;">
+            <h6 style="font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Quick Stats</h6>
+          </div>
+          <div class="card-body" style="padding: 20px;">
+            <div class="row g-3">
+              <div class="col-6">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #1e3a5f;">{{ total_students }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Students</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #198754;">{{ active_students }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Active</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #0d6efd;">{{ total_programmes }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Courses</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 10px;">
+                  <div style="font-size: 28px; font-weight: 700; color: #fd7e14;">{{ total_faculties }}</div>
+                  <div style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Faculties</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {# Fee Status Card #}
+        {% if fee.is_mandatory %}
+        <div class="card mt-3" style="background: #d1e7dd; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-body" style="padding: 20px;">
+            <div class="d-flex align-items-center gap-3">
+              <div style="width: 48px; height: 48px; background: #198754; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 600; color: #1a1a1a;">Fee Active</div>
+                <div style="font-size: 12px; color: #6c757d;">Currently required for students</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="card mt-3" style="background: #f8f9fa; border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+          <div class="card-body" style="padding: 20px;">
+            <div class="d-flex align-items-center gap-3">
+              <div style="width: 48px; height: 48px; background: #6c757d; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                <i class="bi bi-dash-lg"></i>
+              </div>
+              <div>
+                <div style="font-size: 14px; font-weight: 600; color: #1a1a1a;">Fee Optional</div>
+                <div style="font-size: 12px; color: #6c757d;">Optional fee for students</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  {# Courses Tab #}
+  <div id="courses" class="tab-pane fade" role="tabpanel">
+    <div class="section-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Programmes Paying This Fee</h6>
+        <span class="badge bg-primary">{{ total_programmes }} Programmes</span>
+      </div>
+      {% if applicable_programmes %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Programme Name</th>
+                <th>Department</th>
+                <th>Faculty</th>
+                <th>Students Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for programme in applicable_programmes %}
+              <tr>
+                <td class="fw-bold">{{ programme.name }}</td>
+                <td>{{ programme.department.name }}</td>
+                <td>{{ programme.department.faculty.name }}</td>
+                <td>
+                  <span class="badge bg-info">{{ programme.student_set.count }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-book fs-1"></i>
+          <p class="mt-2">No specific programmes assigned. This fee applies to all programmes.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Faculties Tab #}
+  <div id="faculties" class="tab-pane fade" role="tabpanel">
+    <div class="section-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Faculties</h6>
+        <span class="badge bg-primary">{{ total_faculties }} Faculties</span>
+      </div>
+      {% if applicable_faculties %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Faculty Name</th>
+                <th>Departments Count</th>
+                <th>Programmes Count</th>
+                <th>Students Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for faculty in applicable_faculties %}
+              <tr>
+                <td class="fw-bold">{{ faculty.name }}</td>
+                <td>
+                  <span class="badge bg-info">{{ faculty.departments.count }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ faculty.programme_set.count }}</span>
+                </td>
+                <td>
+                  {% with student_count=faculty.student_set.count %}
+                    <span class="badge bg-success">{{ student_count }}</span>
+                  {% endwith %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-building fs-1"></i>
+          <p class="mt-2">No specific faculties assigned. This fee applies to all faculties.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Students Tab #}
+  <div id="students" class="tab-pane fade" role="tabpanel">
+    <div class="section-card">
+      {# Filter Section #}
+      <div class="card mb-3" style="background: #f8f9fa; padding: 10px 12px;">
+        <form id="studentFilterForm" method="GET" class="row g-2 align-items-end">
+          <div class="col">
+            <label for="filterFaculty" class="form-label small mb-1" style="font-size: 11px;">Faculty</label>
+            <select class="form-select form-select-sm" id="filterFaculty" name="faculty" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Faculties</option>
+              {% for faculty in all_faculties %}
+              <option value="{{ faculty.pk }}" {% if request.GET.faculty == faculty.pk|stringformat:"s" %}selected{% endif %}>
+                {{ faculty.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label for="filterDepartment" class="form-label small mb-1" style="font-size: 11px;">Department</label>
+            <select class="form-select form-select-sm" id="filterDepartment" name="department" disabled style="font-size: 12px; padding: 4px 8px;">
+              <option value="">Select Faculty</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="filterProgramme" class="form-label small mb-1" style="font-size: 11px;">Programme</label>
+            <select class="form-select form-select-sm" id="filterProgramme" name="programme" disabled style="font-size: 12px; padding: 4px 8px;">
+              <option value="">Select Dept</option>
+            </select>
+          </div>
+          <div class="col" style="max-width: 100px;">
+            <label for="filterIntake" class="form-label small mb-1" style="font-size: 11px;">Intake</label>
+            <select class="form-select form-select-sm" id="filterIntake" name="intake" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All</option>
+              {% for intake in intakes %}
+              <option value="{{ intake.pk }}" {% if request.GET.intake == intake.pk|stringformat:"s" %}selected{% endif %}>
+                {{ intake.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col" style="max-width: 120px;">
+            <label for="filterSession" class="form-label small mb-1" style="font-size: 11px;">Session</label>
+            <select class="form-select form-select-sm" id="filterSession" name="session" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Sessions</option>
+              {% for session in sessions %}
+              <option value="{{ session.pk }}" {% if request.GET.session == session.pk|stringformat:"s" %}selected{% endif %}>
+                {{ session.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto" style="min-width: 100px;">
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFilters()" style="font-size: 12px; padding: 4px 12px;">
+              <i class="bi bi-x-circle"></i> Clear
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div id="students-results">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0" style="font-size: 14px;">Students Affected by This Fee</h6>
+          <span class="badge bg-primary" style="font-size: 12px;">{{ total_students }} Total</span>
+        </div>
+        
+      {% if affected_students_data %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Programme</th>
+                <th>Level</th>
+                <th>Fee Amount</th>
+                <th>Amount Paid</th>
+                <th>Balance</th>
+                <th>Payment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student_data in affected_students_data %}
+              {% with student=student_data.student %}
+              <tr class="student-row">
+                <td><span class="fw-bold text-primary">{{ student.student_id }}</span></td>
+                <td>{{ student.user.get_full_name }}</td>
+                <td>{{ student.programme.name }}</td>
+                <td>Year {{ student.current_year.name }}</td>
+                <td class="text-end">UGX {{ student_data.fee_amount|floatformat:0 }}</td>
+                <td class="text-end">
+                  {% if student_data.amount_paid > 0 %}
+                    <span class="text-success">UGX {{ student_data.amount_paid|floatformat:0 }}</span>
+                  {% else %}
+                    <span class="text-muted">UGX 0</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if student_data.balance > 0 %}
+                    <span class="text-danger">UGX {{ student_data.balance|floatformat:0 }}</span>
+                  {% else %}
+                    <span class="text-success">UGX 0</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if student_data.payment_status == 'Paid' %}
+                    <span class="badge bg-success">Paid</span>
+                  {% elif student_data.payment_status == 'Partially Paid' %}
+                    <span class="badge bg-info">Partially Paid</span>
+                  {% elif student_data.payment_status == 'Pending' %}
+                    <span class="badge bg-warning">Pending</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Not Invoiced</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endwith %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if total_students > 50 %}
+        <div class="text-center mt-3 text-muted">
+          <small>Showing first 50 of {{ total_students }} students</small>
+        </div>
+        {% endif %}
+      {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-people fs-1"></i>
+          <p class="mt-2">No students found matching this fee criteria.</p>
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  {# Pending Payments Tab #}
+  <div id="pending" class="tab-pane fade" role="tabpanel">
+    <div class="section-card">
+      {# Pending Filter Section #}
+      <div class="card mb-3" style="background: #fff3f3; padding: 10px 12px; border: 1px solid #f5c2c7;">
+        <form id="pendingFilterForm" method="GET" class="row g-2 align-items-end" onsubmit="return false;">
+          <input type="hidden" name="tab" value="pending">
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Faculty</label>
+            <select class="form-select form-select-sm pending-filter" name="pending_faculty" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Faculties</option>
+              {% for faculty in all_faculties %}
+              <option value="{{ faculty.pk }}">{{ faculty.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Department</label>
+            <select class="form-select form-select-sm pending-filter" name="pending_department" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Departments</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Programme</label>
+            <select class="form-select form-select-sm pending-filter" name="pending_programme" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Programmes</option>
+            </select>
+          </div>
+          <div class="col" style="max-width: 100px;">
+            <label class="form-label small mb-1" style="font-size: 11px;">Intake</label>
+            <select class="form-select form-select-sm pending-filter" name="pending_intake" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All</option>
+              {% for intake in intakes %}
+              <option value="{{ intake.pk }}">{{ intake.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto" style="min-width: 100px;">
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearPendingFilters()" style="font-size: 12px; padding: 4px 12px;">
+              <i class="bi bi-x-circle"></i> Clear
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0" style="font-size: 14px; color: #dc3545;">
+          <i class="bi bi-hourglass-split me-2"></i>Students with Pending Payments
+        </h6>
+        <span class="badge bg-danger" style="font-size: 12px;">{{ pending_count|default:0 }} Pending</span>
+      </div>
+      
+      {% if pending_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Programme</th>
+                <th>Fee Amount</th>
+                <th>Amount Paid</th>
+                <th>Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student_data in pending_students %}
+              {% with student=student_data.student %}
+              <tr class="student-row">
+                <td><span class="fw-bold text-primary">{{ student.student_id }}</span></td>
+                <td>{{ student.user.get_full_name }}</td>
+                <td>{{ student.programme.name }}</td>
+                <td class="text-end">UGX {{ student_data.fee_amount|floatformat:0 }}</td>
+                <td class="text-end">
+                  {% if student_data.amount_paid > 0 %}
+                    <span class="text-success">UGX {{ student_data.amount_paid|floatformat:0 }}</span>
+                  {% else %}
+                    <span class="text-muted">UGX 0</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <span class="text-danger fw-bold">UGX {{ student_data.balance|floatformat:0 }}</span>
+                </td>
+                <td>
+                  {% if student_data.payment_status == 'Partially Paid' %}
+                    <span class="badge bg-warning">Partially Paid</span>
+                  {% else %}
+                    <span class="badge bg-danger">Not Paid</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endwith %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-check-circle fs-1 text-success"></i>
+          <p class="mt-2">No pending payments. All students have paid!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  {# Paid Students Tab #}
+  <div id="paid" class="tab-pane fade" role="tabpanel">
+    <div class="section-card">
+      {# Paid Filter Section #}
+      <div class="card mb-3" style="background: #f0f9f4; padding: 10px 12px; border: 1px solid #b8e0c8;">
+        <form id="paidFilterForm" method="GET" class="row g-2 align-items-end" onsubmit="return false;">
+          <input type="hidden" name="tab" value="paid">
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Faculty</label>
+            <select class="form-select form-select-sm paid-filter" name="paid_faculty" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Faculties</option>
+              {% for faculty in all_faculties %}
+              <option value="{{ faculty.pk }}">{{ faculty.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Department</label>
+            <select class="form-select form-select-sm paid-filter" name="paid_department" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Departments</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label small mb-1" style="font-size: 11px;">Programme</label>
+            <select class="form-select form-select-sm paid-filter" name="paid_programme" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All Programmes</option>
+            </select>
+          </div>
+          <div class="col" style="max-width: 100px;">
+            <label class="form-label small mb-1" style="font-size: 11px;">Intake</label>
+            <select class="form-select form-select-sm paid-filter" name="paid_intake" style="font-size: 12px; padding: 4px 8px;">
+              <option value="">All</option>
+              {% for intake in intakes %}
+              <option value="{{ intake.pk }}">{{ intake.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-auto" style="min-width: 100px;">
+            <button type="button" class="btn btn-outline-success btn-sm" onclick="clearPaidFilters()" style="font-size: 12px; padding: 4px 12px;">
+              <i class="bi bi-x-circle"></i> Clear
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0" style="font-size: 14px; color: #198754;">
+          <i class="bi bi-check-circle me-2"></i>Paid Students
+        </h6>
+        <span class="badge bg-success" style="font-size: 12px;">{{ paid_count|default:0 }} Paid</span>
+      </div>
+      
+      {% if paid_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Programme</th>
+                <th>Fee Amount</th>
+                <th>Amount Paid</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student_data in paid_students %}
+              {% with student=student_data.student %}
+              <tr class="student-row">
+                <td><span class="fw-bold text-primary">{{ student.student_id }}</span></td>
+                <td>{{ student.user.get_full_name }}</td>
+                <td>{{ student.programme.name }}</td>
+                <td class="text-end">UGX {{ student_data.fee_amount|floatformat:0 }}</td>
+                <td class="text-end">
+                  <span class="text-success">UGX {{ student_data.amount_paid|floatformat:0 }}</span>
+                </td>
+                <td>
+                  {% if student_data.payment_date %}
+                    {{ student_data.payment_date|date:"M d, Y" }}
+                  {% else %}
+                    <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge bg-success"><i class="bi bi-check me-1"></i>Paid</span>
+                </td>
+              </tr>
+              {% endwith %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted">
+          <i class="bi bi-hourglass-split fs-1 text-warning"></i>
+          <p class="mt-2">No paid students yet. All payments are pending.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+</div>
+
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="feeModal">
+    <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" id="modalTitle">Edit Fee Structure</h5>
+            <button type="button" class="btn-close" onclick="closeModal()"></button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+        </div>
+        <div class="modal-footer" id="modalFooter">
+            <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveBtn" onclick="submitForm()">Save</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Modal functions
+let currentForm = null;
+
+function openModal(feeId = null) {
+    const modal = document.getElementById('feeModal');
+    const modalBody = document.getElementById('modalBody');
+    const modalTitle = document.getElementById('modalTitle');
+    
+    modal.classList.add('show');
+    modalTitle.textContent = feeId ? 'Edit Fee Structure' : 'Add Fee Structure';
+    modalBody.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>';
+    
+    const url = feeId 
+        ? `/finance/fee-structure/${feeId}/edit/`
+        : `/finance/fee-structure/create/`;
+    
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            modalBody.innerHTML = html;
+            currentForm = modalBody.querySelector('form');
+            if (currentForm) {
+                currentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitForm();
+                });
+            }
+        })
+        .catch(error => {
+            modalBody.innerHTML = '<div class="alert alert-danger">Error loading form</div>';
+        });
+}
+
+function closeModal() {
+    const modal = document.getElementById('feeModal');
+    modal.classList.remove('show');
+    currentForm = null;
+}
+
+function submitForm() {
+    if (!currentForm) return;
+    
+    const formData = new FormData(currentForm);
+    const submitBtn = document.getElementById('saveBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+    
+    fetch(currentForm.action || window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            window.location.reload();
+        } else {
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Save';
+        }
+    })
+    .catch(error => {
+        const modalBody = document.getElementById('modalBody');
+        modalBody.innerHTML = '<div class="alert alert-danger">Error saving data</div>';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save';
+    });
+}
+
+// Close modal when clicking outside
+document.getElementById('feeModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Filter form handling
+const facultySelect = document.getElementById('filterFaculty');
+const departmentSelect = document.getElementById('filterDepartment');
+const programmeSelect = document.getElementById('filterProgramme');
+
+// Store all programmes data for filtering
+const programmesData = {{ programmes_json|safe }};
+const programmesByFaculty = {};
+const programmesByDepartment = {};
+
+// Group programmes by faculty and department
+programmesData.forEach(programme => {
+    const facultyId = programme.department__faculty__id;
+    const departmentId = programme.department__id;
+    
+    if (!programmesByFaculty[facultyId]) {
+        programmesByFaculty[facultyId] = new Set();
+    }
+    programmesByFaculty[facultyId].add(departmentId);
+    
+    if (!programmesByDepartment[departmentId]) {
+        programmesByDepartment[departmentId] = [];
+    }
+    programmesByDepartment[departmentId].push(programme);
+});
+
+// Faculty change handler
+facultySelect.addEventListener('change', function() {
+    const facultyId = this.value;
+    
+    // Reset department and programme selects
+    departmentSelect.innerHTML = '<option value="">Select Faculty</option>';
+    programmeSelect.innerHTML = '<option value="">Select Dept</option>';
+    departmentSelect.disabled = !facultyId;
+    programmeSelect.disabled = true;
+    
+    if (facultyId && programmesByFaculty[facultyId]) {
+        departmentSelect.disabled = false;
+        // Populate departments from local data
+        const departments = new Set();
+        programmesData.forEach(programme => {
+            if (programme.department__faculty__id == facultyId) {
+                departments.add({
+                    id: programme.department__id,
+                    name: programme.department__name
+                });
+            }
+        });
+        
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept.id;
+            option.textContent = dept.name;
+            departmentSelect.appendChild(option);
+        });
+    }
+    
+    // Update URL and fetch filtered data
+    updateFilters();
+});
+
+// Department change handler
+departmentSelect.addEventListener('change', function() {
+    const departmentId = this.value;
+    
+    // Reset programme select
+    programmeSelect.innerHTML = '<option value="">All Programmes</option>';
+    programmeSelect.disabled = !departmentId;
+    
+    if (departmentId && programmesByDepartment[departmentId]) {
+        programmeSelect.disabled = false;
+        // Populate programmes
+        programmesByDepartment[departmentId].forEach(programme => {
+            const option = document.createElement('option');
+            option.value = programme.id;
+            option.textContent = programme.name;
+            programmeSelect.appendChild(option);
+        });
+    }
+    
+    // Update URL and fetch filtered data
+    updateFilters();
+});
+
+// Update filters function - uses AJAX to update only students section
+function updateFilters() {
+    const form = document.getElementById('studentFilterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    // Update URL without refreshing
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.pushState({}, '', newUrl);
+    
+    // Show loading indicator
+    const sectionCard = document.querySelector('#students .section-card');
+    if (sectionCard) {
+        sectionCard.style.opacity = '0.7';
+    }
+    
+    // Fetch filtered data
+    fetch(newUrl, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(html => {
+        // Parse the response
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Find the results wrapper in both documents
+        const newResults = doc.querySelector('#students-results');
+        const currentResults = document.querySelector('#students-results');
+        
+        if (newResults && currentResults) {
+            // Replace the entire results section
+            currentResults.innerHTML = newResults.innerHTML;
+        }
+        
+        // Restore opacity
+        if (sectionCard) {
+            sectionCard.style.opacity = '1';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching filtered data:', error);
+        if (sectionCard) {
+            sectionCard.style.opacity = '1';
+        }
+    });
+}
+
+// Clear filters function
+function clearFilters() {
+    const form = document.getElementById('studentFilterForm');
+    
+    // Clear all select values
+    document.getElementById('filterFaculty').value = '';
+    departmentSelect.innerHTML = '<option value="">Select Faculty</option>';
+    departmentSelect.disabled = true;
+    programmeSelect.innerHTML = '<option value="">Select Dept</option>';
+    programmeSelect.disabled = true;
+    document.getElementById('filterIntake').value = '';
+    document.getElementById('filterSession').value = '';
+    
+    // Update filters with cleared values
+    updateFilters();
+}
+
+// Add auto-submit to intake, session, and programme dropdowns
+document.getElementById('filterIntake').addEventListener('change', function() {
+    updateFilters();
+});
+
+document.getElementById('filterSession').addEventListener('change', function() {
+    updateFilters();
+});
+
+// Programme filter auto-submit
+programmeSelect.addEventListener('change', function() {
+    updateFilters();
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial state based on current filters (without submitting)
+    if (facultySelect.value) {
+        // Populate departments without triggering filter update
+        const facultyId = facultySelect.value;
+        departmentSelect.innerHTML = '<option value="">Select Faculty</option>';
+        programmeSelect.innerHTML = '<option value="">Select Dept</option>';
+        departmentSelect.disabled = false;
+        
+        if (facultyId && programmesByFaculty[facultyId]) {
+            const departments = new Set();
+            programmesData.forEach(programme => {
+                if (programme.department__faculty__id == facultyId) {
+                    departments.add({
+                        id: programme.department__id,
+                        name: programme.department__name
+                    });
+                }
+            });
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.name;
+                departmentSelect.appendChild(option);
+            });
+        }
+        
+        // Restore selected department from URL if exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedDept = urlParams.get('department');
+        if (selectedDept) {
+            departmentSelect.value = selectedDept;
+            
+            // Populate programmes for this department
+            const departmentId = selectedDept;
+            programmeSelect.innerHTML = '<option value="">Select Dept</option>';
+            programmeSelect.disabled = false;
+            
+            if (departmentId && programmesByDepartment[departmentId]) {
+                programmesByDepartment[departmentId].forEach(programme => {
+                    const option = document.createElement('option');
+                    option.value = programme.id;
+                    option.textContent = programme.name;
+                    programmeSelect.appendChild(option);
+                });
+            }
+            
+            // Restore selected programme from URL if exists
+            const selectedProg = urlParams.get('programme');
+            if (selectedProg) {
+                programmeSelect.value = selectedProg;
+            }
+        }
+    }
+});
+
+// Pending and Paid Filter Sections - Independent filtering
+function setupPendingFilters() {
+    const pendingFaculty = document.querySelector('#pendingFilterForm select[name="pending_faculty"]');
+    const pendingDept = document.querySelector('#pendingFilterForm select[name="pending_department"]');
+    const pendingProg = document.querySelector('#pendingFilterForm select[name="pending_programme"]');
+    
+    if (!pendingFaculty) return;
+    
+    pendingFaculty.addEventListener('change', function() {
+        const facultyId = this.value;
+        pendingDept.innerHTML = '<option value="">All Departments</option>';
+        pendingProg.innerHTML = '<option value="">All Programmes</option>';
+        pendingDept.disabled = !facultyId;
+        pendingProg.disabled = true;
+        
+        if (facultyId && programmesByFaculty[facultyId]) {
+            pendingDept.disabled = false;
+            const departments = new Set();
+            programmesData.forEach(programme => {
+                if (programme.department__faculty__id == facultyId) {
+                    departments.add({
+                        id: programme.department__id,
+                        name: programme.department__name
+                    });
+                }
+            });
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.name;
+                pendingDept.appendChild(option);
+            });
+        }
+        filterPendingStudents();
+    });
+    
+    pendingDept.addEventListener('change', function() {
+        const departmentId = this.value;
+        pendingProg.innerHTML = '<option value="">All Programmes</option>';
+        pendingProg.disabled = !departmentId;
+        
+        if (departmentId && programmesByDepartment[departmentId]) {
+            pendingProg.disabled = false;
+            programmesByDepartment[departmentId].forEach(programme => {
+                const option = document.createElement('option');
+                option.value = programme.id;
+                option.textContent = programme.name;
+                pendingProg.appendChild(option);
+            });
+        }
+        filterPendingStudents();
+    });
+    
+    pendingProg.addEventListener('change', filterPendingStudents);
+    document.querySelector('#pendingFilterForm select[name="pending_intake"]').addEventListener('change', filterPendingStudents);
+}
+
+function setupPaidFilters() {
+    const paidFaculty = document.querySelector('#paidFilterForm select[name="paid_faculty"]');
+    const paidDept = document.querySelector('#paidFilterForm select[name="paid_department"]');
+    const paidProg = document.querySelector('#paidFilterForm select[name="paid_programme"]');
+    
+    if (!paidFaculty) return;
+    
+    paidFaculty.addEventListener('change', function() {
+        const facultyId = this.value;
+        paidDept.innerHTML = '<option value="">All Departments</option>';
+        paidProg.innerHTML = '<option value="">All Programmes</option>';
+        paidDept.disabled = !facultyId;
+        paidProg.disabled = true;
+        
+        if (facultyId && programmesByFaculty[facultyId]) {
+            paidDept.disabled = false;
+            const departments = new Set();
+            programmesData.forEach(programme => {
+                if (programme.department__faculty__id == facultyId) {
+                    departments.add({
+                        id: programme.department__id,
+                        name: programme.department__name
+                    });
+                }
+            });
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.name;
+                paidDept.appendChild(option);
+            });
+        }
+        filterPaidStudents();
+    });
+    
+    paidDept.addEventListener('change', function() {
+        const departmentId = this.value;
+        paidProg.innerHTML = '<option value="">All Programmes</option>';
+        paidProg.disabled = !departmentId;
+        
+        if (departmentId && programmesByDepartment[departmentId]) {
+            paidProg.disabled = false;
+            programmesByDepartment[departmentId].forEach(programme => {
+                const option = document.createElement('option');
+                option.value = programme.id;
+                option.textContent = programme.name;
+                paidProg.appendChild(option);
+            });
+        }
+        filterPaidStudents();
+    });
+    
+    paidProg.addEventListener('change', filterPaidStudents);
+    document.querySelector('#paidFilterForm select[name="paid_intake"]').addEventListener('change', filterPaidStudents);
+}
+
+function filterPendingStudents() {
+    const form = document.getElementById('pendingFilterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.pushState({}, '', newUrl);
+    
+    fetch(newUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newResults = doc.querySelector('#pending .section-card > .d-flex:last-of-type + *') || 
+                          doc.querySelector('#pending .table-responsive') ||
+                          doc.querySelector('#pending .text-center.py-4');
+        const currentContainer = document.querySelector('#pending .section-card');
+        
+        if (newResults && currentContainer) {
+            // Find and update the results area
+            const resultsDiv = currentContainer.querySelector('.d-flex:last-of-type + *, .table-responsive, .text-center.py-4');
+            if (resultsDiv) {
+                resultsDiv.outerHTML = newResults.outerHTML;
+            }
+        }
+        
+        // Update badge count
+        const newBadge = doc.querySelector('#pending .badge.bg-danger');
+        const currentBadge = document.querySelector('#pending .badge.bg-danger');
+        if (newBadge && currentBadge) {
+            currentBadge.textContent = newBadge.textContent;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function filterPaidStudents() {
+    const form = document.getElementById('paidFilterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.pushState({}, '', newUrl);
+    
+    fetch(newUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(response => response.text())
+    .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newResults = doc.querySelector('#paid .section-card > .d-flex:last-of-type + *') || 
+                          doc.querySelector('#paid .table-responsive') ||
+                          doc.querySelector('#paid .text-center.py-4');
+        const currentContainer = document.querySelector('#paid .section-card');
+        
+        if (newResults && currentContainer) {
+            const resultsDiv = currentContainer.querySelector('.d-flex:last-of-type + *, .table-responsive, .text-center.py-4');
+            if (resultsDiv) {
+                resultsDiv.outerHTML = newResults.outerHTML;
+            }
+        }
+        
+        // Update badge count
+        const newBadge = doc.querySelector('#paid .badge.bg-success');
+        const currentBadge = document.querySelector('#paid .badge.bg-success');
+        if (newBadge && currentBadge) {
+            currentBadge.textContent = newBadge.textContent;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function clearPendingFilters() {
+    const form = document.getElementById('pendingFilterForm');
+    form.reset();
+    
+    const deptSelect = form.querySelector('select[name="pending_department"]');
+    const progSelect = form.querySelector('select[name="pending_programme"]');
+    
+    deptSelect.innerHTML = '<option value="">All Departments</option>';
+    deptSelect.disabled = true;
+    progSelect.innerHTML = '<option value="">All Programmes</option>';
+    progSelect.disabled = true;
+    
+    filterPendingStudents();
+}
+
+function clearPaidFilters() {
+    const form = document.getElementById('paidFilterForm');
+    form.reset();
+    
+    const deptSelect = form.querySelector('select[name="paid_department"]');
+    const progSelect = form.querySelector('select[name="paid_programme"]');
+    
+    deptSelect.innerHTML = '<option value="">All Departments</option>';
+    deptSelect.disabled = true;
+    progSelect.innerHTML = '<option value="">All Programmes</option>';
+    progSelect.disabled = true;
+    
+    filterPaidStudents();
+}
+
+// Initialize pending and paid filters
+document.addEventListener('DOMContentLoaded', function() {
+    setupPendingFilters();
+    setupPaidFilters();
+});
+</script>
+{% endblock %}

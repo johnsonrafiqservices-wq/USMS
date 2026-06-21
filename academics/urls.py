@@ -22,6 +22,7 @@ urlpatterns = [
     path('courses/', views.course_list, name='course_list'),
     path('courses/create/', views.course_create, name='course_create'),
     path('courses/<int:pk>/edit/', views.course_create, name='course_edit'),
+    path('courses/<int:pk>/allocations/manage/', views.course_allocation_popup, name='course_allocation_popup'),
     path('courses/<int:pk>/', views.course_detail, name='course_detail'),
     path('courses/<int:pk>/remove/', views.course_remove, name='course_remove'),
     path('add-existing-course/', views.add_existing_course_to_programme, name='add_existing_course_to_programme'),

@@ -1,0 +1,47 @@
+<form method="post" id="enrollSemesterForm" action="{% url 'students:student_enroll_semester' student.pk %}">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Student</label>
+        <div class="p-2 bg-light rounded">
+            <strong>{{ student.student_id }}</strong> — {{ student.user.get_full_name }}
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+        <select name="academic_session" class="form-select" required>
+            <option value="">— Select Session —</option>
+            {% for session in sessions %}
+            <option value="{{ session.pk }}">{{ session.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Year of Study <span class="text-danger">*</span></label>
+            <select name="year_of_study" class="form-select" required>
+                <option value="">— Select Year —</option>
+                {% for year in years %}
+                <option value="{{ year.pk }}">{{ year.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Semester <span class="text-danger">*</span></label>
+            <select name="semester_number" class="form-select" required>
+                <option value="">— Select Semester —</option>
+                {% for sem in semesters %}
+                <option value="{{ sem.pk }}">{{ sem.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="alert alert-info mb-3">
+        This will enroll the student into all active courses for their programme at the selected year and semester.
+    </div>
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" onclick="closeEnrollModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" id="enrollSemesterBtn" onclick="submitEnrollSemester()">
+            <i class="bi bi-journal-bookmark me-1"></i> Enroll Courses
+        </button>
+    </div>
+</form>

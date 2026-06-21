@@ -108,7 +108,7 @@
         <i class="bi bi-calendar-check"></i> Admitted: {{ student.admission_date|date:"M d, Y" }}
       </div>
       <div class="d-flex gap-2 flex-wrap justify-content-end">
-        {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+        {% if request.user.role == 'admin' or request.user.role == 'registrar' or request.user.is_superuser %}
         <button type="button" class="btn btn-sm btn-outline-primary" onclick="openEditModal({{ student.pk }})">
           <i class="bi bi-pencil-square me-1"></i>Update Info
         </button>
@@ -350,7 +350,14 @@
 {# ══ ENROLLMENTS ══════════════════════════════════════════════ #}
 {% elif active_tab == 'enrollments' %}
 <div class="section-card">
-  <h6>Course Enrollments</h6>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="mb-0">Course Enrollments</h6>
+    {% if request.user.role == 'admin' or request.user.role == 'registrar' or request.user.is_superuser %}
+    <button type="button" class="btn btn-sm btn-primary" onclick="openEnrollModal({{ student.pk }})">
+      <i class="bi bi-journal-bookmark me-1"></i> Enroll Semester Courses
+    </button>
+    {% endif %}
+  </div>
   <div class="table-responsive">
     <table class="table table-hover mb-0">
       <thead class="table-light">
@@ -544,7 +551,7 @@
 <div class="section-card">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h6 class="mb-0">Documents</h6>
-    {% if request.user.role in 'admin,registrar' or request.user.is_superuser %}
+    {% if request.user.role == 'admin' or request.user.role == 'registrar' or request.user.is_superuser %}
     <a href="{% url 'admin:staff_document_add' %}" class="btn btn-sm btn-primary">
       <i class="bi bi-upload me-1"></i>Upload Document
     </a>
@@ -679,6 +686,66 @@ function saveStudent() {
         btn.disabled = false;
         btn.innerHTML = originalText;
         alert('Error saving changes. Please try again.');
+    });
+}
+
+function openEnrollModal(studentId) {
+    const modal = document.getElementById('editModal');
+    const body = document.getElementById('editModalBody');
+    const footer = document.querySelector('#editModal .modal-footer');
+
+    modal.querySelector('.modal-header h5').textContent = 'Enroll Semester Courses';
+    modal.classList.add('show');
+    body.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>';
+    footer.style.display = 'none';
+
+    fetch(`/students/${studentId}/enroll-semester/`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.text())
+    .then(html => {
+        body.innerHTML = html;
+        footer.style.display = 'flex';
+    })
+    .catch(err => {
+        body.innerHTML = '<div class="alert alert-danger">Error loading enrollment popup. Please try again.</div>';
+        footer.style.display = 'none';
+    });
+}
+
+function closeEnrollModal() {
+    closeEditModal();
+}
+
+function submitEnrollSemester() {
+    const form = document.querySelector('#editModalBody form');
+    if (!form) return;
+
+    const btn = document.getElementById('enrollSemesterBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enrolling...';
+
+    const formData = new FormData(form);
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            alert(data.message || 'Enrollment failed.');
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        alert('Error enrolling courses. Please try again.');
     });
 }
 

@@ -3,35 +3,225 @@
 
 {% block extra_css %}
 <style>
-  .fin-stat {
-    background:#fff; border:1px solid #e9ecef; border-radius:10px;
-    padding:20px 22px; position:relative; overflow:hidden;
+    .fin-stat {
+        position:relative; overflow:visible;
+    }
+  .fin-stat .fs-label { font-size:.7rem; text-transform:uppercase; letter-spacing:.4px; color:#888; margin-bottom: 2px; }
+  
+  /* Recent payments table compact styling */
+  #recent-payments-table td { 
+    padding: 0.25rem 0.5rem !important; 
+    vertical-align: middle !important;
   }
-  .fin-stat .fs-label { font-size:.75rem; text-transform:uppercase; letter-spacing:.6px; color:#888; }
-  .fin-stat .fs-val { font-size:1.7rem; font-weight:700; color:#1e3a5f; line-height:1.2; margin:4px 0 2px; }
-  .fin-stat .fs-sub { font-size:.78rem; color:#aaa; }
-  .fin-stat .fs-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:2.4rem; opacity:.12; color:#1e3a5f; }
+  #recent-payments-table th { 
+    padding: 0.5rem 0.5rem !important; 
+    vertical-align: middle !important;
+  }
+  #recent-payments-table tbody tr {
+    height: auto !important;
+  }
+  
+    /* KPI card styles (separate from content cards) */
+    .kpi-card {
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        /* background: #ffffff; */
+        /* border: 1px solid #eef4ff; */
+        border-radius: none !important;
+        /* box-shadow: 0 8px 18px rgba(13,110,253,0.05); */
+        padding: 14px;
+        justify-content: center;
+        border-right: 1px solid #656669 !important;
+    }
+    .kpi-card .card-body {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #656669;
+        border-radius: none !important;
+        justify-content: center;
+    }
+    .kpi-row { margin-bottom: 1rem; }
+    .fin-stat { position: relative; }
+    .fin-stat .fs-val { font-size:1.3rem; font-weight:700; color:#0d6efd; line-height:1.1; margin:2px 0 1px; }
+  .fin-stat .fs-sub { font-size:.72rem; color:#aaa; }
+    .fin-stat .fs-icon { position:absolute; right:14px; top:14px; font-size:1.6rem; opacity:.12; color:#0d6efd; }
   .fin-stat.danger .fs-val { color:#dc3545; }
   .fin-stat.danger .fs-icon { color:#dc3545; }
   .fin-stat.success .fs-val { color:#198754; }
   .fin-stat.success .fs-icon { color:#198754; }
   .fin-stat.warning .fs-val { color:#f59e0b; }
   .fin-stat.warning .fs-icon { color:#f59e0b; }
-  .section-hdr {
-    font-size:.75rem; font-weight:700; letter-spacing:.8px; color:#1e3a5f;
-    text-transform:uppercase; border-bottom:2px solid #1e3a5f;
-    display:inline-block; padding-bottom:3px; margin-bottom:14px;
+    .section-hdr {
+        font-size:1rem;
+        font-weight:700;
+        letter-spacing:0.02em;
+        color:#0d6efd;
+        text-transform:none;
+        margin-bottom:0;
+        display:block;
+    }
+    .section-heading-bar {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        margin-bottom:18px;
+        padding-bottom:12px;
+        border-bottom:1px solid #eef4ff;
+    }
+    .section-heading-bar .badge-count {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-width:44px;
+        padding:0.48rem 0.85rem;
+        border-radius:999px;
+        background:#0d6efd;
+        color:#ffffff;
+        font-size:0.75rem;
+        font-weight:700;
+    }
+    .finance-section .card.p-4 {
+        border:1px solid #e9f0ff;
+        border-radius:18px;
+        box-shadow:0 12px 28px rgba(13,110,253,0.08);
+        background:#ffffff;
+    }
+    .compact-filter {
+        display:flex;
+        gap:14px;
+        padding:16px;
+        background:#fbfdff;
+        border:1px solid #eef4ff;
+        border-radius:14px;
+        margin-bottom:20px;
+        flex-wrap:wrap;
+        align-items:flex-end;
+    }
+    .compact-filter .filter-group {
+        flex:1 1 180px;
+        min-width:180px;
+        display:flex;
+        flex-direction:column;
+    }
+    .compact-filter select,
+    .compact-filter input {
+        font-size:0.92rem;
+        padding:6px;
+        border:1px solid #e1eefb;
+        border-radius:3px;
+        min-width:100%;
+        background:#ffffff;
+        box-shadow:inset 0 1px 2px rgba(16,24,40,0.03);
+        transition:border 0.2s ease, box-shadow 0.2s ease;
+    }
+  .compact-filter input[type="date"] {
+    min-width:180px;
+  }
+    .compact-filter select:focus,
+    .compact-filter input:focus {
+        border-color:#0d6efd;
+        outline:none;
+        box-shadow:0 0 0 4px rgba(13,110,253,0.08);
+    }
+  .compact-filter .filter-buttons {
+    margin-left:auto;
+  }
+  .compact-filter .clear-btn {
+    background:#f8f9fa;
+    color:#495057;
+    border-color:#d0d7e0;
+  }
+  .compact-filter .clear-btn:hover {
+    background:#e9eef6;
   }
   .collection-bar { height:10px; border-radius:5px; background:#e9ecef; }
-  .collection-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,#1e3a5f,#3b82f6); transition:width .6s; }
+  .collection-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,#0d6efd,#3b82f6); transition:width .6s; }
   .qaction-btn {
     display:flex; align-items:center; gap:10px; padding:12px 16px;
-    border:1px solid #e9ecef; border-radius:8px; color:#333;
+    border:1px solid #eef4ff; border-radius:8px; color:#0f1724;
     text-decoration:none; font-size:.88rem; font-weight:500;
-    transition:all .2s; margin-bottom:8px;
+    transition:all .18s; margin-bottom:8px;
+    background:#ffffff;
   }
-  .qaction-btn:hover { background:#f0f4ff; border-color:#1e3a5f; color:#1e3a5f; }
-  .qaction-btn i { font-size:1.2rem; color:#1e3a5f; }
+  .qaction-btn:hover { background:#f4f8ff; border-color:#0d6efd; color:#0d6efd; }
+  .qaction-btn i { font-size:1.2rem; color:#0d6efd; }
+
+  .section-card {
+    border:1px solid #eef4ff;
+    border-radius:18px;
+    background:#ffffff;
+    box-shadow:0 16px 32px rgba(13,110,253,0.05);
+  }
+  .section-card .section-heading-bar {
+    margin-bottom:20px;
+  }
+  .section-card .compact-filter {
+    margin-bottom:24px;
+  }
+  .section-card .card-header {
+    border:none;
+    background:transparent;
+    padding: 0 0 16px 0;
+  }
+
+  /* Navigation Bar Styles */
+  .finance-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 0 8px 0;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #dee2e6;
+    overflow-x: auto;
+  }
+  .finance-nav .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+  }
+    .finance-nav .nav-btn:hover {
+        color: #0d6efd;
+    }
+    .finance-nav .nav-btn.active {
+        color: #0d6efd;
+        /* border-bottom-color: #0d6efd; */
+    }
+  .finance-nav .nav-btn i {
+    font-size: 1rem;
+  } 
+
+  
+  /* Section Styles */
+  .finance-section {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+    .stats-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+  .stats-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
 </style>
 {% endblock %}
 
@@ -53,8 +243,8 @@
 
 {# ── KPI row ────────────────────────────────────────────────── #}
 <div class="row g-3 mb-4">
-    <div class="col-6 col-lg-3">
-        <div class="fin-stat success">
+    <div class="col-6 col-lg-3"> 
+        <div class="kpi-card stat-card fin-stat success" style="border-right: 1px solid #656669 !important; border-radius:none !important;">
             <div class="fs-label">Total Revenue</div>
             <div class="fs-val">{{ total_revenue|floatformat:0 }}</div>
             <div class="fs-sub">UGX collected</div>
@@ -62,7 +252,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="fin-stat danger">
+        <div class="kpi-card stat-card fin-stat danger" style="border-right: 1px solid #656669 !important; border-radius:none !important;">
             <div class="fs-label">Outstanding</div>
             <div class="fs-val">{{ total_outstanding|floatformat:0 }}</div>
             <div class="fs-sub">UGX unpaid</div>
@@ -70,7 +260,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="fin-stat warning">
+        <div class="kpi-card stat-card fin-stat warning" style="border-right: 1px solid #656669 !important; border-radius:none !important;">
             <div class="fs-label">Pending / Partial</div>
             <div class="fs-val">{{ pending_invoices }} / {{ partial_invoices }}</div>
             <div class="fs-sub">invoices</div>
@@ -78,7 +268,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="fin-stat danger">
+        <div class="kpi-card stat-card fin-stat danger">
             <div class="fs-label">Overdue</div>
             <div class="fs-val">{{ overdue_invoices }}</div>
             <div class="fs-sub">invoices</div>
@@ -87,108 +277,609 @@
     </div>
 </div>
 
-{# ── Collection rate + chart row ─────────────────────────────── #}
+{# ── Navigation Bar ─────────────────────────────────────────────── #}
 <div class="row g-3 mb-4">
-    <div class="col-lg-8">
-        <div class="card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="section-hdr">Monthly Revenue (Last 6 Months)</span>
-            </div>
-            <canvas id="revenueChart" height="90"></canvas>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card p-4 mb-3">
-            <div class="section-hdr">Collection Rate</div>
-            <div class="d-flex justify-content-between mb-1">
-                <span style="font-size:.85rem;">{{ collection_rate }}% collected</span>
-                <span style="font-size:.85rem;" class="text-muted">of {{ total_invoiced|floatformat:0 }} UGX</span>
-            </div>
-            <div class="collection-bar">
-                <div class="collection-fill" style="width:{{ collection_rate }}%;"></div>
-            </div>
-        </div>
-        <div class="card p-4">
-            <div class="section-hdr">Scholarships</div>
-            <div class="d-flex justify-content-between">
-                <span class="text-muted" style="font-size:.85rem;">Active scholarships</span>
-                <strong>{{ scholarships_count }}</strong>
-            </div>
-            <div class="d-flex justify-content-between mt-1">
-                <span class="text-muted" style="font-size:.85rem;">Total awarded</span>
-                <strong class="text-success">{{ scholarships_total|floatformat:0 }} UGX</strong>
-            </div>
-            <a href="{% url 'finance:scholarship_list' %}" class="btn btn-sm btn-outline-primary w-100 mt-3">
-                <i class="bi bi-award me-1"></i>View Scholarships
-            </a>
+    <div class="col-12">
+        <div class="finance-nav">
+
+            <ul class="nav nav-tabs border-0 mb-4" id="financeTabs" role="tablist" style="padding: 0 20px;">
+    <li class="nav-item" role="presentation">
+      <button class="nav-btn active" data-section="revenue-chart">
+                <i class="bi bi-bar-chart"></i> Revenue Chart
+            </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-btn" data-section="collection-rate">
+                <i class="bi bi-pie-chart"></i> Collection Rate
+            </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-btn" data-section="scholarships">
+                <i class="bi bi-award"></i> Scholarships
+            </button>
+      </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-btn" data-section="transactions">
+                <i class="bi bi-list-ul"></i> All Transactions
+            </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-btn" data-section="recent-payments">
+                <i class="bi bi-credit-card"></i> Recent Payments
+            </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-btn" data-section="overdue-invoices">
+                <i class="bi bi-exclamation-triangle"></i> Overdue Invoices
+            </button>
+    </li>
+    
+  </ul>
+
+
+
+            
+            
+            
+            
+            
+            
+            <!-- <button class="nav-btn" data-section="quick-actions">
+                <i class="bi bi-lightning"></i> Quick Actions
+            </button> -->
         </div>
     </div>
 </div>
 
-{# ── Recent payments + overdue ────────────────────────────────── #}
-<div class="row g-3">
-    <div class="col-lg-7">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="section-hdr mb-0">Recent Payments</span>
-                <a href="{% url 'finance:payment_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-sm mb-0">
-                    <thead class="table-light">
-                        <tr><th>Receipt</th><th>Student</th><th>Amount (UGX)</th><th>Method</th><th>Date</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for p in recent_payments %}
-                        <tr>
-                            <td><code>{{ p.receipt_number }}</code></td>
-                            <td>{{ p.student.user.get_full_name }}</td>
-                            <td class="text-success fw-bold">{{ p.amount|floatformat:0 }}</td>
-                            <td><span class="badge bg-light text-dark border">{{ p.get_payment_method_display }}</span></td>
-                            <td style="font-size:.82rem;">{{ p.payment_date|date:"M d, Y" }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="5" class="text-muted text-center py-4">No payments recorded yet.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+{# ── Revenue Chart Section ─────────────────────────────────────── #}
+<div class="finance-section" id="revenue-chart">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">Monthly Revenue (Last 6 Months)</span>
+                    <span class="badge-count">6</span>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="revenue-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="revenue-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="revenue-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="revenue-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" id="revenue-date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label>Date To</label>
+                        <input type="date" name="date_to" id="revenue-date-to">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('revenue-chart')">Clear</button>
+                    </div>
+                </div>
+                <canvas id="revenueChart" height="90"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
-        <div class="card mb-3">
-            <div class="card-header"><span class="section-hdr mb-0 text-danger">Overdue Invoices</span></div>
-            <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead class="table-light">
-                        <tr><th>Student</th><th>Session</th><th>Balance</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for inv in overdue_list %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'finance:invoice_detail' inv.pk %}" class="text-decoration-none fw-medium">
-                                    {{ inv.student.user.get_full_name }}
-                                </a><br>
-                                <small class="text-muted">{{ inv.student.student_id }}</small>
-                            </td>
-                            <td style="font-size:.82rem;">{{ inv.session.name }}</td>
-                            <td class="text-danger fw-bold">{{ inv.balance|floatformat:0 }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="3" class="text-muted text-center py-3">No overdue invoices.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+</div>
+
+{# ── Collection Rate Section ───────────────────────────────────── #}
+<div class="finance-section" id="collection-rate" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">Collection Rate</span>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="collection-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="collection-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="collection-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="collection-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Intake</label>
+                        <select name="intake" id="collection-intake">
+                            <option value="">All</option>
+                            {% for intake in intakes %}
+                            <option value="{{ intake.id }}">{{ intake.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('collection-rate')">Clear</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card p-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span style="font-size:.85rem;">{{ collection_rate }}% collected</span>
+                                <span style="font-size:.85rem;" class="text-muted">of {{ total_invoiced|floatformat:0 }} UGX</span>
+                            </div>
+                            <div class="collection-bar">
+                                <div class="collection-fill" style="width:{{ collection_rate|default:0 }}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card p-3">
+                            <div class="section-hdr">Collection Summary</div>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="stats-value text-success">{{ total_revenue|floatformat:0 }}</div>
+                                    <div class="stats-label">Collected</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stats-value text-danger">{{ total_outstanding|floatformat:0 }}</div>
+                                    <div class="stats-label">Outstanding</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card p-3">
-            <div class="section-hdr">Quick Actions</div>
-            <a href="{% url 'finance:create_invoice' %}" class="qaction-btn"><i class="bi bi-plus-circle"></i>Create Invoice</a>
-            <a href="{% url 'finance:invoice_list' %}" class="qaction-btn"><i class="bi bi-receipt"></i>All Invoices</a>
-            <a href="{% url 'finance:fee_structure' %}" class="qaction-btn"><i class="bi bi-gear"></i>Fee Structure</a>
-            <a href="{% url 'finance:scholarship_list' %}" class="qaction-btn"><i class="bi bi-award"></i>Scholarships</a>
-            <a href="{% url 'reports:financial' %}" class="qaction-btn"><i class="bi bi-graph-up"></i>Financial Report</a>
+    </div>
+</div>
+
+{# ── Scholarships Section ───────────────────────────────────────── #}
+<div class="finance-section" id="scholarships" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">Scholarships</span>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="scholarships-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="scholarships-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="scholarships-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="scholarships-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" id="scholarships-date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label>Date To</label>
+                        <input type="date" name="date_to" id="scholarships-date-to">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('scholarships')">Clear</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted" style="font-size:.85rem;">Active scholarships</span>
+                            <strong>{{ scholarships_count }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <span class="text-muted" style="font-size:.85rem;">Total awarded</span>
+                            <strong class="text-success">{{ scholarships_total|floatformat:0 }} UGX</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="{% url 'finance:scholarship_list' %}" class="btn btn-primary">
+                            <i class="bi bi-award me-1"></i>View Scholarships
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── All Transactions Section ─────────────────────────────────── #}
+<div class="finance-section" id="transactions" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">All Transactions</span>
+                    <a href="{% url 'finance:transaction_list' %}" class="btn btn-primary">View All Transactions</a>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="transactions-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="transactions-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="transactions-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="transactions-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" id="transactions-date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label>Date To</label>
+                        <input type="date" name="date_to" id="transactions-date-to">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('transactions')">Clear</button>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stats-value">{{ invoices.count }}</div>
+                        <div class="stats-label">Total Invoices</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-value">{{ payments.count }}</div>
+                        <div class="stats-label">Total Payments</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-value text-primary">{{ total_invoiced|floatformat:0 }}</div>
+                        <div class="stats-label">Total Invoiced</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-value text-success">{{ total_revenue|floatformat:0 }}</div>
+                        <div class="stats-label">Total Collected</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Recent Payments Section ───────────────────────────────────── #}
+<div class="finance-section" id="recent-payments" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">Recent Payments</span>
+                    <a href="{% url 'finance:payment_list' %}" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="payments-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="payments-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="payments-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="payments-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" id="payments-date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label>Date To</label>
+                        <input type="date" name="date_to" id="payments-date-to">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('recent-payments')">Clear</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm mb-0" style="font-size: 0.85rem;" id="recent-payments-table">
+                        <thead class="table-light">
+                            <tr><th>Receipt</th><th>Student</th><th>Amount (UGX)</th><th>Method</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for p in recent_payments %}
+                            <tr>
+                                <td><code>{{ p.receipt_number }}</code></td>
+                                <td>{{ p.student.user.get_full_name }}</td>
+                                <td class="text-success fw-bold">{{ p.amount|floatformat:0 }}</td>
+                                <td>{{ p.get_payment_method_display }}</td>
+                                <td style="font-size:.82rem;">{{ p.payment_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-muted text-center py-4">No payments recorded yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Overdue Invoices Section ──────────────────────────────────── #}
+<div class="finance-section" id="overdue-invoices" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr mb-0 text-danger">Overdue Invoices</span>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="overdue-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="overdue-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="overdue-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="overdue-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date From</label>
+                        <input type="date" name="date_from" id="overdue-date-from">
+                    </div>
+                    <div class="filter-group">
+                        <label>Date To</label>
+                        <input type="date" name="date_to" id="overdue-date-to">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('overdue-invoices')">Clear</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr><th>Student</th><th>Session</th><th>Balance</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for inv in overdue_list %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'finance:invoice_detail' inv.pk %}" class="text-decoration-none fw-medium">
+                                        {{ inv.student.user.get_full_name }}
+                                    </a><br>
+                                    <small class="text-muted">{{ inv.student.student_id }}</small>
+                                </td>
+                                <td style="font-size:.82rem;">{{ inv.session.name }}</td>
+                                <td class="text-danger fw-bold">{{ inv.balance|floatformat:0 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" class="text-muted text-center py-3">No overdue invoices.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Quick Actions Section ─────────────────────────────────────── #}
+<div class="finance-section" id="quick-actions" style="display:none;">
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="section-card p-4">
+                <div class="section-heading-bar">
+                    <span class="section-hdr">Quick Actions</span>
+                </div>
+                <div class="compact-filter">
+                    <div class="filter-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="actions-faculty">
+                            <option value="">All</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <select name="department" id="actions-department">
+                            <option value="">All</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Program</label>
+                        <select name="program" id="actions-program">
+                            <option value="">All</option>
+                            {% for prog in programmes %}
+                            <option value="{{ prog.id }}">{{ prog.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Session</label>
+                        <select name="session" id="actions-session">
+                            <option value="">All</option>
+                            {% for sess in sessions %}
+                            <option value="{{ sess.id }}">{{ sess.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="clear-btn" onclick="clearFilters('quick-actions')">Clear</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Financial Operations</h6>
+                        <a href="{% url 'finance:create_invoice' %}" class="qaction-btn"><i class="bi bi-plus-circle"></i>Create Invoice</a>
+                        <a href="{% url 'finance:invoice_list' %}" class="qaction-btn"><i class="bi bi-receipt"></i>All Invoices</a>
+                        <a href="{% url 'finance:payment_list' %}" class="qaction-btn"><i class="bi bi-credit-card"></i>All Payments</a>
+                        <a href="{% url 'finance:fee_structure' %}" class="qaction-btn"><i class="bi bi-gear"></i>Fee Structure</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Reports & Analysis</h6>
+                        <a href="{% url 'finance:scholarship_list' %}" class="qaction-btn"><i class="bi bi-award"></i>Scholarships</a>
+                        <a href="{% url 'reports:financial' %}" class="qaction-btn"><i class="bi bi-graph-up"></i>Financial Report</a>
+                        <a href="{% url 'finance:transaction_list' %}" class="qaction-btn"><i class="bi bi-list-ul"></i>All Transactions</a>
+                        <a href="{% url 'finance:generate_invoices' %}" class="qaction-btn"><i class="bi bi-file-earmark-text"></i>Generate Invoices</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -196,6 +887,127 @@
 
 {% block extra_js %}
 <script>
+// Navigation functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.finance-section');
+    
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetSection = this.getAttribute('data-section');
+            
+            // Remove active class from all buttons
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            const target = document.getElementById(targetSection);
+            if (target) {
+                target.style.display = 'block';
+            }
+        });
+    });
+    
+    // Setup auto-filters for all sections
+    const sectionIds = [
+        'revenue-chart',
+        'collection-rate', 
+        'scholarships',
+        'transactions',
+        'recent-payments',
+        'overdue-invoices',
+        'quick-actions'
+    ];
+    
+    sectionIds.forEach(sectionId => {
+        setupAutoFilters(sectionId);
+    });
+});
+
+// Filter functionality - auto-apply on change
+function setupAutoFilters(sectionId) {
+    const prefix = sectionId.replace('-', '');
+    const filterElements = [
+        document.getElementById(`${prefix}-faculty`),
+        document.getElementById(`${prefix}-department`),
+        document.getElementById(`${prefix}-program`),
+        document.getElementById(`${prefix}-session`),
+        document.getElementById(`${prefix}-intake`),
+        document.getElementById(`${prefix}-date-from`),
+        document.getElementById(`${prefix}-date-to`)
+    ];
+    
+    filterElements.forEach(element => {
+        if (element) {
+            element.addEventListener('change', function() {
+                applyFilters(sectionId);
+            });
+        }
+    });
+}
+
+function applyFilters(sectionId) {
+    const prefix = sectionId.replace('-', '');
+    
+    // Get filter values
+    const faculty = document.getElementById(`${prefix}-faculty`)?.value || '';
+    const department = document.getElementById(`${prefix}-department`)?.value || '';
+    const program = document.getElementById(`${prefix}-program`)?.value || '';
+    const session = document.getElementById(`${prefix}-session`)?.value || '';
+    const intake = document.getElementById(`${prefix}-intake`)?.value || '';
+    const dateFrom = document.getElementById(`${prefix}-date-from`)?.value || '';
+    const dateTo = document.getElementById(`${prefix}-date-to`)?.value || '';
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (faculty) params.append('faculty', faculty);
+    if (department) params.append('department', department);
+    if (program) params.append('program', program);
+    if (session) params.append('session', session);
+    if (intake) params.append('intake', intake);
+    if (dateFrom) params.append('date_from', dateFrom);
+    if (dateTo) params.append('date_to', dateTo);
+    
+    // Reload page with filters
+    const currentUrl = new URL(window.location);
+    currentUrl.search = params.toString();
+    window.location.href = currentUrl.toString();
+}
+
+function clearFilters(sectionId) {
+    const prefix = sectionId.replace('-', '');
+    
+    // Clear all filter inputs
+    const facultyInput = document.getElementById(`${prefix}-faculty`);
+    const departmentInput = document.getElementById(`${prefix}-department`);
+    const programInput = document.getElementById(`${prefix}-program`);
+    const sessionInput = document.getElementById(`${prefix}-session`);
+    const intakeInput = document.getElementById(`${prefix}-intake`);
+    const dateFromInput = document.getElementById(`${prefix}-date-from`);
+    const dateToInput = document.getElementById(`${prefix}-date-to`);
+    
+    if (facultyInput) facultyInput.value = '';
+    if (departmentInput) departmentInput.value = '';
+    if (programInput) programInput.value = '';
+    if (sessionInput) sessionInput.value = '';
+    if (intakeInput) intakeInput.value = '';
+    if (dateFromInput) dateFromInput.value = '';
+    if (dateToInput) dateToInput.value = '';
+    
+    // Reload page without filters
+    const currentUrl = new URL(window.location);
+    currentUrl.search = '';
+    window.location.href = currentUrl.toString();
+}
+
+// Chart functionality
 const monthlyData = {{ monthly_data|safe }};
 if (monthlyData && monthlyData.length) {
     new Chart(document.getElementById('revenueChart'), {

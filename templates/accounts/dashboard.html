@@ -1,6 +1,29 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Uniform card heights and transparent style for stat cards */
+    .stat-card {
+        height: 80px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0.75rem !important;
+    }
+
+    /* Add subtle right divider between stat columns, but remove on the row's last column */
+    .row > [class*="col-"] .stat-card {
+        border-right: 1px solid #dee2e6 !important;
+    }
+    .row > [class*="col-"]:last-child .stat-card {
+        border-right: none !important;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-start">
     <div>
@@ -68,7 +91,7 @@
                     <a href="{% url 'accounts:register_user' %}" class="btn btn-outline-primary"><i class="bi bi-person-plus me-1"></i> Create User</a>
                     <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary"><i class="bi bi-mortarboard me-1"></i> Manage Students</a>
                     <a href="{% url 'students:admission_list' %}" class="btn btn-outline-primary"><i class="bi bi-clipboard-check me-1"></i> Admissions</a>
-                    <a href="{% url 'academics:course_create' %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> New Course</a>
+                    <a href="{% url 'academics:course_list' %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> New Course</a>
                     <a href="{% url 'finance:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-cash me-1"></i> Finance Dashboard</a>
                     <a href="{% url 'reports:dashboard' %}" class="btn btn-outline-primary"><i class="bi bi-graph-up me-1"></i> Reports</a>
                     <a href="{% url 'communications:announcements' %}" class="btn btn-outline-primary"><i class="bi bi-megaphone me-1"></i> Announcements</a>
@@ -88,7 +111,7 @@
                     <tbody>
                     {% for s in recent_students %}
                     <tr>
-                        <td><a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a></td>
+                        <td>{% if s.pk %}<a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a>{% else %}{{ s.user.get_full_name }}{% endif %}</td>
                         <td><small>{{ s.student_id }}</small></td>
                         <td><small>{{ s.programme.code|default:"—" }}</small></td>
                         <td><span class="badge {% if s.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">{{ s.get_status_display }}</span></td>
@@ -143,23 +166,23 @@
 <div class="row g-3 mb-3">
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-label">Active Students</div>
+            <div class="stat-label">Students</div>
             <div class="stat-value">{{ total_students }}</div>
-            <i class="bi bi-mortarboard stat-icon"></i>
+            <i class="bi bi-people stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-label">Pending Admissions</div>
-            <div class="stat-value text-warning">{{ pending_admissions }}</div>
-            <i class="bi bi-person-plus stat-icon"></i>
+            <div class="stat-label">Faculties</div>
+            <div class="stat-value">{{ total_faculties }}</div>
+            <i class="bi bi-building stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
         <div class="stat-card">
-            <div class="stat-label">Total Applications</div>
-            <div class="stat-value">{{ total_applications }}</div>
-            <i class="bi bi-file-text stat-icon"></i>
+            <div class="stat-label">Departments</div>
+            <div class="stat-value">{{ total_departments }}</div>
+            <i class="bi bi-columns-gap stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
@@ -167,6 +190,28 @@
             <div class="stat-label">Programmes</div>
             <div class="stat-value">{{ total_programmes }}</div>
             <i class="bi bi-bookmark stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Registrar Charts Row -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-lg-8">
+        <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="section-hdr">Admissions Trend (Last 12 months)</span>
+                <small class="text-muted">Admissions by month</small>
+            </div>
+            <canvas id="registrarAdmissionsChart" height="100"></canvas>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="section-hdr">Programme Distribution</span>
+                <small class="text-muted">Students per programme</small>
+            </div>
+            <canvas id="registrarProgrammesChart" height="200"></canvas>
         </div>
     </div>
 </div>
@@ -235,7 +280,7 @@
                     <tbody>
                     {% for s in new_students %}
                     <tr>
-                        <td><a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a></td>
+                        <td>{% if s.pk %}<a href="{% url 'students:student_detail' s.pk %}">{{ s.user.get_full_name }}</a>{% else %}{{ s.user.get_full_name }}{% endif %}</td>
                         <td><small>{{ s.programme.code|default:"—" }}</small></td>
                         <td><span class="badge {% if s.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">{{ s.get_status_display }}</span></td>
                     </tr>
@@ -244,6 +289,381 @@
                     {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ FACULTY DEAN DASHBOARD -->
+{% elif dashboard_type == 'faculty_dean' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Faculty</div>
+            <div class="stat-value">{{ faculty.name|default:'Unassigned' }}</div>
+            <i class="bi bi-building stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Departments</div>
+            <div class="stat-value">{{ faculty_departments_count }}</div>
+            <i class="bi bi-diagram-3 stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Programmes</div>
+            <div class="stat-value">{{ faculty_programmes_count }}</div>
+            <i class="bi bi-journal-bookmark stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Students</div>
+            <div class="stat-value">{{ faculty_students_count }}</div>
+            <i class="bi bi-people stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if faculty %}
+                    <a href="{% url 'academics:faculty_detail' faculty.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-right-circle me-1"></i>View Faculty</a>
+                    <a href="{% url 'academics:department_list' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-building me-1"></i>Manage Departments</a>
+                    <a href="{% url 'academics:programme_list' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-journal-bookmark me-1"></i>Manage Programmes</a>
+                    <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-people me-1"></i>View Students</a>
+                    {% else %}
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-circle me-1"></i>Complete Profile</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header"><i class="bi bi-journal-bookmark"></i> Programmes ({{ faculty_programmes_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for programme in faculty_programmes_list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <small><a href="{% url 'academics:programme_detail' programme.pk %}">{{ programme.name }}</a></small>
+                        <span class="badge bg-primary rounded-pill">{{ programme.code }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No programmes</li>
+                    {% endfor %}
+                </ul>
+                {% if faculty_programmes_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:programme_list' %}" class="btn btn-sm btn-link">View all {{ faculty_programmes_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-people"></i> Students ({{ faculty_students_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for student in faculty_students_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'students:student_detail' student.pk %}">{{ student.user.get_full_name }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ student.programme.name|truncatewords:3 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No students</li>
+                    {% endfor %}
+                </ul>
+                {% if faculty_students_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'students:student_list' %}" class="btn btn-sm btn-link">View all {{ faculty_students_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-book"></i> Courses ({{ faculty_courses_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for course in faculty_courses_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'academics:course_detail' course.pk %}">{{ course.code }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ course.title|truncatewords:2 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No courses</li>
+                    {% endfor %}
+                </ul>
+                {% if faculty_courses_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:course_list' %}" class="btn btn-sm btn-link">View all {{ faculty_courses_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center py-5">
+                {% if faculty %}
+                <div class="display-6 text-primary">{{ faculty.name }}</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">You are assigned as the dean. Manage departments, programmes, and review student progress.</p>
+                <a href="{% url 'academics:faculty_detail' faculty.pk %}" class="btn btn-sm btn-primary mt-3">Go to Faculty Details</a>
+                {% else %}
+                <div class="display-6 text-warning">Unassigned</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">No faculty assignment yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DEPARTMENT HEAD DASHBOARD -->
+{% elif dashboard_type == 'department_head' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Department</div>
+            <div class="stat-value">{{ department.name|default:'Unassigned' }}</div>
+            <i class="bi bi-building stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Programmes</div>
+            <div class="stat-value">{{ department_programmes_count }}</div>
+            <i class="bi bi-journal-bookmark stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Students</div>
+            <div class="stat-value">{{ department_students_count }}</div>
+            <i class="bi bi-people stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Courses</div>
+            <div class="stat-value">{{ department_courses_count }}</div>
+            <i class="bi bi-book stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if department %}
+                    <a href="{% url 'academics:department_detail' department.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-right-circle me-1"></i>View Department</a>
+                    <a href="{% url 'academics:programme_list' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-journal-bookmark me-1"></i>Programmes</a>
+                    <a href="{% url 'academics:course_list' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-book me-1"></i>Courses</a>
+                    <a href="{% url 'students:student_list' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-people me-1"></i>Students</a>
+                    <a href="{% url 'academics:grade_management' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-card-checklist me-1"></i>Grades</a>
+                    <a href="{% url 'academics:attendance_list' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-clipboard-check me-1"></i>Attendance</a>
+                    <a href="{% url 'academics:my_timetable' %}?department={{ department.pk }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-week me-1"></i>Timetable</a>
+                    <a href="{% url 'staff:staff_list' %}?department={{ department.pk }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-badge me-1"></i>Staff</a>
+                    <a href="{% url 'reports:dashboard' %}?department={{ department.pk }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-graph-up me-1"></i>Reports</a>
+                    {% else %}
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-circle me-1"></i>Complete Profile</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header"><i class="bi bi-journal-bookmark"></i> Programmes ({{ department_programmes_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for programme in department_programmes_list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <small><a href="{% url 'academics:programme_detail' programme.pk %}">{{ programme.name }}</a></small>
+                        <span class="badge bg-primary rounded-pill">{{ programme.code }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No programmes</li>
+                    {% endfor %}
+                </ul>
+                {% if department_programmes_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:programme_list' %}" class="btn btn-sm btn-link">View all {{ department_programmes_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-people"></i> Students ({{ department_students_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for student in department_students_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'students:student_detail' student.pk %}">{{ student.user.get_full_name }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ student.programme.name|truncatewords:3 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No students</li>
+                    {% endfor %}
+                </ul>
+                {% if department_students_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'students:student_list' %}" class="btn btn-sm btn-link">View all {{ department_students_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-book"></i> Courses ({{ department_courses_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for course in department_courses_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'academics:course_detail' course.pk %}">{{ course.code }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ course.title|truncatewords:2 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No courses</li>
+                    {% endfor %}
+                </ul>
+                {% if department_courses_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:course_list' %}" class="btn btn-sm btn-link">View all {{ department_courses_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center py-5">
+                {% if department %}
+                <div class="display-6 text-primary">{{ department.name }}</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">You are assigned as head of department. Manage programmes and courses, review student performance.</p>
+                <a href="{% url 'academics:department_detail' department.pk %}" class="btn btn-sm btn-primary mt-3">Go to Department Details</a>
+                {% else %}
+                <div class="display-6 text-warning">Unassigned</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">No department assignment yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ PROGRAMME COORDINATOR DASHBOARD -->
+{% elif dashboard_type == 'programme_coordinator' %}
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Programmes</div>
+            <div class="stat-value">{{ programme_count }}</div>
+            <i class="bi bi-journal-bookmark stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Students</div>
+            <div class="stat-value">{{ programme_students_count }}</div>
+            <i class="bi bi-people stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Courses</div>
+            <div class="stat-value">{{ programme_courses_count }}</div>
+            <i class="bi bi-book stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <div class="stat-label">Primary Programme</div>
+            <div class="stat-value">{{ primary_programme.name|default:'None' }}</div>
+            <i class="bi bi-tags stat-icon"></i>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-lightning-charge"></i> Quick Actions</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if primary_programme %}
+                    <a href="{% url 'academics:programme_detail' primary_programme.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-right-circle me-1"></i>View Primary Programme</a>
+                    {% endif %}
+                    <a href="{% url 'academics:programme_list' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-journal-bookmark me-1"></i>Manage Programmes</a>
+                    {% if primary_programme %}<a href="{% url 'academics:programme_courses' primary_programme.pk %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-book me-1"></i>Manage Courses</a>{% endif %}
+                    <a href="{% url 'students:student_list' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-people me-1"></i>View Students</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header"><i class="bi bi-journal-bookmark"></i> Programmes ({{ programme_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for programme in coordinator_programmes_list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <small><a href="{% url 'academics:programme_detail' programme.pk %}">{{ programme.name }}</a></small>
+                        <span class="badge bg-primary rounded-pill">{{ programme.code }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No programmes</li>
+                    {% endfor %}
+                </ul>
+                {% if programme_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:programme_list' %}" class="btn btn-sm btn-link">View all {{ programme_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-people"></i> Students ({{ programme_students_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for student in programme_students_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'students:student_detail' student.pk %}">{{ student.user.get_full_name }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ student.programme.name|truncatewords:3 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No students</li>
+                    {% endfor %}
+                </ul>
+                {% if programme_students_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'students:student_list' %}" class="btn btn-sm btn-link">View all {{ programme_students_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-book"></i> Courses ({{ programme_courses_count }})</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for course in programme_courses_list %}
+                    <li class="list-group-item py-2">
+                        <div class="small"><strong><a href="{% url 'academics:course_detail' course.pk %}">{{ course.code }}</a></strong></div>
+                        <div class="text-muted" style="font-size:0.75rem;">{{ course.title|truncatewords:2 }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item py-3 text-center text-muted">No courses</li>
+                    {% endfor %}
+                </ul>
+                {% if programme_courses_count > 10 %}
+                <div class="p-2 text-center"><a href="{% url 'academics:course_list' %}" class="btn btn-sm btn-link">View all {{ programme_courses_count }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body text-center py-5">
+                {% if programme_count > 0 %}
+                <div class="display-6 text-primary">{{ programme_count }} Programme{{ programme_count|pluralize }}</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">You coordinate these programmes. Manage allocations and review course performance.</p>
+                {% if primary_programme %}<a href="{% url 'academics:programme_detail' primary_programme.pk %}" class="btn btn-sm btn-primary mt-3">Go to Primary Programme</a>{% endif %}
+                {% else %}
+                <div class="display-6 text-warning">Unassigned</div>
+                <p class="text-muted mt-3" style="font-size:0.9rem;">No programmes assigned yet.</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -378,6 +798,7 @@
             <div class="card-body">
                 <div class="d-grid gap-2">
                     <a href="{% url 'students:course_registration' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-plus-circle me-1"></i> Register Courses</a>
+                    <a href="{% url 'students:course_registration' %}?action=enroll_semester" class="btn btn-outline-secondary btn-sm"><i class="bi bi-journal-bookmark me-1"></i> Semester Enrollment</a>
                     <a href="{% url 'students:my_results' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-trophy me-1"></i> My Results</a>
                     <a href="{% url 'finance:my_fees' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash me-1"></i> My Fees</a>
                     <a href="{% url 'academics:my_timetable' %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-week me-1"></i> Timetable</a>
@@ -442,30 +863,30 @@
 {% elif dashboard_type == 'finance' %}
 <div class="row g-3 mb-3">
     <div class="col-6 col-md-3">
-        <div class="stat-card">
+        <div class="stat-card" style="background: transparent !important; border: none !important; border-right: 1px solid #dee2e6 !important;">
             <div class="stat-label">Total Revenue (UGX)</div>
             <div class="stat-value" style="font-size:1.1rem;">{{ total_revenue|floatformat:0 }}</div>
             <i class="bi bi-cash-stack stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="stat-card">
+        <div class="stat-card" style="background: transparent !important; border: none !important; border-right: 1px solid #dee2e6 !important;">
             <div class="stat-label">Pending Invoices</div>
             <div class="stat-value text-warning">{{ pending_invoices }}</div>
             <i class="bi bi-receipt stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="stat-card">
+        <div class="stat-card" style="background: transparent !important; border: none !important; border-right: 1px solid #dee2e6 !important;">
             <div class="stat-label">Overdue Invoices</div>
             <div class="stat-value text-danger">{{ overdue_invoices }}</div>
             <i class="bi bi-exclamation-circle stat-icon"></i>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="stat-card">
+        <div class="stat-card" style="background: transparent !important; border: none !important;">
             <div class="stat-label">Total Outstanding</div>
-            <div class="stat-value text-danger" style="font-size:1rem;">{{ total_outstanding|floatformat:0 }}</div>
+            <div class="stat-value text-danger">{{ total_outstanding|floatformat:0 }}</div>
             <i class="bi bi-wallet stat-icon"></i>
         </div>
     </div>
@@ -500,7 +921,7 @@
                     <tr>
                         <td>{{ p.student.user.get_full_name }}</td>
                         <td>{{ p.amount|floatformat:0 }}</td>
-                        <td><span class="badge bg-info">{{ p.get_payment_method_display }}</span></td>
+                        <td><small style="color: blue;">{{ p.get_payment_method_display }}</small></td>
                         <td><small>{{ p.payment_date|date:"d M Y" }}</small></td>
                         <td><small>{{ p.receipt_number }}</small></td>
                     </tr>
@@ -509,6 +930,20 @@
                     {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-graph-up"></i> Financial Overview (Last 12 months)</span>
+                <small class="text-muted">Payments vs Invoices</small>
+            </div>
+            <div class="card-body">
+                <canvas id="financeChart" height="120"></canvas>
             </div>
         </div>
     </div>
@@ -728,4 +1163,58 @@
     </div>
 </div>
 {% endif %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/finance/stats/')
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        { label: 'Payments (UGX)', data: data.payments, borderColor: '#198754', backgroundColor: 'rgba(25,135,84,0.1)', tension: 0.2 },
+                        { label: 'Invoices (UGX)', data: data.invoices, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,0.08)', tension: 0.2 }
+                    ]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { ticks: { callback: function(v){ return v.toLocaleString(); } } } }
+            });
+        })
+        .catch(err => console.error('Failed to load finance stats', err));
+});
+</script>
+{% if registrar_month_labels_json %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const labels = {{ registrar_month_labels_json|safe }};
+        const admissions = {{ registrar_admissions_json|safe }};
+        const progLabels = {{ registrar_programmes_labels_json|safe }};
+        const progData = {{ registrar_programmes_data_json|safe }};
+
+        const ctxA = document.getElementById('registrarAdmissionsChart');
+        if (ctxA) {
+            new Chart(ctxA.getContext('2d'), {
+                type: 'line',
+                data: { labels: labels, datasets: [{ label: 'Admissions', data: admissions, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,0.08)', tension: 0.25, fill: true }] },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        const ctxP = document.getElementById('registrarProgrammesChart');
+        if (ctxP) {
+            new Chart(ctxP.getContext('2d'), {
+                type: 'pie',
+                data: { labels: progLabels, datasets: [{ data: progData, backgroundColor: ['#0d6efd','#198754','#ffc107','#dc3545','#6c757d','#6610f2','#20c997','#fd7e14'] }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+    } catch (e) { console.error('Registrar charts error', e); }
+});
+</script>
+{% endif %}
+{% endblock %}
 {% endblock %}

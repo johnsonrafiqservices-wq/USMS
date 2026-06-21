@@ -1,5 +1,8 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from .models import Course, Department, Programme, CourseAllocation, Timetable, Faculty, Campus, AcademicSession, Intake, StudyLevel
+
+User = get_user_model()
 
 
 class DepartmentForm(forms.ModelForm):
@@ -13,6 +16,12 @@ class DepartmentForm(forms.ModelForm):
             'head_of_department': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['head_of_department'].queryset = User.objects.filter(
+            role__in=[User.Role.DEPARTMENT_HEAD, User.Role.ADMIN, User.Role.REGISTRAR]
+        ).order_by('first_name', 'last_name')
 
 
 class StudyLevelForm(forms.ModelForm):
@@ -31,18 +40,25 @@ class StudyLevelForm(forms.ModelForm):
 class ProgrammeForm(forms.ModelForm):
     class Meta:
         model = Programme
-        fields = ['name', 'code', 'department', 'level', 'schedule', 'duration_years', 
+        fields = ['name', 'code', 'department', 'coordinator', 'level', 'schedule', 'duration_years', 
                   'total_credits', 'description', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'code': forms.TextInput(attrs={'class': 'form-control'}),
             'department': forms.Select(attrs={'class': 'form-select'}),
+            'coordinator': forms.Select(attrs={'class': 'form-select'}),
             'level': forms.Select(attrs={'class': 'form-select'}),
             'schedule': forms.Select(attrs={'class': 'form-select'}),
             'duration_years': forms.NumberInput(attrs={'class': 'form-control'}),
             'total_credits': forms.NumberInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['coordinator'].queryset = User.objects.filter(
+            role__in=[User.Role.PROGRAMME_COORDINATOR, User.Role.ADMIN, User.Role.REGISTRAR]
+        ).order_by('first_name', 'last_name')
 
 
 class AcademicSessionForm(forms.ModelForm):
@@ -76,6 +92,12 @@ class FacultyForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'established_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['dean'].queryset = User.objects.filter(
+            role__in=[User.Role.FACULTY_DEAN, User.Role.ADMIN, User.Role.REGISTRAR]
+        ).order_by('first_name', 'last_name')
 
 
 class CampusForm(forms.ModelForm):

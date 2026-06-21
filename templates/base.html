@@ -145,23 +145,32 @@
         .table tbody tr:hover { background-color: rgba(30,58,95,0.02); transform: scale(1.001); }
         .table-responsive { border-radius: 0.4rem; box-shadow: none; }
 
-        /* Stat Cards */
+        /* Stat Cards - make transparent/no-border and consistent across site */
         .stat-card {
-            background: rgba(255,255,255,0.95); backdrop-filter: none;
-            border: 1px solid rgba(0,0,0,0.1); border-radius: 0.5rem;
-            padding: 1rem; box-shadow: none; transition: all 0.3s ease;
-            position: relative; overflow: hidden;
+            height: 80px; display: flex; flex-direction: column; justify-content: center;
+            background: transparent !important; border: none !important; border-radius: 0.5rem;
+            padding: 0.75rem !important; box-shadow: none; transition: all 0.2s ease;
+            position: relative; overflow: visible;
         }
-        .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #1e3a5f, #2a5280);
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .stat-card:hover { transform: none; box-shadow: none; border-color: rgba(30,58,95,0.25); }
-        .stat-card:hover::before { opacity: 1; }
-        .stat-card .stat-icon { font-size: 2rem; color: #1e3a5f; opacity: 0.15; position: absolute; right: 1rem; bottom: 1rem; }
-        .stat-card .stat-value, .stat-card h3 { font-size: 1.6rem; font-weight: 600; color: #212121; margin-bottom: 0.25rem; }
+        .stat-card .stat-icon { font-size: 2rem; color: #1e3a5f; opacity: 0.12; position: absolute; right: 1rem; bottom: 0.5rem; }
+        .stat-card .stat-value, .stat-card h3 { font-size: 1.2rem; font-weight: 600; color: #212121; margin-bottom: 0.15rem; }
         .stat-card .stat-label, .stat-card p { font-size: 0.75rem; color: #757575; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin: 0; }
+
+        /* Add subtle right divider between stat columns, but remove on the row's last column */
+        .row > [class*="col-"] .stat-card { border-right: 1px solid #dee2e6 !important; }
+        .row > [class*="col-"]:last-child .stat-card { border-right: none !important; }
+        /* Make legacy `.fin-stat` elements match `.stat-card` appearance */
+        .fin-stat {
+            background: transparent !important;
+            border: none !important;
+            padding: 0.75rem !important;
+            height: 80px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }
+        .row > [class*="col-"] .fin-stat { border-right: 1px solid #dee2e6 !important; }
+        .row > [class*="col-"]:last-child .fin-stat { border-right: none !important; }
 
         /* Content wrapper */
         .content-wrapper { padding: 1.25rem; transition: max-width 0.3s ease-in-out; }
@@ -187,7 +196,7 @@
         .form-control:hover, .form-select:hover { border-color: rgba(0,0,0,0.15); }
         textarea.form-control { min-height: 80px; }
         .form-check { padding-left: 1.75rem; margin-bottom: 0.5rem; }
-        .form-check-label { font-size: 0.8rem; font-weight: 500; color: #424242; }
+        .form-check-label { font-weight: 500; color: #424242; margin-bottom: 0; display: inline; }
         .form-check-input { margin-top: 0.2rem; width: 1.25rem; height: 1.25rem; border: 2px solid rgba(0,0,0,0.15); border-radius: 0.35rem; }
         .form-check-input:checked { background-color: #1e3a5f; border-color: #1e3a5f; }
 
@@ -233,7 +242,7 @@
         h6 { font-size: 0.75rem; }
         a { text-decoration: none; }
         a:hover { text-decoration: none; }
-        .row { margin-bottom: 0.5rem; }
+        .content-wrapper .row { margin-bottom: 0.5rem; }
 
         /* Avatar */
         .avatar-sm {
@@ -288,9 +297,17 @@
 
                     <nav class="nav flex-column">
                         {% for item in nav_items %}
-                        <a class="nav-link" href="{% url item.url %}" title="{{ item.label }}">
-                            <i class="bi {{ item.icon }}"></i> <span class="sidebar-text">{{ item.label }}</span>
-                        </a>
+                            {% if item.path %}
+                                <a class="nav-link" href="{{ item.path }}" title="{{ item.label }}">
+                                    <i class="bi {{ item.icon }}"></i> <span class="sidebar-text">{{ item.label }}</span>
+                                </a>
+                            {% elif item.url %}
+                                <a class="nav-link" href="{% url item.url %}" title="{{ item.label }}">
+                                    <i class="bi {{ item.icon }}"></i> <span class="sidebar-text">{{ item.label }}</span>
+                                </a>
+                            {% else %}
+                                {# skip nav item without path or url to avoid NoReverseMatch #}
+                            {% endif %}
                         {% endfor %}
 
                         <hr class="text-white">
@@ -621,7 +638,9 @@
         {% elif user.is_student %}
             <div class="qc-action-item"><span class="qc-action-label">Register Course</span><button class="qc-action-btn" data-action="register_course" data-title="Register for Courses"><i class="bi bi-journal-bookmark"></i></button></div>
             <div class="qc-action-item"><span class="qc-action-label">Maintenance Request</span><button class="qc-action-btn" data-action="add_maintenance" data-title="New Maintenance Request"><i class="bi bi-tools"></i></button></div>
+            {% if user.student and user.student.pk %}
             <div class="qc-action-item"><span class="qc-action-label">My Profile</span><button class="qc-action-btn" onclick="window.location.href='{% url 'students:student_detail' user.student.pk %}'"><i class="bi bi-person"></i></button></div>
+            {% endif %}
         {% endif %}
         </div>
     </div>
@@ -729,6 +748,7 @@
                 if (!resp.ok) throw new Error('Failed to load form');
                 const html = await resp.text();
                 formBody.innerHTML = html;
+                if (window.initFeeStructureForm) { try { window.initFeeStructureForm(formBody); } catch (err) { console.error('initFeeStructureForm error:', err); } }
             } catch (err) {
                 formBody.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>Could not load form. ${err.message}</div>`;
             }
@@ -751,6 +771,7 @@
                 if (!resp.ok) throw new Error('Failed to load form');
                 const html = await resp.text();
                 formBody.innerHTML = html;
+                if (window.initFeeStructureForm) { try { window.initFeeStructureForm(formBody); } catch (err) { console.error('initFeeStructureForm error:', err); } }
             } catch (err) {
                 formBody.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>Could not load form. ${err.message}</div>`;
             }

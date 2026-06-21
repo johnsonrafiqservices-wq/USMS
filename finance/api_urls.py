@@ -10,4 +10,5 @@ router.register(r'payments', api_views.PaymentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('stats/', api_views.FinanceStatsView.as_view(), name='stats'),
 ]

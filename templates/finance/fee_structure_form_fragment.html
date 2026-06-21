@@ -1,75 +1,540 @@
-<form method="post" id="feeForm">
+<form method="post" id="feeForm" action="{% url 'finance:fee_structure_create' %}">
     {% csrf_token %}
     <div id="formErrors"></div>
 
-    <div class="mb-3">
-        <label class="form-label">Fee Name <span class="text-danger">*</span></label>
-        <input type="text" name="name" class="form-control" value="{{ fee.name|default:'' }}" required>
-    </div>
+    <!-- Programmes data for JavaScript -->
+    <script id="programmesData" type="application/json">{{ programmes_json|safe }}</script>
+    <!-- Departments data for JavaScript -->
+    <script id="departmentsData" type="application/json">{{ departments_json|safe }}</script>
+    <!-- Courses data for JavaScript -->
+    <script id="coursesData" type="application/json">{{ courses_json|safe }}</script>
 
-    <div class="mb-3">
-        <label class="form-label">Fee Type <span class="text-danger">*</span></label>
-        <select name="fee_type" class="form-select" required>
-            <option value="">Select Type</option>
-            {% for val, label in fee_types %}
-            <option value="{{ val }}" {% if fee.fee_type == val %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Frequency <span class="text-danger">*</span></label>
-        <select name="frequency" class="form-select" required>
-            <option value="per_semester" {% if fee.frequency|default:'per_semester' == 'per_semester' %}selected{% endif %}>Per Semester</option>
-            <option value="per_year" {% if fee.frequency == 'per_year' %}selected{% endif %}>Per Year</option>
-            <option value="once" {% if fee.frequency == 'once' %}selected{% endif %}>Once</option>
-            <option value="graduation" {% if fee.frequency == 'graduation' %}selected{% endif %}>Graduation</option>
-            <option value="monthly" {% if fee.frequency == 'monthly' %}selected{% endif %}>Monthly</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Programme</label>
-        <select name="programme" class="form-select">
-            <option value="">All Programmes</option>
-            {% for p in programmes %}
-            <option value="{{ p.pk }}" {% if fee.programme_id == p.pk %}selected{% endif %}>{{ p.name }}</option>
-            {% endfor %}
-        </select>
-        <small class="text-muted">Leave blank to apply to all programmes</small>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Year Level</label>
-        <input type="number" name="level" class="form-control" value="{{ fee.level|default:'' }}" min="1" max="6">
-        <small class="text-muted">Leave blank to apply to all years</small>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Academic Session <span class="text-danger">*</span></label>
-        <select name="session" class="form-select" required>
-            <option value="">Select Session</option>
-            {% for s in sessions %}
-            <option value="{{ s.pk }}" {% if fee.session_id == s.pk %}selected{% endif %}>{{ s.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
-        <input type="number" name="amount" class="form-control" value="{{ fee.amount|default:'' }}" step="0.01" min="0" required>
-    </div>
-
-    <div class="mb-3">
-        <div class="form-check">
-            <input type="checkbox" name="is_mandatory" class="form-check-input" id="isMandatory" {% if fee.is_mandatory|default:True %}checked{% endif %}>
-            <label class="form-check-label" for="isMandatory">Mandatory Fee</label>
+    <!-- Progress Steps -->
+    <div class="mb-4">
+        <div class="d-flex justify-content-between position-relative">
+            <div class="progress position-absolute top-50 start-0 translate-middle-y w-100" style="height: 4px; z-index: 0;"></div>
+            <div class="step-indicator text-center position-relative z-1" data-step="1">
+                <div class="step-circle bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">1</div>
+                <div class="step-label small fw-bold">Faculty</div>
+            </div>
+            <div class="step-indicator text-center position-relative z-1" data-step="2">
+                <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">2</div>
+                <div class="step-label small text-muted">Programs</div>
+            </div>
+            <div class="step-indicator text-center position-relative z-1" data-step="3">
+                <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">3</div>
+                <div class="step-label small text-muted">Departments</div>
+            </div>
+            <div class="step-indicator text-center position-relative z-1" data-step="4">
+                <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">4</div>
+                <div class="step-label small text-muted">Courses</div>
+            </div>
+            <div class="step-indicator text-center position-relative z-1" data-step="5">
+                <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">5</div>
+                <div class="step-label small text-muted">Details</div>
+            </div>
         </div>
-        <small class="text-muted">If checked, this fee is mandatory for students</small>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea name="description" class="form-control" rows="3">{{ fee.description|default:'' }}</textarea>
+    <!-- Step 1: Faculty Selection -->
+    <div class="step-content" data-step="1">
+        <h5 class="mb-3">Select Faculty</h5>
+        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+            <div class="form-check mb-2">
+                <input type="checkbox" name="faculties" value="all" class="form-check-input" id="fac_all">
+                <label class="form-check-label fw-bold" for="fac_all">All Faculties</label>
+            </div>
+            <hr class="my-2">
+            {% for f in faculties %}
+            <div class="form-check mb-2 faculty-item">
+                <input type="checkbox" name="faculties" value="{{ f.pk }}" class="form-check-input faculty-checkbox"
+                       id="fac_{{ f.pk }}" data-faculty-id="{{ f.pk }}" {% if fee and f in fee.faculties.all %}checked{% endif %}>
+                <label class="form-check-label" for="fac_{{ f.pk }}">{{ f.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-3 text-end">
+            <button type="button" class="btn btn-primary" data-action="next-step">Next <i class="bi bi-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Step 2: Program Selection -->
+    <div class="step-content" data-step="2" style="display: none;">
+        <h5 class="mb-3">Select Programs</h5>
+        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;" id="programmesContainer">
+            <div class="form-check mb-2" id="allProgrammesCheck" style="display: none;">
+                <input type="checkbox" name="programmes" value="all" class="form-check-input" id="prog_all">
+                <label class="form-check-label fw-bold" for="prog_all">All Programs</label>
+            </div>
+            <hr class="my-2" id="progDivider" style="display: none;">
+            {% for p in programmes %}
+            <div class="form-check mb-2 programme-item" data-faculty-id="{{ p.department.faculty_id }}" style="display: none;">
+                <input type="checkbox" name="programmes" value="{{ p.pk }}" class="form-check-input prog-checkbox"
+                       id="prog_{{ p.pk }}" {% if fee and p in fee.programmes.all %}checked{% endif %}>
+                <label class="form-check-label" for="prog_{{ p.pk }}">{{ p.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <small class="text-muted" id="programmesHint">Select programs from the chosen faculties</small>
+        <div class="mt-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-action="prev-step"><i class="bi bi-arrow-left"></i> Previous</button>
+            <button type="button" class="btn btn-primary" data-action="next-step">Next <i class="bi bi-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Step 3: Department Selection -->
+    <div class="step-content" data-step="3" style="display: none;">
+        <h5 class="mb-3">Select Departments</h5>
+        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;" id="departmentsContainer">
+            <div class="form-check mb-2" id="allDepartmentsCheck" style="display: none;">
+                <input type="checkbox" name="departments" value="all" class="form-check-input" id="dept_all">
+                <label class="form-check-label fw-bold" for="dept_all">All Departments</label>
+            </div>
+            <hr class="my-2" id="deptDivider" style="display: none;">
+            {% for dept in departments %}
+            <div class="form-check mb-2 department-item" data-faculty-id="{{ dept.faculty_id }}" style="display: none;">
+                <input type="checkbox" name="departments" value="{{ dept.pk }}" class="form-check-input dept-checkbox"
+                       id="dept_{{ dept.pk }}" {% if fee and dept in fee.departments.all %}checked{% endif %}>
+                <label class="form-check-label" for="dept_{{ dept.pk }}">{{ dept.name }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <small class="text-muted" id="departmentsHint">Select departments from the chosen faculties</small>
+        <div class="mt-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-action="prev-step"><i class="bi bi-arrow-left"></i> Previous</button>
+            <button type="button" class="btn btn-primary" data-action="next-step">Next <i class="bi bi-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Step 4: Course Selection -->
+    <div class="step-content" data-step="4" style="display: none;">
+        <h5 class="mb-3">Select Courses</h5>
+        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;" id="coursesContainer">
+            <div class="form-check mb-2" id="allCoursesCheck" style="display: none;">
+                <input type="checkbox" name="courses" value="all" class="form-check-input" id="course_all">
+                <label class="form-check-label fw-bold" for="course_all">All Courses</label>
+            </div>
+            <hr class="my-2" id="courseDivider" style="display: none;">
+            {% for course in courses %}
+            <div class="form-check mb-2 course-item" data-department-id="{{ course.department_id }}" style="display: none;">
+                <input type="checkbox" name="courses" value="{{ course.pk }}" class="form-check-input course-checkbox"
+                       id="course_{{ course.pk }}" {% if fee and course in fee.courses.all %}checked{% endif %}>
+                <label class="form-check-label" for="course_{{ course.pk }}">{{ course.code }} - {{ course.title }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <small class="text-muted" id="coursesHint">Select courses from the chosen departments (optional)</small>
+        <div class="mt-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-action="prev-step"><i class="bi bi-arrow-left"></i> Previous</button>
+            <button type="button" class="btn btn-primary" data-action="next-step">Next <i class="bi bi-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Step 5: Fee Details -->
+    <div class="step-content" data-step="5" style="display: none;">
+        <h5 class="mb-3">Fee Details</h5>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Fee Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control" value="{{ fee.name|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fee Type <span class="text-danger">*</span></label>
+                    <select name="fee_type" class="form-select" required>
+                        <option value="">Select Type</option>
+                        {% for val, label in fee_types %}
+                        <option value="{{ val }}" {% if fee.fee_type == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Frequency <span class="text-danger">*</span></label>
+                    <select name="frequency" class="form-select" required>
+                        <option value="per_semester" {% if fee.frequency|default:'per_semester' == 'per_semester' %}selected{% endif %}>Per Semester</option>
+                        <option value="per_year" {% if fee.frequency == 'per_year' %}selected{% endif %}>Per Year</option>
+                        <option value="once" {% if fee.frequency == 'once' %}selected{% endif %}>Once</option>
+                        <option value="graduation" {% if fee.frequency == 'graduation' %}selected{% endif %}>Graduation</option>
+                        <option value="monthly" {% if fee.frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Academic Session <span class="text-danger">*</span></label>
+                    <select name="session" class="form-select" required>
+                        <option value="">Select Session</option>
+                        {% for s in sessions %}
+                        <option value="{{ s.pk }}" {% if fee.session_id == s.pk %}selected{% endif %}>{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row g-2">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Amount (UGX) <span class="text-danger">*</span></label>
+                        <input type="number" name="amount" class="form-control" value="{{ fee.amount|default:'' }}" step="0.01" min="0" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Year Level</label>
+                        <input type="number" name="level" class="form-control" value="{{ fee.level|default:'' }}" min="1" max="6">
+                        <small class="text-muted">Blank = all years</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_mandatory" class="form-check-input" id="isMandatory" {% if fee.is_mandatory|default:True %}checked{% endif %}>
+                        <label class="form-check-label" for="isMandatory">Mandatory Fee</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="2">{{ fee.description|default:'' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Schedules</label>
+                    <div class="border rounded p-2">
+                        {% for val, label in schedules %}
+                        {% if val != 'all' %}
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" name="schedules" value="{{ val }}" class="form-check-input"
+                                   id="sched_{{ val }}" {% if fee and val in fee.schedules %}checked{% endif %}>
+                            <label class="form-check-label" for="sched_{{ val }}">{{ label }}</label>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-action="prev-step"><i class="bi bi-arrow-left"></i> Previous</button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Submit Fee Structure</button>
+        </div>
     </div>
 </form>
+
+<script>
+(function() {
+    // State
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    // Helper functions
+    function getSelectedFacultyIds() {
+        const facultyCheckboxes = document.querySelectorAll('.faculty-checkbox');
+        const selected = [];
+        facultyCheckboxes.forEach(cb => {
+            if (cb.checked) selected.push(parseInt(cb.dataset.facultyId));
+        });
+        return selected;
+    }
+
+    function getSelectedProgramIds() {
+        const programmeItems = document.querySelectorAll('.programme-item');
+        const selected = [];
+        programmeItems.forEach(item => {
+            const cb = item.querySelector('.prog-checkbox');
+            if (cb && cb.checked && item.style.display !== 'none') {
+                selected.push(parseInt(cb.value));
+            }
+        });
+        return selected;
+    }
+
+    function getSelectedDepartmentIds() {
+        const departmentItems = document.querySelectorAll('.department-item');
+        const selected = [];
+        departmentItems.forEach(item => {
+            const cb = item.querySelector('.dept-checkbox');
+            if (cb && cb.checked && item.style.display !== 'none') {
+                selected.push(parseInt(cb.value));
+            }
+        });
+        return selected;
+    }
+
+    function updateStepIndicators() {
+        document.querySelectorAll('.step-indicator').forEach(indicator => {
+            const step = parseInt(indicator.dataset.step);
+            const circle = indicator.querySelector('.step-circle');
+            const label = indicator.querySelector('.step-label');
+
+            if (step === currentStep) {
+                circle.classList.remove('bg-secondary');
+                circle.classList.add('bg-primary');
+                label.classList.remove('text-muted');
+                label.classList.add('fw-bold');
+            } else if (step < currentStep) {
+                circle.classList.remove('bg-secondary', 'bg-primary');
+                circle.classList.add('bg-success');
+                label.classList.remove('text-muted', 'fw-bold');
+            } else {
+                circle.classList.remove('bg-primary', 'bg-success');
+                circle.classList.add('bg-secondary');
+                label.classList.remove('fw-bold');
+                label.classList.add('text-muted');
+            }
+        });
+    }
+
+    function updateProgrammes() {
+        const selectedFacultyIds = getSelectedFacultyIds();
+        const programmeItems = document.querySelectorAll('.programme-item');
+        const totalFaculties = document.querySelectorAll('.faculty-checkbox').length;
+
+        programmeItems.forEach(item => {
+            const facultyId = parseInt(item.dataset.facultyId);
+            if (selectedFacultyIds.includes(facultyId)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+                const cb = item.querySelector('.prog-checkbox');
+                if (cb) cb.checked = false;
+            }
+        });
+
+        const allProgrammesCheck = document.getElementById('allProgrammesCheck');
+        const progDivider = document.getElementById('progDivider');
+        if (allProgrammesCheck) {
+            if (selectedFacultyIds.length === totalFaculties) {
+                allProgrammesCheck.style.display = 'block';
+                if (progDivider) progDivider.style.display = 'block';
+            } else {
+                allProgrammesCheck.style.display = 'none';
+                if (progDivider) progDivider.style.display = 'none';
+                const prog_all = document.getElementById('prog_all');
+                if (prog_all) prog_all.checked = false;
+            }
+        }
+        
+        updateDepartments();
+    }
+
+    function updateDepartments() {
+        const selectedFacultyIds = getSelectedFacultyIds();
+        const departmentItems = document.querySelectorAll('.department-item');
+
+        departmentItems.forEach(item => {
+            const facultyId = parseInt(item.dataset.facultyId);
+            if (selectedFacultyIds.includes(facultyId)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+                const cb = item.querySelector('.dept-checkbox');
+                if (cb) cb.checked = false;
+            }
+        });
+
+        const allDepartmentsCheck = document.getElementById('allDepartmentsCheck');
+        const deptDivider = document.getElementById('deptDivider');
+        if (allDepartmentsCheck) {
+            if (selectedFacultyIds.length > 0) {
+                allDepartmentsCheck.style.display = 'block';
+                if (deptDivider) deptDivider.style.display = 'block';
+            } else {
+                allDepartmentsCheck.style.display = 'none';
+                if (deptDivider) deptDivider.style.display = 'none';
+                const dept_all = document.getElementById('dept_all');
+                if (dept_all) dept_all.checked = false;
+            }
+        }
+        
+        updateCourses();
+    }
+
+    function updateCourses() {
+        const selectedDepartmentIds = getSelectedDepartmentIds();
+        const courseItems = document.querySelectorAll('.course-item');
+
+        courseItems.forEach(item => {
+            const departmentId = parseInt(item.dataset.departmentId);
+            if (selectedDepartmentIds.includes(departmentId)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+                const cb = item.querySelector('.course-checkbox');
+                if (cb) cb.checked = false;
+            }
+        });
+
+        const allCoursesCheck = document.getElementById('allCoursesCheck');
+        const courseDivider = document.getElementById('courseDivider');
+        if (allCoursesCheck) {
+            if (selectedDepartmentIds.length > 0) {
+                allCoursesCheck.style.display = 'block';
+                if (courseDivider) courseDivider.style.display = 'block';
+            } else {
+                allCoursesCheck.style.display = 'none';
+                if (courseDivider) courseDivider.style.display = 'none';
+                const course_all = document.getElementById('course_all');
+                if (course_all) course_all.checked = false;
+            }
+        }
+    }
+
+    function goToNextStep() {
+        if (currentStep < totalSteps) {
+            if (currentStep === 1 && getSelectedFacultyIds().length === 0) {
+                alert('Please select at least one faculty');
+                return;
+            }
+            if (currentStep === 2 && getSelectedProgramIds().length === 0) {
+                alert('Please select at least one program');
+                return;
+            }
+            if (currentStep === 3 && getSelectedDepartmentIds().length === 0) {
+                alert('Please select at least one department');
+                return;
+            }
+
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).style.display = 'none';
+            currentStep++;
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).style.display = 'block';
+            updateStepIndicators();
+        }
+    }
+
+    function goToPrevStep() {
+        if (currentStep > 1) {
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).style.display = 'none';
+            currentStep--;
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).style.display = 'block';
+            updateStepIndicators();
+        }
+    }
+
+    // Event delegation for buttons
+    document.addEventListener('click', function(e) {
+        const form = e.target.closest('#feeForm');
+        if (!form) return;
+
+        if (e.target.closest('[data-action="next-step"]')) {
+            e.preventDefault();
+            goToNextStep();
+        }
+        if (e.target.closest('[data-action="prev-step"]')) {
+            e.preventDefault();
+            goToPrevStep();
+        }
+    });
+
+    // Direct bindings for Next/Previous buttons as a fallback
+    try {
+        document.querySelectorAll('#feeForm [data-action="next-step"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToNextStep();
+            });
+        });
+        document.querySelectorAll('#feeForm [data-action="prev-step"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToPrevStep();
+            });
+        });
+    } catch (err) {
+        console.error('Wizard button binding error', err);
+    }
+
+    // Event listeners for checkboxes
+    document.addEventListener('change', function(e) {
+        const form = e.target.closest('#feeForm');
+        if (!form) return;
+
+        // Faculty checkboxes
+        if (e.target.classList.contains('faculty-checkbox')) {
+            const facultyAllCheckbox = document.getElementById('fac_all');
+            const facultyCheckboxes = document.querySelectorAll('.faculty-checkbox');
+            const selectedCount = getSelectedFacultyIds().length;
+            if (facultyAllCheckbox) facultyAllCheckbox.checked = selectedCount === facultyCheckboxes.length;
+            updateProgrammes();
+        }
+
+        // All faculties checkbox
+        if (e.target.id === 'fac_all') {
+            const facultyCheckboxes = document.querySelectorAll('.faculty-checkbox');
+            if (e.target.checked) {
+                facultyCheckboxes.forEach(cb => cb.checked = true);
+            } else {
+                facultyCheckboxes.forEach(cb => cb.checked = false);
+            }
+            updateProgrammes();
+        }
+
+        // All programs checkbox
+        if (e.target.id === 'prog_all') {
+            const programmeItems = document.querySelectorAll('.programme-item');
+            if (e.target.checked) {
+                programmeItems.forEach(item => {
+                    if (item.style.display !== 'none') {
+                        const cb = item.querySelector('.prog-checkbox');
+                        if (cb) cb.checked = true;
+                    }
+                });
+            } else {
+                programmeItems.forEach(item => {
+                    const cb = item.querySelector('.prog-checkbox');
+                    if (cb) cb.checked = false;
+                });
+            }
+        }
+
+        // All departments checkbox
+        if (e.target.id === 'dept_all') {
+            const departmentItems = document.querySelectorAll('.department-item');
+            if (e.target.checked) {
+                departmentItems.forEach(item => {
+                    if (item.style.display !== 'none') {
+                        const cb = item.querySelector('.dept-checkbox');
+                        if (cb) cb.checked = true;
+                    }
+                });
+            } else {
+                departmentItems.forEach(item => {
+                    const cb = item.querySelector('.dept-checkbox');
+                    if (cb) cb.checked = false;
+                });
+            }
+            updateCourses();
+        }
+
+        // Department checkboxes
+        if (e.target.classList.contains('dept-checkbox')) {
+            updateCourses();
+        }
+
+        // All courses checkbox
+        if (e.target.id === 'course_all') {
+            const courseItems = document.querySelectorAll('.course-item');
+            if (e.target.checked) {
+                courseItems.forEach(item => {
+                    if (item.style.display !== 'none') {
+                        const cb = item.querySelector('.course-checkbox');
+                        if (cb) cb.checked = true;
+                    }
+                });
+            } else {
+                courseItems.forEach(item => {
+                    const cb = item.querySelector('.course-checkbox');
+                    if (cb) cb.checked = false;
+                });
+            }
+        }
+    });
+
+    // Initialize on form load
+    const form = document.getElementById('feeForm');
+    if (form) {
+        updateProgrammes();
+        updateDepartments();
+        updateCourses();
+    }
+})();
+</script>

@@ -1,6 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Students{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Ensure action buttons are clickable */
+    .table td .btn {
+        position: relative;
+        z-index: 10;
+    }
+    .table tbody tr:hover .btn {
+        z-index: 20;
+    }
+    /* Make sure the button link is properly styled */
+    .table td a.btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
     <h1 class="page-title"><i class="bi bi-mortarboard"></i> Student Management</h1>
@@ -54,8 +73,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'students:student_detail' student.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-eye"></i>
+                        <a href="{% url 'students:student_detail' student.pk %}" class="btn btn-sm btn-outline-primary" title="View Details">
+                            <i class="bi bi-eye"></i> View
                         </a>
                     </td>
                 </tr>

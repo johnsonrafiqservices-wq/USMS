@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Q, Sum
 from django.conf import settings
 from django.utils import timezone
 
@@ -148,6 +148,13 @@ class AcademicYearEnrollment(models.Model):
 
     class Meta:
         unique_together = ['student', 'academic_session', 'year_of_study', 'semester_number']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student'],
+                condition=Q(status='active'),
+                name='unique_active_academic_year_enrollment_per_student'
+            )
+        ]
         ordering = ['-academic_session__name', 'year_of_study__level', 'semester_number__number']
         verbose_name = 'Academic Year Enrollment'
         verbose_name_plural = 'Academic Year Enrollments'
@@ -162,6 +169,32 @@ class AcademicYearEnrollment(models.Model):
         year = self.year_of_study.name if self.year_of_study else '?'
         sem = self.semester_number.name if self.semester_number else '?'
         return f"{year}, {sem}"
+
+    def save(self, *args, **kwargs):
+        # Ensure only one active year enrollment exists per student.
+        is_making_active = self.status == self.EnrollmentStatus.ACTIVE
+
+        if not self.semester and self.semester_number:
+            self.semester = self.semester_number
+
+        super().save(*args, **kwargs)
+
+        if is_making_active and self.student_id:
+            AcademicYearEnrollment.objects.filter(
+                student=self.student,
+                status=self.EnrollmentStatus.ACTIVE
+            ).exclude(pk=self.pk).update(status=self.EnrollmentStatus.COMPLETED)
+
+            student = self.student
+            updated = False
+            if student.current_year_id != self.year_of_study_id:
+                student.current_year = self.year_of_study
+                updated = True
+            if student.current_semester_number_id != self.semester_number_id:
+                student.current_semester_number = self.semester_number
+                updated = True
+            if updated:
+                student.save(update_fields=['current_year', 'current_semester_number'])
 
 
 class Enrollment(models.Model):
